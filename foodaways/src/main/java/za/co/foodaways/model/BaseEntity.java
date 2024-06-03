@@ -7,7 +7,7 @@ import jakarta.persistence.Id;
 import java.time.LocalDateTime;
 
 public class BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO, generator="native")
-    public Long id;
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.AUTO, generator="native")
+//    public Long id;
 }
