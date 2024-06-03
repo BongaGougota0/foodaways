@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class Order extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
-    public Long id;
+    public Integer id;
     public String orderStatus;
     public int userId;
     public ArrayList<Product> orderItems;
