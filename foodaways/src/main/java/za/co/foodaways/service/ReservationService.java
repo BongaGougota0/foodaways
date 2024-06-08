@@ -24,13 +24,13 @@ public class ReservationService {
 
     public void addReservation(Reservation reservation){
         reservationRepo.save(reservation);
-        Statement stmt = null;
-        try {
-            stmt = this.conn.getStatement();
-            System.out.println("Data to write "+reservation.toString());
-            stmt.executeQuery("INSERT INTO reservation VALUES "+reservation.toString());
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+//        Statement stmt = null;
+//        try {
+//            stmt = this.conn.getStatement();
+//            System.out.println("Data to write "+reservation.toString());
+//            stmt.executeQuery("INSERT INTO reservation VALUES "+reservation.toString());
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
     }
 }
