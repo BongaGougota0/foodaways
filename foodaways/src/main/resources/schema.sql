@@ -1,5 +1,5 @@
 --create database foodawaysDB;
-
+--
 --use foodawaysDB;
 --
 --CREATE TABLE IF NOT EXISTS `roles` (
