@@ -12,14 +12,17 @@ import org.springframework.security.web.SecurityFilterChain;
 public class ProjectConfig {
     @Bean
     SecurityFilterChain projectSecurityConfig(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(
+        http.csrf(d -> d.disable()).authorizeHttpRequests(
                 (re)-> re.requestMatchers("/","/index","/home").permitAll()
-                .requestMatchers("/login","/register").permitAll()
+                .requestMatchers("/login").permitAll()
+                .requestMatchers("/register").permitAll()
                 .requestMatchers("/assets/**").permitAll()
                 .requestMatchers("/in/**").authenticated())
                 .formLogin(loginFormConfigure -> loginFormConfigure.loginPage("/login")
-                        .defaultSuccessUrl("/home").failureUrl("/login?error=true").permitAll())
-                        .logout(logoutFormConfigure -> logoutFormConfigure.logoutSuccessUrl("/login?logout=true").permitAll()
+                        .defaultSuccessUrl("/home")
+                        .failureUrl("/login?error=true").permitAll())
+                        .logout(logoutFormConfigure
+                                -> logoutFormConfigure.logoutSuccessUrl("/login?logout=true").permitAll()
                                 .invalidateHttpSession(true).permitAll())
                 .httpBasic(Customizer.withDefaults());
         return http.build();

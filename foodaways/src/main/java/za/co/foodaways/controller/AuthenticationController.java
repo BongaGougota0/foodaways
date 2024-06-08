@@ -2,17 +2,26 @@ package za.co.foodaways.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+import za.co.foodaways.model.StoreUser;
+import za.co.foodaways.service.StoreUserService;
 
 @Controller
 public class AuthenticationController {
+    @Autowired
+    PasswordEncoder passwordEncoder;
+    @Autowired
+    StoreUserService storeUserService;
     @RequestMapping(value = "/login", method = {RequestMethod.GET, RequestMethod.POST})
     public String login(Model model,
                         @RequestParam(value = "error", required = false) String error,
@@ -30,11 +39,24 @@ public class AuthenticationController {
             errorMessage = "Please login to your account";
         }
         model.addAttribute("errorMessage", errorMessage);
-        return "loginRegistration.html";
+        return "login.html";
     }
 
-    @RequestMapping(value = "/register", method = {RequestMethod.GET, RequestMethod.POST})
-    public String register(Model model){
+    @RequestMapping(value = "/register", method = {RequestMethod.POST, RequestMethod.GET})
+    public ModelAndView register(Model model){
+        ModelAndView mv = new ModelAndView("register.html");
+        mv.addObject("storeUser", new StoreUser());
+        return mv;
+    }
+
+    @PostMapping(value = "/register-user")
+    public String addNewUser(@ModelAttribute("storeUser") StoreUser storeUser){
+        storeUser.setPassword(passwordEncoder.encode(storeUser.getPassword()));
+        int saved = storeUserService.createUser(storeUser);
+        if(saved > 0){
+            System.out.println("User is saved! ---------------------------  ");
+            return "redirect:/login?login=true";
+            }
         return "redirect:/login?login=true";
     }
 
