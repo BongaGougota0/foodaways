@@ -42,21 +42,25 @@ public class AuthenticationController {
         return "login.html";
     }
 
-    @RequestMapping(value = "/register", method = {RequestMethod.POST, RequestMethod.GET})
-    public ModelAndView register(Model model){
-        ModelAndView mv = new ModelAndView("register.html");
-        mv.addObject("storeUser", new StoreUser());
-        return mv;
+    @RequestMapping(value = "/register", method = {RequestMethod.GET})
+    public String register(Model model){
+        model.addAttribute("storeUser", new StoreUser());
+        return "register.html";
     }
 
-    @PostMapping(value = "/register-user")
-    public String addNewUser(@ModelAttribute("storeUser") StoreUser storeUser){
+    @RequestMapping(value = "/addUser", method = {RequestMethod.POST})
+    public String addNewUser(@Valid @ModelAttribute("storeUser") StoreUser storeUser, Errors errors){
+        System.out.println("Input from postman "+ storeUser.toString());
+        if(errors.hasErrors()){
+            return "redirect:/register";
+        }
         storeUser.setPassword(passwordEncoder.encode(storeUser.getPassword()));
         int saved = storeUserService.createUser(storeUser);
         if(saved > 0){
             System.out.println("User is saved! ---------------------------  ");
             return "redirect:/login?login=true";
             }
+        System.out.println("Input from postman-- "+ storeUser.toString());
         return "redirect:/login?login=true";
     }
 

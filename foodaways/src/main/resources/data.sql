@@ -16,5 +16,5 @@
 --  VALUES ('spinach, coleslow, tomato, prawn','../images/products/default.jpeg', 93.90, 1),
 --  ('calamari and prawn','../images/products/default.jpeg', 120.99, 1);
 --
---INSERT INTO `order` (`order_status`, `user_id`, `order_items`, `created_at`, `order_to`)
+--INSERT INTO `order_data` (`order_status`, `user_id`, `order_items`, `created_at`, `order_to`)
 --VALUES (1,3,1,CURDATE(),1);

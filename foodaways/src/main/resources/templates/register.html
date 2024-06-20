@@ -51,11 +51,12 @@
 <body>
 <div class="login-container">
     <h2>Register Account</h2>
-    <form th:action="@{/register-user}" method="post" th:object="${storeUser}">
+    <form th:action="@{/addUser}" method="POST" th:object="${storeUser}">
         <input type="text" th:field="*{fullName}" name="fullName" placeholder="full name" required><br>
         <input type="text" th:field="*{email}" name="email" placeholder="email" required><br>
         <input type="text" th:field="*{phoneNumber}" name="phoneNumber" placeholder="phone number" required><br>
         <input type="password" th:field="*{password}" name="password" placeholder="Password" required><br>
+        <input type="hidden" th:field="*{roleId}" name="roleId" placeholder="12"><br>
         <input type="submit" value="Register Account">
     </form>
 </div>

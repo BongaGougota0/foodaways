@@ -43,11 +43,11 @@
 --    FOREIGN KEY (product_store) REFERENCES store(id)
 --);
 --
---CREATE TABLE IF NOT EXISTS `order` (
+--CREATE TABLE IF NOT EXISTS `customer_orders` (
 --    `id` int AUTO_INCREMENT PRIMARY KEY,
 --    `order_status` int NOT NULL,
 --    `user_id` int NOT NULL,
---    `order_items` int NULL,
+--    `order_items` VARCHAR(255) NULL,
 --    `order_total` double NULL,
 --    `created_at` TIMESTAMP DEFAULT NULL,
 --    `closed_at` TIMESTAMP DEFAULT NULL,
@@ -55,7 +55,6 @@
 --    FOREIGN KEY (order_status) REFERENCES status(id),
 --    FOREIGN KEY (user_id) REFERENCES store_user(id),
 --    FOREIGN KEY (order_to) REFERENCES store(id),
---    FOREIGN KEY (order_items) REFERENCES product(id)
 --);
 --
 --CREATE TABLE IF NOT EXISTS `reservation`(

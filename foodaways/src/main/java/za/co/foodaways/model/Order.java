@@ -7,12 +7,12 @@ import jakarta.persistence.Id;
 
 import java.util.ArrayList;
 
-@Entity(name = "order")
+@Entity(name = "customer_orders")
 public class Order extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     public Integer id;
-    public String orderStatus;
+    public int orderStatus;
     public int userId;
     public ArrayList<Product> orderItems;
     public int orderTo;
