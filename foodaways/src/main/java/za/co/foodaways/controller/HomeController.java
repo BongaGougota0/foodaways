@@ -19,9 +19,14 @@ public class HomeController {
     @Autowired
     public ReservationService reservationService;
 
-    @RequestMapping(value = {"", "/home", "/index"}, method = {RequestMethod.GET})
+    @RequestMapping(value = {"", "/index"}, method = {RequestMethod.GET})
     public String home(Model model){
         model.addAttribute("reservation", new Reservation());
+        return "index.html";
+    }
+
+    @RequestMapping(value = "/home", method = {RequestMethod.GET})
+    public String loggedInHome(Model model){
         return "index.html";
     }
 

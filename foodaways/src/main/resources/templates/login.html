@@ -6,6 +6,7 @@
     <title>Login Form</title>
     <style>
         a {
+        padding: 8px;
         text-decoration : none;
         }
 
@@ -55,11 +56,13 @@
 <body>
 <div class="login-container">
     <h2>Login</h2>
+    <li class="alert alert-success" role="alert" th:if="${!#strings.isEmpty(errorMessage)}"
+        th:text="${errorMessage}" />
     <form th:action="@{/login}" method="POST">
         <input type="text" name="username" placeholder="Username" required><br>
         <input type="password" name="password" placeholder="Password" required><br>
         <input type="submit" value="Login">
-        <a th:href="@{/register}">already have account ? login</a>
+        <a th:href="@{/register}">Don't have account ? Register</a>
     </form>
 </div>
 </body>

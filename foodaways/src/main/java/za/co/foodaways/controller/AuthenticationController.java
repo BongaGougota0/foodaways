@@ -50,17 +50,14 @@ public class AuthenticationController {
 
     @RequestMapping(value = "/addUser", method = {RequestMethod.POST})
     public String addNewUser(@Valid @ModelAttribute("storeUser") StoreUser storeUser, Errors errors){
-        System.out.println("Input from postman "+ storeUser.toString());
         if(errors.hasErrors()){
             return "redirect:/register";
         }
         storeUser.setPassword(passwordEncoder.encode(storeUser.getPassword()));
         int saved = storeUserService.createUser(storeUser);
         if(saved > 0){
-            System.out.println("User is saved! ---------------------------  ");
             return "redirect:/login?login=true";
             }
-        System.out.println("Input from postman-- "+ storeUser.toString());
         return "redirect:/login?login=true";
     }
 
