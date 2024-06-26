@@ -20,22 +20,22 @@ import java.util.List;
 
 @Component
 public class FoodawaysAuthenticationProvider implements AuthenticationProvider {
+    private final PasswordEncoder passwordEncoder;
+    private final StoreUserRepository storeUserRepository;
     @Autowired
-    PasswordEncoder passwordEncoder;
-
-    @Autowired
-    StoreUserRepository storeUserRepository;
+    public FoodawaysAuthenticationProvider(StoreUserRepository repo, PasswordEncoder encoder){
+        this.storeUserRepository = repo;
+        this.passwordEncoder = encoder;
+    }
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        String phoneNumber = authentication.getName();
+        String email = authentication.getName();
         String password = authentication.getCredentials().toString();
-
-        StoreUser storeUser = storeUserRepository.findByPhoneNumber(phoneNumber);
-        if(storeUser != null
-                && storeUser.id > 0
+        StoreUser storeUser = storeUserRepository.findByEmail(email);
+        if(storeUser != null && storeUser.id > 0
                 && passwordEncoder.matches(password, storeUser.getPassword())){
-            return new UsernamePasswordAuthenticationToken(phoneNumber,
+            return new UsernamePasswordAuthenticationToken(email,
                     null, getGrantedAuthorities(storeUser));
         }
         else {
@@ -43,10 +43,10 @@ public class FoodawaysAuthenticationProvider implements AuthenticationProvider {
         }
     }
 
-    private Collection<? extends GrantedAuthority> getGrantedAuthorities(StoreUser user) {
+    private List<GrantedAuthority> getGrantedAuthorities(StoreUser user) {
         List<GrantedAuthority> grantedAuthorityList = new ArrayList<>();
-        if(user.roleId == 2 ? grantedAuthorityList.add(new SimpleGrantedAuthority("Role_"+Roles.Role.CUSTOMER.getRoleName())) :
-        grantedAuthorityList.add(new SimpleGrantedAuthority("Role_"+Roles.Role.STORE_OWNER.getRoleName())));
+        if(user.roleId == 2 ? grantedAuthorityList.add(new SimpleGrantedAuthority("ROLE"+Roles.Role.CUSTOMER.getRoleName())) :
+        grantedAuthorityList.add(new SimpleGrantedAuthority("ROLE"+Roles.Role.STORE_OWNER.getRoleName())));
         return grantedAuthorityList;
     }
 

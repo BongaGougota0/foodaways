@@ -7,4 +7,5 @@ import za.co.foodaways.model.StoreUser;
 @Repository
 public interface StoreUserRepository extends JpaRepository<StoreUser, Integer> {
     StoreUser findByPhoneNumber(String mobileNumber);
+    StoreUser findByEmail(String email);
 }

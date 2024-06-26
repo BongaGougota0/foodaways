@@ -1,6 +1,8 @@
 package za.co.foodaways.controller;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -9,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import za.co.foodaways.model.Reservation;
+import za.co.foodaways.model.StoreUser;
+import za.co.foodaways.repository.StoreUserRepository;
 import za.co.foodaways.service.ReservationService;
 
 import java.sql.SQLOutput;
@@ -18,6 +22,8 @@ public class HomeController {
 
     @Autowired
     public ReservationService reservationService;
+    @Autowired
+    StoreUserRepository storeUserRepository;
 
     @RequestMapping(value = {"", "/index"}, method = {RequestMethod.GET})
     public String home(Model model){
@@ -26,7 +32,10 @@ public class HomeController {
     }
 
     @RequestMapping(value = "/home", method = {RequestMethod.GET})
-    public String loggedInHome(Model model){
+    public String loggedInHome(Model model, Authentication authentication, HttpSession session){
+        StoreUser userPerson = storeUserRepository.findByEmail(authentication.getName());
+        model.addAttribute("roles", authentication.getAuthorities().toString());
+        session.setAttribute("loggedInUser", userPerson);
         return "index.html";
     }
 

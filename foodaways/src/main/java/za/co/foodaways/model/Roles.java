@@ -3,9 +3,9 @@ package za.co.foodaways.model;
 public class Roles {
 
     public enum Role{
-        ADMIN("admin"),
-        CUSTOMER("customer"),
-        STORE_OWNER("store_owner");
+        ADMIN("ADMIN"),
+        CUSTOMER("CUSTOMER"),
+        STORE_OWNER("STORE_OWNER");
 
         private String roleName;
 

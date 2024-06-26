@@ -29,6 +29,7 @@ public class ProjectConfig {
                 .requestMatchers("/menu").authenticated()
                 .requestMatchers("/contact").authenticated()
                 .requestMatchers(HttpMethod.POST, "/addUser").permitAll()
+                .requestMatchers("/assets/images/**").permitAll()
                 .requestMatchers("/assets/**").permitAll()
                 .requestMatchers("/in/**").authenticated()
                 .requestMatchers("/home").authenticated())
