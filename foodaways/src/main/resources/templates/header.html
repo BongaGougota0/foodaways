@@ -55,6 +55,14 @@
                         <li class="nav-item">
                             <a class="nav-link" th:href="@{/contact}">Contact</a>
                         </li>
+
+                        <li sec:authorize="hasRole('ROLE_CUSTOMER')" class="nav-item">
+                            <a class="nav-link" th:href="@{/contact}">My Cart</a>
+                        </li>
+
+                        <li sec:authorize="hasRole('ROLE_CUSTOMER')" class="nav-item">
+                            <a class="nav-link" th:href="@{/contact}">Wishlist</a>
+                        </li>
                     </ul>
                 </div>
 

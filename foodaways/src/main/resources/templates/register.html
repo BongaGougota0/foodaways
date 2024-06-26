@@ -56,7 +56,7 @@
 <div class="login-container">
     <h2>Register Account</h2>
     <ul>
-        <li class="alert alert-danger" role="alert" th:each="error : ${#fields.errors('person.*')}" th:text="${error}" />
+        <li class="alert alert-danger" role="alert" th:each="error : ${#fields.errors('storeUser.*')}" th:text="${error}" />
     </ul>
     <form th:action="@{/addUser}" method="POST" th:object="${storeUser}">
         <input type="text" th:field="*{fullName}" name="fullName" placeholder="full name" required><br>
