@@ -28,16 +28,17 @@ public class ProjectConfig {
                 .requestMatchers("/about").authenticated()
                 .requestMatchers("/menu").authenticated()
                 .requestMatchers("/contact").authenticated()
-                .requestMatchers(HttpMethod.POST, "/addUser").permitAll()
+                .requestMatchers("/addUser").permitAll()
                 .requestMatchers("/assets/images/**").permitAll()
                 .requestMatchers("/assets/**").permitAll()
                 .requestMatchers("/in/**").authenticated()
-                .requestMatchers("/home").authenticated())
+                .requestMatchers("/home").authenticated()
+                .requestMatchers("/error?continue").authenticated())
                 .formLogin(loginFormConfigure -> loginFormConfigure.loginPage("/login")
                         .defaultSuccessUrl("/home")
                         .failureUrl("/login?error=true").permitAll())
                         .logout(logoutFormConfigure
-                                -> logoutFormConfigure.logoutSuccessUrl("/login?logout=true")
+                                -> logoutFormConfigure.logoutSuccessUrl("/index")
                                 .invalidateHttpSession(true).permitAll())
                 .httpBasic(Customizer.withDefaults());
         return http.build();

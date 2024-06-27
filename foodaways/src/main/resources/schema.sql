@@ -67,3 +67,13 @@
 --    `res_time` VARCHAR(20),
 --    `reservation_comments` VARCHAR(500)
 --);
+
+--CREATE TABLE IF NOT EXISTS `reviews` (
+--    `id` int AUTO_INCREMENT PRIMARY KEY,
+--    `user_id` int NOT NULL,
+--    `order_id` int NOT NULL,
+--    `comments` VARCHAR(255),
+--    `rating` int NOT NULL,
+--     FOREIGN KEY (user_id) REFERENCES store_user(id),
+--     FOREIGN KEY (order_id) REFERENCES customer_orders(id)
+--);
