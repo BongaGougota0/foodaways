@@ -33,6 +33,7 @@ public class ProjectConfig {
                 .requestMatchers("/assets/**").permitAll()
                 .requestMatchers("/in/**").authenticated()
                 .requestMatchers("/home").authenticated()
+                .requestMatchers("/store-manager/**").hasRole("STORE_OWNER")
                 .requestMatchers("/error?continue").authenticated())
                 .formLogin(loginFormConfigure -> loginFormConfigure.loginPage("/login")
                         .defaultSuccessUrl("/home")

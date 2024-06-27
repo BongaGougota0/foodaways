@@ -10,12 +10,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import za.co.foodaways.model.Product;
 import za.co.foodaways.model.Reservation;
 import za.co.foodaways.model.StoreUser;
 import za.co.foodaways.repository.StoreUserRepository;
+import za.co.foodaways.service.ProductsService;
 import za.co.foodaways.service.ReservationService;
 
 import java.sql.SQLOutput;
+import java.util.ArrayList;
 
 @Controller
 public class HomeController {
@@ -24,6 +27,9 @@ public class HomeController {
     public ReservationService reservationService;
     @Autowired
     StoreUserRepository storeUserRepository;
+    @Autowired
+    ProductsService productsService;
+
 
     @RequestMapping(value = {"", "/index"}, method = {RequestMethod.GET})
     public String home(Model model){
@@ -45,7 +51,9 @@ public class HomeController {
     }
 
     @RequestMapping(value = "/menu")
-    public String menu(){
+    public String menu(Model model){
+        ArrayList<Product> productArrayList = new ArrayList<>(productsService.getAllProducts());
+        model.addAttribute("products", productArrayList);
         return "menu.html";
     }
 
