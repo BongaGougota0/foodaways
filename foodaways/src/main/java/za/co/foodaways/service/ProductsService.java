@@ -24,12 +24,12 @@ public class ProductsService {
     }
 
     public ArrayList<Product> getByBestSellingProducts(){
-        List<Product> productArrayList = productsRepository.findBySales();
+        List<Product> productArrayList = productsRepository.findByOrderBySalesDesc();
         return new ArrayList<>(productArrayList);
     }
 
     public ArrayList<Product> getByBestRating(){
-        List<Product> productArrayList = productsRepository.findByRating();
+        List<Product> productArrayList = productsRepository.findByOrderByRatingDesc();
         return new ArrayList<>(productArrayList);
     }
 
