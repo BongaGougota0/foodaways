@@ -5,10 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import za.co.foodaways.model.Product;
 import za.co.foodaways.model.Reservation;
@@ -79,5 +76,12 @@ public class HomeController {
         System.out.print("Object from form "+reservation.toString());
         mav.setViewName("redirect:/home");
         return mav;
+    }
+
+    @RequestMapping(value = "/product-view/{productId}")
+    public String productView(Model model, @PathVariable("productId") int productId){
+        Product product = productsService.getProductById(productId);
+//        model.addAttribute("product", product);
+        return "product-detail.html";
     }
 }

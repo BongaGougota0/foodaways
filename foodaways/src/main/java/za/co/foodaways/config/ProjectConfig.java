@@ -33,6 +33,7 @@ public class ProjectConfig {
                 .requestMatchers("/assets/**").permitAll()
                 .requestMatchers("/in/**").authenticated()
                 .requestMatchers("/home").authenticated()
+                .requestMatchers("/product-view/**").permitAll()
                 .requestMatchers("/store-manager/**").hasRole("STORE_OWNER")
                 .requestMatchers("/error?continue").authenticated())
                 .formLogin(loginFormConfigure -> loginFormConfigure.loginPage("/login")
@@ -41,7 +42,7 @@ public class ProjectConfig {
                         .logout(logoutFormConfigure
                                 -> logoutFormConfigure.logoutSuccessUrl("/index")
                                 .invalidateHttpSession(true).permitAll())
-                .httpBasic(Customizer.withDefaults());
+                .httpBasic().disable();
         return http.build();
     }
 
