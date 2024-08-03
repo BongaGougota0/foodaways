@@ -11,6 +11,7 @@ public class StoreUserService {
     @Autowired
     StoreUserRepository storeUserRepository;
 
+
     public int createUser(StoreUser user){
         user.setRoleId(2);
         StoreUser User_ = storeUserRepository.save(user);

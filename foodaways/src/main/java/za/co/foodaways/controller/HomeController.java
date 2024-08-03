@@ -81,7 +81,7 @@ public class HomeController {
     @RequestMapping(value = "/product-view/{productId}")
     public String productView(Model model, @PathVariable("productId") int productId){
         Product product = productsService.getProductById(productId);
-//        model.addAttribute("product", product);
-        return "product-detail.html";
+        model.addAttribute("product", product);
+        return "productDetail.html";
     }
 }
