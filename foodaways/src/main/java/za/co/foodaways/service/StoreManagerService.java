@@ -23,8 +23,7 @@ public class StoreManagerService implements StoreManager {
     }
     @Override
     public void addNewProduct(Product newProduct) {
-        TypedQuery<Product> typedQuery = entityManager.createQuery("INSERT INTO Product", Product.class);
-
+        entityManager.persist(newProduct);
     }
 
     @Override
@@ -48,7 +47,10 @@ public class StoreManagerService implements StoreManager {
 
     @Override
     public void deleteOrder(int orderId) {
-
+        Order removeOrder = entityManager.find(Order.class, orderId);
+        if(!(removeOrder == null)){
+            entityManager.remove(removeOrder);
+        }
     }
 
     @Override
