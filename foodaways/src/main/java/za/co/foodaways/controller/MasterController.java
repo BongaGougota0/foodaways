@@ -11,7 +11,7 @@ import za.co.foodaways.model.Store;
 import za.co.foodaways.model.StoreUser;
 import za.co.foodaways.service.MasterService;
 
-@Controller(value = "/admin")
+@Controller
 public class MasterController {
 
     private final MasterService masterService;

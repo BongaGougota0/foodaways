@@ -1,8 +1,14 @@
 package za.co.foodaways.service;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import za.co.foodaways.queries.StoreQueries;
 import za.co.foodaways.model.Product;
+import za.co.foodaways.model.Store;
 import za.co.foodaways.repository.ProductsRepository;
 
 import java.util.ArrayList;
@@ -13,9 +19,12 @@ import java.util.Optional;
 public class ProductsService {
 
     private final ProductsRepository productsRepository;
+    @PersistenceContext
+    private final EntityManager entityManager;
     @Autowired
-    public ProductsService(ProductsRepository productsRepository){
+    public ProductsService(ProductsRepository productsRepository, EntityManager entityManager){
         this.productsRepository = productsRepository;
+        this.entityManager = entityManager;
     }
 
     public ArrayList<Product> getAllProducts(){
@@ -50,5 +59,21 @@ public class ProductsService {
 
     public Product getProductById(int productId) {
         return productsRepository.getReferenceById(productId);
+    }
+
+    // --------------------------- Store Manager Methods
+    public List<Product> getStoreProductsByManagerId(int managerId){
+        TypedQuery<Product> typedQuery = entityManager.createQuery("FROM Product p WHERE p.storeId=:id", Product.class);
+        typedQuery.setParameter("id", managerId);
+        return typedQuery.getResultList();
+    }
+
+    @Transactional
+    public void adminAddNewProduct(Product product, int adminId){
+        product.setStoreId(adminId);
+        entityManager.createQuery(StoreQueries.getAdminStoreID).setParameter("adminId", adminId);
+        Store store = entityManager.find(Store.class, adminId);
+        product.setProductStore(store.id);
+        entityManager.persist(product);
     }
 }

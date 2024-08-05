@@ -13,11 +13,18 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.stereotype.Component;
 import za.co.foodaways.model.StoreUser;
 import za.co.foodaways.repository.StoreUserRepository;
+import za.co.foodaways.security.CustomAuthenticationSuccessHandler;
 
 import java.util.List;
 
 @Configuration
 public class ProjectConfig {
+    private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
+
+    @Autowired
+    public ProjectConfig(CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler){
+        this.customAuthenticationSuccessHandler = customAuthenticationSuccessHandler;
+    }
     @Bean
     SecurityFilterChain projectSecurityConfig(HttpSecurity http) throws Exception {
         http.csrf(d -> d.disable()).authorizeHttpRequests(
@@ -35,11 +42,14 @@ public class ProjectConfig {
                 .requestMatchers("/in/**").authenticated()
                 .requestMatchers("/home").authenticated()
                 .requestMatchers("/product-view/**").permitAll()
+                .requestMatchers("/home/**").hasRole("CUSTOMER")
+                .requestMatchers("/store-manager").hasRole("STORE_OWNER")
                 .requestMatchers("/store-manager/**").hasRole("STORE_OWNER")
-                .requestMatchers("/error?continue").authenticated()
-                .requestMatchers("/admin/**").permitAll())
+                .requestMatchers("/foodaways-admin").hasRole("ADMIN")
+                .requestMatchers("/foodaways-admin/**").hasRole("ADMIN")
+                .requestMatchers("/error?continue").authenticated())
                 .formLogin(loginFormConfigure -> loginFormConfigure.loginPage("/login")
-                        .defaultSuccessUrl("/home")
+                        .successHandler(customAuthenticationSuccessHandler)
                         .failureUrl("/login?error=true").permitAll())
                         .logout(logoutFormConfigure
                                 -> logoutFormConfigure.logoutSuccessUrl("/index")
