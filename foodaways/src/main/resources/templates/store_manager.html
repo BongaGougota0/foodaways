@@ -143,7 +143,7 @@
             </thead>
             <tbody>
                 <tr th:each="product : ${products}">
-                    <td th:text="${product.productImage}">Product Name</td>
+                    <td th:text="${product.productImagePath}">Product Name</td>
                     <td th:text="${product.rating}">Rating</td>
                     <td th:text="${product.menuItems}">Menu Items</td>
                     <td th:text="${product.productPrice}">Price</td>
@@ -158,7 +158,7 @@
     <div class="modal-content">
         <span class="close" onclick="closeModal()">&times;</span>
         <h2>Add New Product</h2>
-        <form th:action="@{/add-new-product}" th:method="post" enctype="multipart/form-data" th:object="${newProduct}">
+        <form th:action="@{/store-manager/add-new-product}" th:method="post" enctype="multipart/form-data" th:object="${newProduct}">
             <div class="form-group">
                 <label for="productName">Product Name</label>
                 <input th:field="*{productName}" type="text" id="productName" name="productName" required>
