@@ -101,9 +101,10 @@ public class StoreController {
         return "order.html";
     }
 
-    @RequestMapping(value = "/update-status")
-    public String updateOrderStatus(){
-        return "redirect:/records";
+    @RequestMapping(value = "/store-manager/update-product", method = {RequestMethod.POST})
+    public String updateProductDetails(@ModelAttribute("updateProduct") Product updateProduct, int productId){
+        productsService.adminUpdateProduct(updateProduct, productId);
+        return "redirect:/store-manager";
     }
 
     @RequestMapping(value = "/accept")

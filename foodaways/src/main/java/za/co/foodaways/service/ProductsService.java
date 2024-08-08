@@ -6,6 +6,7 @@ import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import za.co.foodaways.queries.ProductQueries;
 import za.co.foodaways.queries.StoreQueries;
 import za.co.foodaways.model.Product;
 import za.co.foodaways.model.Store;
@@ -63,7 +64,7 @@ public class ProductsService {
 
     // --------------------------- Store Manager Methods
     public List<Product> getStoreProductsByManagerId(int managerId){
-        TypedQuery<Product> typedQuery = entityManager.createQuery("FROM Product p WHERE p.storeId=:id", Product.class);
+        TypedQuery<Product> typedQuery = entityManager.createQuery(ProductQueries.getStoreProductsByManagerId, Product.class);
         typedQuery.setParameter("id", managerId);
         return typedQuery.getResultList();
     }
@@ -75,5 +76,17 @@ public class ProductsService {
         Store store = entityManager.find(Store.class, adminId);
         product.setProductStore(store.id);
         entityManager.persist(product);
+    }
+
+    public void adminUpdateProduct(Product updatedProduct, int productId){
+        Product product = productsRepository.getReferenceById(productId);
+
+        if(product != null){
+            product.setProductName(updatedProduct.getProductName());
+            product.setProductPrice(updatedProduct.getProductPrice());
+            product.setMenuItems(updatedProduct.getMenuItems());
+            product.setProductImagePath(updatedProduct.getProductImagePath());
+            productsRepository.save(product);
+        }
     }
 }

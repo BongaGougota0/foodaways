@@ -11,6 +11,10 @@ public class StoreUserService {
     @Autowired
     StoreUserRepository storeUserRepository;
 
+    public StoreUser findUserByEmail(String userEmail){
+        return storeUserRepository.findByEmail(userEmail);
+    }
+
 
     public int createUser(StoreUser user){
         user.setRoleId(2);
