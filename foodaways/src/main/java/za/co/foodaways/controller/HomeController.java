@@ -31,6 +31,7 @@ public class HomeController {
     @RequestMapping(value = {"", "/index"}, method = {RequestMethod.GET})
     public String home(Model model){
         model.addAttribute("reservation", new Reservation());
+        model.addAttribute("specialProducts", new ArrayList<Product>());
         return "index.html";
     }
 
@@ -38,6 +39,7 @@ public class HomeController {
     public String loggedInHome(Model model, Authentication authentication, HttpSession session){
         StoreUser userPerson = storeUserRepository.findByEmail(authentication.getName());
         model.addAttribute("roles", authentication.getAuthorities().toString());
+        model.addAttribute("specialProducts", new ArrayList<Product>());
         session.setAttribute("loggedInUser", userPerson);
         return "index.html";
     }
@@ -48,9 +50,13 @@ public class HomeController {
     }
 
     @RequestMapping(value = "/menu")
-    public String menu(Model model){
+    public String menu(Model model, Authentication authentication, HttpSession session){
+        StoreUser user = storeUserRepository.findByEmail(authentication.getName());
         ArrayList<Product> productArrayList = new ArrayList<>(productsService.getAllProducts());
         model.addAttribute("products", productArrayList);
+        model.addAttribute("dinnerProducts", new ArrayList<Product>());
+        model.addAttribute("lunchProducts", new ArrayList<Product>());
+        session.setAttribute("loggedInUser", user);
         return "menu.html";
     }
 
