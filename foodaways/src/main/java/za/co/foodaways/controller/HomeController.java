@@ -19,14 +19,17 @@ import java.util.ArrayList;
 
 @Controller
 public class HomeController {
-
     @Autowired
     public ReservationService reservationService;
-    @Autowired
-    StoreUserRepository storeUserRepository;
-    @Autowired
-    ProductsService productsService;
 
+    StoreUserRepository storeUserRepository;
+
+    ProductsService productsService;
+    @Autowired
+    public HomeController(ProductsService service, StoreUserRepository userRepository){
+        this.storeUserRepository = userRepository;
+        this.productsService = service;
+    }
 
     @RequestMapping(value = {"", "/index"}, method = {RequestMethod.GET})
     public String home(Model model){
@@ -73,7 +76,6 @@ public class HomeController {
     public ModelAndView createReservation(@ModelAttribute("reservation")Reservation reservation){
         reservationService.addReservation(reservation);
         ModelAndView mav = new ModelAndView();
-        System.out.print("Object from form "+reservation.toString());
         mav.setViewName("redirect:/home");
         return mav;
     }
