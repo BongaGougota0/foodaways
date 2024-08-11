@@ -1,18 +1,18 @@
 package za.co.foodaways.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import lombok.Data;
+import org.hibernate.annotations.GenericGenerator;
+
+@Entity(name = "roles")
+@Data
 public class Roles {
-
-    public enum Role{
-        ADMIN("ADMIN"),
-        CUSTOMER("CUSTOMER"),
-        STORE_OWNER("STORE_OWNER");
-
-        private String roleName;
-
-        Role(String roleName){
-            this.roleName = roleName;
-        }
-
-        public String getRoleName(){return roleName;}
-    }
+    @Id
+    @GeneratedValue(strategy= GenerationType.AUTO,generator="native")
+    @GenericGenerator(name = "native",strategy = "native")
+    public int role;
+    public String roleName;
 }

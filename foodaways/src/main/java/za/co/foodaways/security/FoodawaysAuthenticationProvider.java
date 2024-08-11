@@ -33,7 +33,7 @@ public class FoodawaysAuthenticationProvider implements AuthenticationProvider {
         String email = authentication.getName();
         String password = authentication.getCredentials().toString();
         StoreUser storeUser = storeUserRepository.findByEmail(email);
-        if(storeUser != null && storeUser.id > 0
+        if(storeUser != null && storeUser.userId > 0
                 && passwordEncoder.matches(password, storeUser.getPassword())){
             return new UsernamePasswordAuthenticationToken(email,
                     null, getGrantedAuthorities(storeUser));
@@ -45,12 +45,12 @@ public class FoodawaysAuthenticationProvider implements AuthenticationProvider {
 
     private List<GrantedAuthority> getGrantedAuthorities(StoreUser user) {
         List<GrantedAuthority> grantedAuthorityList = new ArrayList<>();
-        if(user.roleId == 1){
-            grantedAuthorityList.add(new SimpleGrantedAuthority("ROLE_"+Roles.Role.ADMIN));
+        if(user.getRole().getRole() == 1){
+            grantedAuthorityList.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
             return grantedAuthorityList;
         }
-        if(user.roleId == 2 ? grantedAuthorityList.add(new SimpleGrantedAuthority("ROLE_"+Roles.Role.CUSTOMER.getRoleName())) :
-        grantedAuthorityList.add(new SimpleGrantedAuthority("ROLE_"+Roles.Role.STORE_OWNER.getRoleName())));
+        if(user.getRole().getRole() == 2 ? grantedAuthorityList.add(new SimpleGrantedAuthority("ROLE_CUSTOMER")) :
+        grantedAuthorityList.add(new SimpleGrantedAuthority("ROLE_STORE_OWNER")));
         return grantedAuthorityList;
     }
 
