@@ -45,11 +45,11 @@ public class FoodawaysAuthenticationProvider implements AuthenticationProvider {
 
     private List<GrantedAuthority> getGrantedAuthorities(StoreUser user) {
         List<GrantedAuthority> grantedAuthorityList = new ArrayList<>();
-        if(user.getRole().getRole() == 1){
+        if(user.getRole().getRoleId() == 1){
             grantedAuthorityList.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
             return grantedAuthorityList;
         }
-        if(user.getRole().getRole() == 2 ? grantedAuthorityList.add(new SimpleGrantedAuthority("ROLE_CUSTOMER")) :
+        if(user.getRole().getRoleId() == 2 ? grantedAuthorityList.add(new SimpleGrantedAuthority("ROLE_CUSTOMER")) :
         grantedAuthorityList.add(new SimpleGrantedAuthority("ROLE_STORE_OWNER")));
         return grantedAuthorityList;
     }

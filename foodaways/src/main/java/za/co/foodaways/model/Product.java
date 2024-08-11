@@ -13,7 +13,7 @@ import java.io.File;
 public class Product extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
-    public Integer id;
+    public Integer productId;
     public String menuItems;
     public String productName;
 
@@ -23,6 +23,10 @@ public class Product extends BaseEntity{
     public double productPrice;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "store_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "store_id", referencedColumnName = "storeId", nullable = false)
     public Store store;
+
+    public int getStoreId(){
+        return store.storeId;
+    }
 }

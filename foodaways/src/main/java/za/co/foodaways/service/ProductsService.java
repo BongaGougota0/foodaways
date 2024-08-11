@@ -34,13 +34,15 @@ public class ProductsService {
     }
 
     public ArrayList<Product> getByBestSellingProducts(){
-        List<Product> productArrayList = productsRepository.findByOrderBySalesDesc();
-        return new ArrayList<>(productArrayList);
+//        List<Product> productArrayList = productsRepository.findByOrderBySalesDesc();
+//        return new ArrayList<>(productArrayList);
+        return null;
     }
 
     public ArrayList<Product> getByBestRating(){
-        List<Product> productArrayList = productsRepository.findByOrderByRatingDesc();
-        return new ArrayList<>(productArrayList);
+//        List<Product> productArrayList = productsRepository.findByOrderByRatingDesc();
+//        return new ArrayList<>(productArrayList);
+        return null;
     }
 
     public void addProduct(Product product){
@@ -51,7 +53,7 @@ public class ProductsService {
     }
 
     public void updateProduct(Product updateProduct){
-        Optional<Product> productToUpdate = productsRepository.findById(updateProduct.id);
+        Optional<Product> productToUpdate = productsRepository.findById(updateProduct.getProductId());
         if(productToUpdate.get() != null){
             productToUpdate.get().productPrice = updateProduct.productPrice;
             productToUpdate.get().menuItems = updateProduct.menuItems;
@@ -71,10 +73,10 @@ public class ProductsService {
 
     @Transactional
     public void adminAddNewProduct(Product product, int adminId){
-        product.setStoreId(adminId);
+//        product.setStoreId(adminId);
         entityManager.createQuery(StoreQueries.getAdminStoreID).setParameter("adminId", adminId);
         Store store = entityManager.find(Store.class, adminId);
-        product.setProductStore(store.id);
+//        product.setProductStore(store.id);
         entityManager.persist(product);
     }
 

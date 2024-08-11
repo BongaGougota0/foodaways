@@ -46,7 +46,7 @@ public class StoreController {
         model.addAttribute("roles", authentication.getAuthorities().toString());
         ModelAndView mav = new ModelAndView("store_manager.html");
         mav.addObject("newProduct", new Product());
-        mav.addObject("products", productsService.getStoreProductsByManagerId(userPerson.id));
+        mav.addObject("products", productsService.getStoreProductsByManagerId(userPerson.getUserId()));
         session.setAttribute("loggedInUser", userPerson);
         return mav;
     }
@@ -86,12 +86,12 @@ public class StoreController {
                 Files.write(path, fileBytes);
                 newProduct.setProductImagePath(String.valueOf(path));
                 newProduct.setProductName(fileName);
-                productsService.adminAddNewProduct(newProduct, userPerson.getId());
+                productsService.adminAddNewProduct(newProduct, userPerson.getUserId());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }else if(productImage == null || productImage.isEmpty()) {
-            productsService.adminAddNewProduct(newProduct, userPerson.getId());
+            productsService.adminAddNewProduct(newProduct, userPerson.getUserId());
         }
         return mav;
     }

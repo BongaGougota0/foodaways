@@ -10,7 +10,7 @@ import java.util.List;
 
 @Repository
 public interface ProductsRepository extends JpaRepository<Product,Integer> {
-    List<Product> findByOrderBySalesDesc();
+//    List<Product> findByOrderBySalesDesc();
 
-    List<Product> findByOrderByRatingDesc();
+//    List<Product> findByOrderByRatingDesc();
 }

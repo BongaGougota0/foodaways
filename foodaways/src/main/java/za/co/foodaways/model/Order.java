@@ -5,7 +5,7 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 
-@Entity(name = "customer_orders")
+@Entity(name = "orders")
 @Setter
 public class Order extends BaseEntity{
     @Id
@@ -16,11 +16,11 @@ public class Order extends BaseEntity{
 
     // Customer Order Mapping.
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = true)
+    @JoinColumn(name = "user_id", referencedColumnName = "userId", nullable = true)
     public StoreUser user;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    @JoinColumn(name = "store_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "store_id", referencedColumnName = "storeId", nullable = false)
     public Store store;
 
     public double getOrderTotal(){

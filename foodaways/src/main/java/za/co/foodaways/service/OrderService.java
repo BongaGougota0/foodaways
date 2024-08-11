@@ -19,7 +19,7 @@ public class OrderService {
 
     public String newOrder(Order newOrder){
         Order order = orderRepository.save(newOrder);
-        if(order.id != null && order.id >= 1){
+        if(order.orderId != null && order.orderId >= 1){
             return "saved";
         }
         return "order_not_created";
