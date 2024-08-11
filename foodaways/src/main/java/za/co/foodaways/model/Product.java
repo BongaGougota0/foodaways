@@ -16,12 +16,13 @@ public class Product extends BaseEntity{
     public Integer id;
     public String menuItems;
     public String productName;
-    public int productStore;
+
     @Transient
-    public MultipartFile productImage; // Path to image
+    public MultipartFile productImage;
     public String productImagePath; // Path to image
     public double productPrice;
-    public int storeId;
-    public int rating;
-    public int sales;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "store_id", referencedColumnName = "id", nullable = false)
+    public Store store;
 }

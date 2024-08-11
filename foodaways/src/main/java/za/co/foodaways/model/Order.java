@@ -1,9 +1,6 @@
 package za.co.foodaways.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Setter;
 
 import java.util.ArrayList;
@@ -13,11 +10,18 @@ import java.util.ArrayList;
 public class Order extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
-    public Integer id;
+    public Integer orderId;
     public int orderStatus;
-    public int userId;
     public ArrayList<Product> orderItems;
-    public int orderTo;
+
+    // Customer Order Mapping.
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = true)
+    public StoreUser user;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "store_id", referencedColumnName = "id", nullable = false)
+    public Store store;
 
     public double getOrderTotal(){
         return this.orderItems.isEmpty() ?

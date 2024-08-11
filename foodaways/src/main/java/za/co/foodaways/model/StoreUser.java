@@ -1,13 +1,16 @@
 package za.co.foodaways.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity(name =  "store_user")
-@Data
+@Getter
+@Setter
 public class StoreUser extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
@@ -18,4 +21,6 @@ public class StoreUser extends BaseEntity{
     private String password;
     public int roleId;
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    public Set<Order> orders = new HashSet<>();
 }
