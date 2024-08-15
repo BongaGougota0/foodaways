@@ -29,13 +29,12 @@ public class OrderService {
         ArrayList<Order> storeOrders = new ArrayList<>();
         return  storeOrders;
     }
-    public List<Order> getStoreOrders(int storeId){
+    public List<Order> getStoreOrdersByStatus(int storeId){
         ArrayList<Order> storeOrders = new ArrayList<>();
-        List<Order> storeOrdersById = orderRepository.findAllById(Collections.singleton(storeId));
+        List<Order> storeOrdersById = orderRepository.findStoreCompletedOrders(storeId);
         if(storeOrdersById.isEmpty()){
             return storeOrders;
         }
-
         storeOrders.addAll(storeOrdersById);
         return storeOrders;
     }

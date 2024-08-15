@@ -66,9 +66,9 @@ public class ProductsService {
 
     // --------------------------- Store Manager Methods
     public List<Product> getStoreProductsByManagerId(int managerId){
-        TypedQuery<Product> typedQuery = entityManager.createQuery(ProductQueries.getStoreProductsByManagerId, Product.class);
-        typedQuery.setParameter("id", managerId);
-        return typedQuery.getResultList();
+//        TypedQuery<Product> typedQuery = entityManager.createQuery(ProductQueries.getStoreProductsByManagerId, Product.class);
+//        typedQuery.setParameter("id", managerId);
+        return productsRepository.findStoreProductsById(managerId);
     }
 
     @Transactional

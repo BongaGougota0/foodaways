@@ -18,11 +18,11 @@ public class Store extends  BaseEntity{
     public String storeNumber;
     public String storeLocation;
 
-//    @OneToMany(mappedBy = "products", fetch = FetchType.LAZY,
-//            cascade = CascadeType.PERSIST, targetEntity = Product.class)
-//    public Set<Product> products;
-//
-//    @OneToMany(mappedBy = "orders", fetch = FetchType.LAZY,
-//            cascade = CascadeType.PERSIST, targetEntity = Order.class)
-//    public Set<Order> orders;
+    @OneToMany(mappedBy = "store", fetch = FetchType.LAZY,
+            cascade = CascadeType.PERSIST, targetEntity = Product.class)
+    public Set<Product> products;
+
+    @OneToMany(mappedBy = "storeOrder", fetch = FetchType.LAZY,
+            cascade = CascadeType.PERSIST, targetEntity = Order.class)
+    public Set<Order> orders;
 }

@@ -1,12 +1,14 @@
 package za.co.foodaways.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
 
-@Entity(name = "orders")
+@Entity
 @Setter
+@Getter
 public class Order extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
@@ -21,7 +23,7 @@ public class Order extends BaseEntity{
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "store_id", referencedColumnName = "storeId", nullable = false)
-    public Store store;
+    public Store storeOrder;
 
     public double getOrderTotal(){
         return this.orderItems.isEmpty() ?
