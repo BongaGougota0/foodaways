@@ -33,7 +33,7 @@ public class FoodawaysAuthenticationProvider implements AuthenticationProvider {
         String email = authentication.getName();
         String password = authentication.getCredentials().toString();
         StoreUser storeUser = storeUserRepository.findByEmail(email);
-        if(storeUser != null && storeUser.userId > 0
+        if(storeUser != null && storeUser.getUserId() > 0
                 && passwordEncoder.matches(password, storeUser.getPassword())){
             return new UsernamePasswordAuthenticationToken(email,
                     null, getGrantedAuthorities(storeUser));

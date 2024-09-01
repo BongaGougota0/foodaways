@@ -10,10 +10,9 @@ import java.util.List;
 
 @Repository
 public interface ProductsRepository extends JpaRepository<Product,Integer> {
-//    List<Product> findByOrderBySalesDesc();
 
-//    List<Product> findByOrderByRatingDesc();
-
-    @Query(nativeQuery = true, value = "SELECT * FROM Products p WHERE p.store_id = :storeId")
-    List<Product> findStoreProductsById(@Param("storeId") int storeId);
+    @Query(nativeQuery = true,
+            value = "SELECT * FROM products p WHERE p.store_id = " +
+                    "(SELECT s.store_id from store s LEFT JOIN store_user u ON s.manager_id = :manager_id)")
+    List<Product> findStoreProductsByAdminId(@Param("manager_id") int managerId);
 }
