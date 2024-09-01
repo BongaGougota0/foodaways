@@ -46,7 +46,7 @@ public class StoreController {
         model.addAttribute("roles", authentication.getAuthorities().toString());
         ModelAndView mav = new ModelAndView("store_manager.html");
         mav.addObject("newProduct", new Product());
-        mav.addObject("products", productsService.getStoreProductsByManagerId(userPerson.id));
+        mav.addObject("products", productsService.getStoreProductsByManagerId(userPerson.getUserId()));
         session.setAttribute("loggedInUser", userPerson);
         return mav;
     }
@@ -57,9 +57,30 @@ public class StoreController {
         return "store_layout.html";
     }
 
-    @RequestMapping(value = "/orders")
+    @RequestMapping(value = "/store-manager/orders", method = {RequestMethod.GET, RequestMethod.POST})
     public ModelAndView storeOrders(){
         ModelAndView mav = new ModelAndView("order.html");
+        mav.addObject("storeOrders", orderService.getStoreOrdersByStatus(1));
+        return mav;
+    }
+    @RequestMapping(value = "/store-manager/completed", method = {RequestMethod.GET, RequestMethod.POST})
+    public ModelAndView storeCompletedOrders(){
+        ModelAndView mav = new ModelAndView("order.html");
+        mav.addObject("storeOrders", orderService.getStoreOrdersByStatus(1));
+        return mav;
+    }
+
+    @RequestMapping(value = "/store-manager/delivered", method = {RequestMethod.GET, RequestMethod.POST})
+    public ModelAndView storeDeliveredOrders(){
+        ModelAndView mav = new ModelAndView("order.html");
+        mav.addObject("storeOrders", orderService.getStoreOrdersByStatus(1));
+        return mav;
+    }
+
+    @RequestMapping(value = "/store-manager/sales-details", method = {RequestMethod.GET, RequestMethod.POST})
+    public ModelAndView storeSalesDetails(){
+        ModelAndView mav = new ModelAndView("order.html");
+        mav.addObject("storeOrders", orderService.getStoreOrdersByStatus(1));
         return mav;
     }
 
@@ -86,12 +107,12 @@ public class StoreController {
                 Files.write(path, fileBytes);
                 newProduct.setProductImagePath(String.valueOf(path));
                 newProduct.setProductName(fileName);
-                productsService.adminAddNewProduct(newProduct, userPerson.getId());
+                productsService.adminAddNewProduct(newProduct, userPerson.getUserId());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }else if(productImage == null || productImage.isEmpty()) {
-            productsService.adminAddNewProduct(newProduct, userPerson.getId());
+            productsService.adminAddNewProduct(newProduct, userPerson.getUserId());
         }
         return mav;
     }

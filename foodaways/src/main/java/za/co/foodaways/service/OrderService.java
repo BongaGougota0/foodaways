@@ -19,23 +19,22 @@ public class OrderService {
 
     public String newOrder(Order newOrder){
         Order order = orderRepository.save(newOrder);
-        if(order.id != null && order.id >= 1){
+        if(order.orderId != null && order.orderId >= 1){
             return "saved";
         }
         return "order_not_created";
     }
 
-    public List<Order> getStoreOrders(String adminEmail){
-        ArrayList<Order> storeOrders = new ArrayList<>();
-        return  storeOrders;
-    }
     public List<Order> getStoreOrders(int storeId){
+        ArrayList<Order> storeOrders = orderRepository.findOrdersByStoreId(storeId);
+        return storeOrders;
+    }
+    public List<Order> getStoreOrdersByStatus(int storeId){
         ArrayList<Order> storeOrders = new ArrayList<>();
-        List<Order> storeOrdersById = orderRepository.findAllById(Collections.singleton(storeId));
+        List<Order> storeOrdersById = orderRepository.findStoreCompletedOrders(storeId);
         if(storeOrdersById.isEmpty()){
             return storeOrders;
         }
-
         storeOrders.addAll(storeOrdersById);
         return storeOrders;
     }

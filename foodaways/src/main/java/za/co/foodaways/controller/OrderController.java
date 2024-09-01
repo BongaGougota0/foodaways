@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import za.co.foodaways.model.Order;
 import za.co.foodaways.model.Product;
+import za.co.foodaways.model.StoreUser;
+import za.co.foodaways.repository.StoreUserRepository;
 import za.co.foodaways.service.OrderService;
 import za.co.foodaways.service.StoreUserService;
 
@@ -30,7 +32,8 @@ public class OrderController {
 
     @RequestMapping(value = "/store-orders/", method = {RequestMethod.GET})
     public ModelAndView displayOrderPage(Authentication authentication){
-        List<Order> orderList = orderService.getStoreOrders(authentication.getName());
+        int storeId = storeUserService.findUserByEmail(authentication.getName()).managedStore.storeId;
+        List<Order> orderList = orderService.getStoreOrders(storeId);
         ModelAndView mav = new ModelAndView("order.html");
         mav.addObject("storeOrders", orderList);
         return mav;

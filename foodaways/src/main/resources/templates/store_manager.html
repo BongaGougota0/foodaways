@@ -114,10 +114,10 @@
 <body>
 <!-- Sidebar -->
 <div class="sidebar">
-    <a href="#" th:href="@{/orders}">Orders</a>
-    <a href="#" th:href="@{/completed}">Completed</a>
-    <a href="#" th:href="@{/delivered}">Delivered</a>
-    <a href="#" th:href="@{/salesDetails}">Sales Details</a>
+    <a href="#" th:href="@{/store-manager/orders}">Orders</a>
+    <a href="#" th:href="@{/store-manager/completed}">Completed</a>
+    <a href="#" th:href="@{/store-manager/delivered}">Delivered</a>
+    <a href="#" th:href="@{/store-manager/salesDetails}">Sales Details</a>
     <button class="btn" onclick="openModal()">Add New Product</button>
     <button class="btn-primary primary" style="border-radius: 4px">
         <a th:href="@{/logout}">
@@ -136,15 +136,16 @@
             <thead>
             <tr>
                 <th>Product Name</th>
-                <th>Rating</th>
+<!--                <th>Rating</th>-->
                 <th>Menu Items</th>
                 <th>Price</th>
             </tr>
             </thead>
             <tbody>
                 <tr th:each="product : ${products}">
+                    <td>Edit Product</td>
                     <td th:text="${product.productImagePath}">Product Name</td>
-                    <td th:text="${product.rating}">Rating</td>
+<!--                    <td th:text="${product.rating}">Rating</td>-->
                     <td th:text="${product.menuItems}">Menu Items</td>
                     <td th:text="${product.productPrice}">Price</td>
                 </tr>

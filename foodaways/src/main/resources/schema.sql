@@ -44,7 +44,7 @@
 --);
 --
 --CREATE TABLE IF NOT EXISTS `customer_orders` (
---    `id` int AUTO_INCREMENT PRIMARY KEY,
+--    `order_id` int AUTO_INCREMENT PRIMARY KEY,
 --    `order_status` int NOT NULL,
 --    `user_id` int NOT NULL,
 --    `order_items` VARCHAR(255) NULL,

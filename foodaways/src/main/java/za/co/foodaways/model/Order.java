@@ -1,23 +1,29 @@
 package za.co.foodaways.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
 
-@Entity(name = "customer_orders")
+@Entity(name = "orders")
 @Setter
+@Getter
 public class Order extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
-    public Integer id;
+    public Integer orderId;
     public int orderStatus;
-    public int userId;
     public ArrayList<Product> orderItems;
-    public int orderTo;
+
+    // Customer Order Mapping.
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "user_id", referencedColumnName = "userId", nullable = true)
+    public StoreUser user;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "store_id", referencedColumnName = "storeId", nullable = false)
+    public Store storeOrder;
 
     public double getOrderTotal(){
         return this.orderItems.isEmpty() ?
