@@ -25,9 +25,9 @@ public class OrderService {
         return "order_not_created";
     }
 
-    public List<Order> getStoreOrders(String adminEmail){
-        ArrayList<Order> storeOrders = new ArrayList<>();
-        return  storeOrders;
+    public List<Order> getStoreOrders(int storeId){
+        ArrayList<Order> storeOrders = orderRepository.findOrdersByStoreId(storeId);
+        return storeOrders;
     }
     public List<Order> getStoreOrdersByStatus(int storeId){
         ArrayList<Order> storeOrders = new ArrayList<>();

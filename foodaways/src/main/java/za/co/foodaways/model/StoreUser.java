@@ -12,7 +12,7 @@ import java.util.Set;
 public class StoreUser extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
-    public Integer userId;
+    private Integer userId;
     private String fullName;
     private String phoneNumber;
     private String email;

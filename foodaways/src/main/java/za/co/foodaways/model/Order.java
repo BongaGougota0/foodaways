@@ -6,7 +6,7 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 
-@Entity
+@Entity(name = "orders")
 @Setter
 @Getter
 public class Order extends BaseEntity{
@@ -21,7 +21,7 @@ public class Order extends BaseEntity{
     @JoinColumn(name = "user_id", referencedColumnName = "userId", nullable = true)
     public StoreUser user;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "store_id", referencedColumnName = "storeId", nullable = false)
     public Store storeOrder;
 

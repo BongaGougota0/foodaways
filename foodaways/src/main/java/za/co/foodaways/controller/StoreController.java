@@ -46,7 +46,7 @@ public class StoreController {
         model.addAttribute("roles", authentication.getAuthorities().toString());
         ModelAndView mav = new ModelAndView("store_manager.html");
         mav.addObject("newProduct", new Product());
-        mav.addObject("products", productsService.getStoreProductsByManagerId(1));
+        mav.addObject("products", productsService.getStoreProductsByManagerId(userPerson.getUserId()));
         session.setAttribute("loggedInUser", userPerson);
         return mav;
     }
