@@ -4,8 +4,10 @@ import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import za.co.foodaways.model.Roles;
+import za.co.foodaways.model.Store;
 import za.co.foodaways.model.StoreUser;
 import za.co.foodaways.repository.RoleRepository;
+import za.co.foodaways.repository.StoreRepository;
 import za.co.foodaways.repository.StoreUserRepository;
 
 import java.util.Optional;
@@ -14,6 +16,8 @@ import java.util.Optional;
 public class StoreUserService {
     @Autowired
     StoreUserRepository storeUserRepository;
+    @Autowired
+    StoreRepository storeRepository;
     @Autowired
     RoleRepository roleRepository;
 
@@ -37,6 +41,14 @@ public class StoreUserService {
     public StoreUser getUserById(int userId){
         Optional<StoreUser> user = storeUserRepository.findById(userId);
         return user.get();
+    }
+
+    public Store getManagedStoreByAdminId(int managerId){
+        Optional<Store> store = storeRepository.findByIdManagerId(managerId);
+        if(store.get() != null){
+            return store.get();
+        }
+        return new Store();
     }
 
 }

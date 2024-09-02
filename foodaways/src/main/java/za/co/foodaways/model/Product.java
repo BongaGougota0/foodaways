@@ -7,7 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 
-@Entity
+@Entity(name = "products")
 @Setter
 @Getter
 public class Product extends BaseEntity{
