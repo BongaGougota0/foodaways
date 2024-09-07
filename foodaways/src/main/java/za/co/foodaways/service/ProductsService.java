@@ -71,11 +71,7 @@ public class ProductsService {
 
     @Transactional
     public void adminAddNewProduct(Product product, int adminId){
-//        product.setStoreId(adminId);
-        entityManager.createQuery(StoreQueries.getAdminStoreID).setParameter("adminId", adminId);
-        Store store = entityManager.find(Store.class, adminId);
-//        product.setProductStore(store.id);
-        entityManager.persist(product);
+        productsRepository.save(product);
     }
 
     public void adminUpdateProduct(Product updatedProduct, int productId){

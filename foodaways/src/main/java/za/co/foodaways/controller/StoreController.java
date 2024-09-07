@@ -9,14 +9,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
-import za.co.foodaways.model.Order;
-import za.co.foodaways.model.Product;
-import za.co.foodaways.model.Reservation;
-import za.co.foodaways.model.StoreUser;
+import za.co.foodaways.model.*;
 import za.co.foodaways.repository.StoreUserRepository;
 import za.co.foodaways.service.OrderService;
 import za.co.foodaways.service.ProductsService;
 import za.co.foodaways.service.ReservationService;
+import za.co.foodaways.service.StoreUserService;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,13 +29,15 @@ public class StoreController {
     StoreUserRepository storeUserRepository;
     OrderService orderService;
     ProductsService productsService;
+    StoreUserService storeUserService;
     @Autowired
     public StoreController(ReservationService service, OrderService orderService,
-                           StoreUserRepository userRepository, ProductsService productsService){
+                           StoreUserRepository userRepository, ProductsService productsService, StoreUserService storeUserService){
         this.reservationService = service;
         this.orderService = orderService;
         this.storeUserRepository = userRepository;
         this.productsService = productsService;
+        this.storeUserService = storeUserService;
     }
 
     @RequestMapping(value = "/store-manager", method = {RequestMethod.GET, RequestMethod.POST})
@@ -48,6 +48,7 @@ public class StoreController {
         mav.addObject("newProduct", new Product());
         mav.addObject("products", productsService.getStoreProductsByManagerId(userPerson.getUserId()));
         session.setAttribute("loggedInUser", userPerson);
+        session.setAttribute("managedStore", storeUserService.getManagedStoreByAdminId(userPerson.getUserId()));
         return mav;
     }
 
@@ -93,8 +94,9 @@ public class StoreController {
 
     @RequestMapping(value = "/store-manager/add-new-product", method = {RequestMethod.GET, RequestMethod.POST})
     public ModelAndView addProductToStore(@ModelAttribute("newProduct")Product newProduct,
-                                          MultipartFile productImage, Authentication authentication){
+                                          MultipartFile productImage, Authentication authentication, HttpSession session){
         ModelAndView mav = new ModelAndView("redirect:/store-manager");
+        System.out.println("View store id from http_session " +session.getAttribute("managedStore").toString());
         StoreUser userPerson = storeUserRepository.findByEmail(authentication.getName());
         String uploadDirectory = "src/main/resources/static/assets/images";
         if(!productImage.isEmpty()){
@@ -107,6 +109,8 @@ public class StoreController {
                 Files.write(path, fileBytes);
                 newProduct.setProductImagePath(String.valueOf(path));
                 newProduct.setProductName(fileName);
+                Store store = (Store)session.getAttribute("managedStore");
+                newProduct.setStore(store);
                 productsService.adminAddNewProduct(newProduct, userPerson.getUserId());
             } catch (IOException e) {
                 throw new RuntimeException(e);
