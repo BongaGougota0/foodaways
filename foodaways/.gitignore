@@ -4,6 +4,8 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+src/main/resources/static/assets/images/
+
 src/main/resources/application.properties
 **/src/main/resources/application.properties
 
