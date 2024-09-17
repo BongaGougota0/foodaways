@@ -34,15 +34,18 @@ public class HomeController {
     @RequestMapping(value = {"", "/index"}, method = {RequestMethod.GET})
     public String home(Model model){
         model.addAttribute("reservation", new Reservation());
-        model.addAttribute("specialProducts", new ArrayList<Product>());
+        System.err.printf("total products got %d", productsService.getAllProducts().size());
+        model.addAttribute("specialProducts", productsService.getAllProducts());
         return "index.html";
     }
 
     @RequestMapping(value = "/home", method = {RequestMethod.GET})
     public String loggedInHome(Model model, Authentication authentication, HttpSession session){
         StoreUser userPerson = storeUserRepository.findByEmail(authentication.getName());
+        ArrayList<Product> products = productsService.getAllProducts();
+        System.err.printf("Found products %d", products.size());
         model.addAttribute("roles", authentication.getAuthorities().toString());
-        model.addAttribute("specialProducts", new ArrayList<Product>());
+        model.addAttribute("specialProducts", products);
         session.setAttribute("loggedInUser", userPerson);
         return "index.html";
     }
