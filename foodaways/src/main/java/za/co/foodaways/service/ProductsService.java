@@ -85,4 +85,10 @@ public class ProductsService {
             productsRepository.save(product);
         }
     }
+
+    public void deleteProductById(int productId) {
+        if(productsRepository.findById(productId).isPresent()){
+            productsRepository.deleteProductById(productId);
+        }
+    }
 }

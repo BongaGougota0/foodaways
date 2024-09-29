@@ -108,8 +108,8 @@ public class StoreController {
                 Path path = Paths.get(uploadDirectory, fileName);
                 Files.write(path, fileBytes);
                 newProduct.setProductImagePath(String.valueOf(path));
-                newProduct.setProductName(fileName);
                 Store store = (Store)session.getAttribute("managedStore");
+                newProduct.setImageOfProduct(fileName);
                 newProduct.setStore(store);
                 productsService.adminAddNewProduct(newProduct, userPerson.getUserId());
             } catch (IOException e) {
@@ -118,6 +118,30 @@ public class StoreController {
         }else if(productImage == null || productImage.isEmpty()) {
             productsService.adminAddNewProduct(newProduct, userPerson.getUserId());
         }
+        return mav;
+    }
+
+    @RequestMapping(value = "/store-manager/delete-product/{productId}")
+    public String deleteProductById(@PathVariable("productId")int productId){
+        productsService.deleteProductById(productId);
+        return "redirect:/store-manager";
+    }
+
+    @RequestMapping(value = "/store-manager/update-product/{productId}")
+    public String updateProduct(Model model, @PathVariable("productId") int productId){
+        // Get product and goto product view
+        Product toUpdate = productsService.getProductById(productId);
+        if(toUpdate != null){
+            model.addAttribute("productToUpdate", toUpdate);
+            return  "redirect:/store-manager/product-edit-page/"+toUpdate.getProductId();
+        }
+        return "redirect:/store-manager";
+    }
+
+    @RequestMapping(value = "/store-manager/product-edit-page/{productId}")
+    public ModelAndView editProductPage(Model model, @PathVariable("productId") int productId){
+        ModelAndView mav = new ModelAndView("edit_product_page.html");
+        mav.addObject("toUpdateProduct",model.getAttribute("productToUpdate"));
         return mav;
     }
 

@@ -20,6 +20,7 @@ public class Product extends BaseEntity{
     @Transient
     public MultipartFile productImage;
     public String productImagePath; // Path to image
+    public String imageOfProduct;
     public double productPrice;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
