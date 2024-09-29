@@ -33,7 +33,8 @@
                                 <div class="menu-thumb">
                                     <a th:href="@{/product-view/{id}(id = ${product.productId})}">
                                         <div class="menu-image-wrap">
-                                            <img th:src="@{${product.productImagePath}}" class="img-fluid menu-image" alt="">
+                                            <img th:src="@{'/assets/images/' + ${product.imageOfProduct}}"
+                                                    class="img-fluid menu-image" alt="">
 
                                             <span class="menu-tag bg-warning">Lunch</span>
                                             <a class="add-to-cart" onclick="addToCart(this)">Add To Cart</a>
@@ -70,7 +71,7 @@
                                 <div class="menu-thumb">
                                     <a th:href="@{/product-view/{id}(id = ${lunch.productId})}">
                                         <div class="menu-image-wrap">
-                                            <img th:src="@{${lunch.productImagePath}}"
+                                            <img th:src="@{'assets/images/' + ${lunch.imageOfProduct}}"
                                                  class="img-fluid menu-image" alt="">
 
                                             <span class="menu-tag bg-warning">Lunch</span>

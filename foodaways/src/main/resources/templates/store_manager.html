@@ -108,6 +108,11 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             position: relative;
         }
+
+        td .product-image-display img{
+            height: 600px
+            width: 400px;
+        }
     </style>
 </head>
 
@@ -135,19 +140,30 @@
         <table>
             <thead>
             <tr>
-                <th>Product Name</th>
-<!--                <th>Rating</th>-->
+                <th>Edit</th>
+                <th>Product Image</th>
                 <th>Menu Items</th>
                 <th>Price</th>
+                <th>Delete Product</th>
             </tr>
             </thead>
             <tbody>
                 <tr th:each="product : ${products}">
-                    <td>Edit Product</td>
-                    <td th:text="${product.productImagePath}">Product Name</td>
-<!--                    <td th:text="${product.rating}">Rating</td>-->
+                    <td>
+                        <a th:href="@{/store-manager/edit-product/{productId}(productId = ${product.productId})}">
+                            Edit Product
+                        </a>
+                    </td>
+                    <td>
+                        <div class="product-image-display">
+                            <img th:src="@{'assets/images/' + ${product.imageOfProduct}}" class="img-fluid menu-image" alt="">
+                        </div>
+                    </td>
                     <td th:text="${product.menuItems}">Menu Items</td>
                     <td th:text="${product.productPrice}">Price</td>
+                    <td>
+                        <a th:href="@{/store-manager/delete-product/{productId}(productId = ${product.productId})}">Delete (X)</a>
+                    </td>
                 </tr>
             </tbody>
         </table>

@@ -105,7 +105,8 @@
                                 <div class="menu-thumb">
                                     <a th:href="@{/product-view/{id}(id = ${special.productId})}">
                                         <div class="menu-image-wrap">
-                                            <img th:src="@{${special.productImagePath}}" class="img-fluid menu-image" alt="">
+                                            <img th:src="@{'assets/images/' + ${special.imageOfProduct}}"
+                                                 class="img-fluid menu-image" alt="">
 
                                             <span class="menu-tag bg-warning">Lunch</span>
                                             <a class="add-to-cart" onclick="addToCart(this)">Add To Cart</a>
@@ -116,8 +117,8 @@
                                         <h4 class="mb-0" th:text="${special.productName}"></h4>
                                         <p th:text="${special.menuItems}"></p>
                                         <span class="price-tag bg-white shadow-lg ms-4"
-                                              th:text="${special.productPrice}"><small>R</small></span>
-
+                                              th:text="${special.productPrice}"><small>R</small>
+                                        </span>
                                     </div>
                                 </div>
                             </div>
