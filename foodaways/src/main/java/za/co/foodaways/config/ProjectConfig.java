@@ -39,7 +39,7 @@ public class ProjectConfig {
                 .requestMatchers("/assets/images/**").permitAll()
                 .requestMatchers("/assets/**").permitAll()
                 .requestMatchers("video/**").permitAll()
-                .requestMatchers("/in/**").authenticated()
+                .requestMatchers("/in/**").hasRole("CUSTOMER")
                 .requestMatchers("/home").authenticated()
                 .requestMatchers("/product-view/**").permitAll()
                 .requestMatchers("/home/**").hasRole("CUSTOMER")

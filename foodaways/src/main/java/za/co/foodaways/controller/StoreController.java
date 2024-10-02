@@ -15,7 +15,6 @@ import za.co.foodaways.service.OrderService;
 import za.co.foodaways.service.ProductsService;
 import za.co.foodaways.service.ReservationService;
 import za.co.foodaways.service.StoreUserService;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -23,6 +22,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @Controller
+@RequestMapping("store-manager")
 public class StoreController {
 
     ReservationService reservationService;
@@ -32,7 +32,8 @@ public class StoreController {
     StoreUserService storeUserService;
     @Autowired
     public StoreController(ReservationService service, OrderService orderService,
-                           StoreUserRepository userRepository, ProductsService productsService, StoreUserService storeUserService){
+                           StoreUserRepository userRepository, ProductsService productsService,
+                           StoreUserService storeUserService){
         this.reservationService = service;
         this.orderService = orderService;
         this.storeUserRepository = userRepository;
@@ -40,7 +41,7 @@ public class StoreController {
         this.storeUserService = storeUserService;
     }
 
-    @RequestMapping(value = "/store-manager", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/home", method = {RequestMethod.GET, RequestMethod.POST})
     public ModelAndView storeManagerHome(Model model, Authentication authentication, HttpSession session){
         StoreUser userPerson = storeUserRepository.findByEmail(authentication.getName());
         model.addAttribute("roles", authentication.getAuthorities().toString());
@@ -58,20 +59,20 @@ public class StoreController {
         return "store_layout.html";
     }
 
-    @RequestMapping(value = "/store-manager/orders", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/orders", method = {RequestMethod.GET, RequestMethod.POST})
     public ModelAndView storeOrders(){
         ModelAndView mav = new ModelAndView("order.html");
         mav.addObject("storeOrders", orderService.getStoreOrdersByStatus(1));
         return mav;
     }
-    @RequestMapping(value = "/store-manager/completed", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/completed-orders", method = {RequestMethod.GET, RequestMethod.POST})
     public ModelAndView storeCompletedOrders(){
         ModelAndView mav = new ModelAndView("order.html");
         mav.addObject("storeOrders", orderService.getStoreOrdersByStatus(1));
         return mav;
     }
 
-    @RequestMapping(value = "/store-manager/delivered", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/delivered-orders", method = {RequestMethod.GET, RequestMethod.POST})
     public ModelAndView storeDeliveredOrders(){
         ModelAndView mav = new ModelAndView("order.html");
         mav.addObject("storeOrders", orderService.getStoreOrdersByStatus(1));
@@ -92,7 +93,7 @@ public class StoreController {
         return mav;
     }
 
-    @RequestMapping(value = "/store-manager/add-new-product", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/add-new-product", method = {RequestMethod.GET, RequestMethod.POST})
     public ModelAndView addProductToStore(@ModelAttribute("newProduct")Product newProduct,
                                           MultipartFile productImage, Authentication authentication, HttpSession session){
         ModelAndView mav = new ModelAndView("redirect:/store-manager");
@@ -121,13 +122,13 @@ public class StoreController {
         return mav;
     }
 
-    @RequestMapping(value = "/store-manager/delete-product/{productId}")
+    @RequestMapping(value = "/delete-product/{productId}")
     public String deleteProductById(@PathVariable("productId")int productId){
         productsService.deleteProductById(productId);
         return "redirect:/store-manager";
     }
 
-    @RequestMapping(value = "/store-manager/update-product/{productId}")
+    @RequestMapping(value = "/update-product/{productId}")
     public String updateProduct(Model model, @PathVariable("productId") int productId){
         // Get product and goto product view
         Product toUpdate = productsService.getProductById(productId);
@@ -135,10 +136,10 @@ public class StoreController {
             model.addAttribute("productToUpdate", toUpdate);
             return  "redirect:/store-manager/product-edit-page/"+toUpdate.getProductId();
         }
-        return "redirect:/store-manager";
+        return "redirect:/store-manager/home";
     }
 
-    @RequestMapping(value = "/store-manager/product-edit-page/{productId}")
+    @RequestMapping(value = "/product-edit-page/{productId}")
     public ModelAndView editProductPage(Model model, @PathVariable("productId") int productId){
         ModelAndView mav = new ModelAndView("edit_product_page.html");
         mav.addObject("toUpdateProduct",model.getAttribute("productToUpdate"));
@@ -150,10 +151,10 @@ public class StoreController {
         return "order.html";
     }
 
-    @RequestMapping(value = "/store-manager/update-product", method = {RequestMethod.POST})
+    @RequestMapping(value = "/update-product", method = {RequestMethod.POST})
     public String updateProductDetails(@ModelAttribute("updateProduct") Product updateProduct, int productId){
         productsService.adminUpdateProduct(updateProduct, productId);
-        return "redirect:/store-manager";
+        return "redirect:/store-manager/home";
     }
 
     @RequestMapping(value = "/accept")
