@@ -125,7 +125,7 @@ public class StoreController {
     @RequestMapping(value = "/delete-product/{productId}")
     public String deleteProductById(@PathVariable("productId")int productId){
         productsService.deleteProductById(productId);
-        return "redirect:/store-manager";
+        return "redirect:/store-manager/home";
     }
 
     @RequestMapping(value = "/update-product/{productId}")
