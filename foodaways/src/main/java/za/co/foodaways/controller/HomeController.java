@@ -1,7 +1,6 @@
 package za.co.foodaways.controller;
 
 import jakarta.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,28 +12,23 @@ import za.co.foodaways.model.StoreUser;
 import za.co.foodaways.repository.StoreUserRepository;
 import za.co.foodaways.service.ProductsService;
 import za.co.foodaways.service.ReservationService;
-
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 
 @Controller
 public class HomeController {
-    @Autowired
     public ReservationService reservationService;
-
     StoreUserRepository storeUserRepository;
-
     ProductsService productsService;
-    @Autowired
-    public HomeController(ProductsService service, StoreUserRepository userRepository){
+
+    public HomeController(ProductsService service, StoreUserRepository userRepository, ReservationService reservationService){
         this.storeUserRepository = userRepository;
         this.productsService = service;
+        this.reservationService = reservationService;
     }
 
     @RequestMapping(value = {"", "/index"}, method = {RequestMethod.GET})
     public String home(Model model){
         model.addAttribute("reservation", new Reservation());
-        System.err.printf("total products got %d", productsService.getAllProducts().size());
         model.addAttribute("specialProducts", productsService.getAllProducts());
         return "index.html";
     }
@@ -43,7 +37,6 @@ public class HomeController {
     public String loggedInHome(Model model, Authentication authentication, HttpSession session){
         StoreUser userPerson = storeUserRepository.findByEmail(authentication.getName());
         ArrayList<Product> products = productsService.getAllProducts();
-        System.err.printf("Found products %d", products.size());
         model.addAttribute("roles", authentication.getAuthorities().toString());
         model.addAttribute("specialProducts", products);
         session.setAttribute("loggedInUser", userPerson);

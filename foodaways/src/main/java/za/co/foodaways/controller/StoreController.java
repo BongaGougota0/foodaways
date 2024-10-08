@@ -96,7 +96,7 @@ public class StoreController {
     @RequestMapping(value = "/add-new-product", method = {RequestMethod.GET, RequestMethod.POST})
     public ModelAndView addProductToStore(@ModelAttribute("newProduct")Product newProduct,
                                           MultipartFile productImage, Authentication authentication, HttpSession session){
-        ModelAndView mav = new ModelAndView("redirect:/store-manager");
+        ModelAndView mav = new ModelAndView("redirect:/store-manager/home");
         System.out.println("View store id from http_session " +session.getAttribute("managedStore").toString());
         StoreUser userPerson = storeUserRepository.findByEmail(authentication.getName());
         String uploadDirectory = "src/main/resources/static/assets/images";

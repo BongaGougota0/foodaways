@@ -1,7 +1,6 @@
 package za.co.foodaways.controller;
 
 import jakarta.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,7 +18,7 @@ public class CustomerController {
     OrderService orderService;
     ProductsService productsService;
     StoreUserService userService;
-    @Autowired
+
     public CustomerController(OrderService orderService, ProductsService productsService, StoreUserService userService){
         this.orderService = orderService;
         this.productsService = productsService;
@@ -31,7 +30,6 @@ public class CustomerController {
     public String customerLoginPage(Model model, HttpSession session, Authentication authentication){
         StoreUser userPerson = userService.getUserByEmail(authentication.getName());
         ArrayList<Product> products = productsService.getAllProducts();
-        System.err.printf("Found products %d", products.size());
         model.addAttribute("roles", authentication.getAuthorities().toString());
         model.addAttribute("specialProducts", products);
         session.setAttribute("loggedInUser", userPerson);
