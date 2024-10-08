@@ -65,9 +65,7 @@
                             <h2 class="mb-lg-5 mb-4">Lunch Menu</h2>
                         </div>
 
-                        <div th:each="lunch : ${lunchProducts}">
-
-                            <div class="col-lg-4 col-md-6 col-12">
+                            <div class="col-lg-4 col-md-6 col-12" th:each="lunch : ${lunchProducts}">
                                 <div class="menu-thumb">
                                     <a th:href="@{/product-view/{id}(id = ${lunch.productId})}">
                                         <div class="menu-image-wrap">
@@ -89,7 +87,6 @@
                                 </div>
                             </div>
 
-                        </div>
                     </div>
                 </div>
             </section>
@@ -101,9 +98,7 @@
                         <div class="col-12">
                             <h2 class="mb-lg-5 mb-4">Dinner Menu</h2>
 
-                            <div th:each="dinner : ${dinnerProducts}">
-
-                                <div class="col-lg-4 col-md-6 col-12">
+                                <div class="col-lg-4 col-md-6 col-12" th:each="dinner : ${dinnerProducts}">
                                     <div class="menu-thumb">
                                         <a th:href="@{/product-view/{id}(id = ${dinner.productId})}">
                                             <div class="menu-image-wrap">
@@ -125,7 +120,6 @@
                                     </div>
                                 </div>
 
-                            </div>
                         </div>
 
                     </div>

@@ -99,9 +99,7 @@
                             <h2 class="text-center mb-lg-5 mb-4">Special Menus</h2>
                         </div>
 
-                        <div th:each="special : ${specialProducts}">
-
-                            <div class="col-lg-4 col-md-6 col-12">
+                            <div class="col-lg-4 col-md-6 col-12" th:each="special : ${specialProducts}">
                                 <div class="menu-thumb">
                                     <a th:href="@{/product-view/{id}(id = ${special.productId})}">
                                         <div class="menu-image-wrap">
@@ -114,16 +112,17 @@
                                     </a>
 
                                     <div class="menu-info d-flex flex-wrap align-items-center">
-                                        <h4 class="mb-0" th:text="${special.productName}"></h4>
-                                        <p th:text="${special.menuItems}"></p>
-                                        <span class="price-tag bg-white shadow-lg ms-4"
-                                              th:text="${special.productPrice}"><small>R</small>
-                                        </span>
+                                        <div class="menu-info d-flex flex-wrap align-items-center">
+                                            <h4 class="mb-0" th:text="${special.productName}"></h4>
+                                            <p th:text="${special.menuItems}"></p>
+                                            <span class="price-tag bg-white shadow-lg ms-4"
+                                                  th:text="${special.productPrice}"><small>R</small>
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
-                        </div>
 
                     </div>
                 </div>

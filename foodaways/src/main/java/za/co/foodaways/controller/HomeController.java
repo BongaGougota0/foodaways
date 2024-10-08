@@ -26,7 +26,7 @@ public class HomeController {
         this.reservationService = reservationService;
     }
 
-    @RequestMapping(value = {"", "/index"}, method = {RequestMethod.GET})
+    @RequestMapping(value = {"/index"}, method = {RequestMethod.GET})
     public String home(Model model){
         model.addAttribute("reservation", new Reservation());
         model.addAttribute("specialProducts", productsService.getAllProducts());
