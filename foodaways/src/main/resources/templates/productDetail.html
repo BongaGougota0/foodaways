@@ -1,115 +1,39 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-
     <body>
-    <div th:insert="~{header :: header}"></div>
+        <div th:insert="~{header :: header}"></div>
+            <main>
 
-        <main>
-
-        <header class="site-header site-news-detail-header">
-            <div class="container">
-                <div class="row">
-
-                    <div class="col-12">
-                        <h2>Learning a fine dining experience</h2>
-                    </div>
-
-                </div>
-            </div>
-        </header>
-
-        <section class="news-detail section-padding pt-0">
-            <div class="container">
-                <div class="row">
-
-                    <div class="col-lg-12 col-12">
-                        <img th:src="@{assets/images/news/news-detail-header.jpg}"
-                             class="img-fluid news-detail-image" alt="fine dining experience">
-
-                        <div class="col-lg-10 col-10 mx-auto mt-5">
-
-                            <h4 class="mb-3">The best fine-dining experience at Crispy Kitchen</h4>
-
-                            <p>Phasellus in augue at quam ornare malesuada. Sed magna lorem, dapibus nec lorem sed, pretium vulputate ante. In porttitor sapien urna, eu vulputate arcu pharetra non. Vivamus nec nulla quis leo sodales semper. Quisque sed ultricies tortor. Fusce porta pretium tellus, sit amet vulputate orci.</p>
-
-                            <ul class="list">
-                                <li class="list-item">Pasta stats published in the International</li>
-
-                                <li class="list-item">Rice flour, or legumes such as beans</li>
-
-                                <li class="list-item">Belgian family developed major food poisoning symptoms</li>
-                            </ul>
-
-                            <p>Pasta is a type of food typically made from an unleavened dough of wheat flour mixed with water or eggs, and formed into sheets or other shapes, then cooked by boiling or baking. Rice flour, or legumes such as beans or lentils, are sometimes used in place of wheat flour to yield a different taste</p>
-
-
-                            <p>Crispy Kitchen is free Bootstrap 5 HTML template provided by Tooplate. You are free to use this layout for commercial purposes. You are NOT allowed to redistribute the template ZIP file on any template donwnload website. Please <a href="https://www.tooplate.com/contact" target="_blank">contact us</a> for more information.</p>
-
-                            <h5 class="mt-4 mb-3">Pasta with Cream Sauce Recipe</h5>
-
-                            <p>Pasta is a type of food typically made from an unleavened dough of wheat flour mixed with water or eggs, and formed into sheets or other shapes, then cooked by boiling or baking. Rice flour, or legumes such as beans or lentils, are sometimes used in place of wheat flour to yield a different taste</p>
+                <header class="site-header site-news-detail-header">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-12">
+                                <h2 th:text="${product.productName}"></h2>
+                            </div>
                         </div>
                     </div>
+                </header>
 
-                </div>
-            </div>
-        </section>
+                <section class="news-detail section-padding pt-0">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-12 col-12">
+                                <img th:src="@{'/assets/images/' + ${product.imageOfProduct}}"
+                                     class="img-fluid news-detail-image" alt="fine dining experience">
 
-        <section class="comments section-padding">
-            <div class="container">
-                <div class="row">
+                                <div class="col-lg-10 col-10 mx-auto mt-5">
 
-                    <div class="col-12">
-                        <h4 class="text-center mb-4">Comment Box</h4>
-                    </div>
+                                    <h4 class="mb-3">The best fine-dining experience at Crispy Kitchen</h4>
 
-                    <div class="col-lg-7 col-12 mx-auto">
-                        <form class="custom-form comment-form" action="#" method="get" role="form">
+                                    <p th:text="${product.menuItems}"></p>
 
-                            <input type="text" name="comment-name" id="comment-name" class="form-control" placeholder="Your Name" required>
-
-                            <input type="email" name="comment-email" id="comment-email" pattern="[^ @]*@[^ @]*" class="form-control" placeholder="Your Email" required="">
-
-                            <textarea class="form-control" rows="5" id="comment" name="comment" placeholder="Write a comment" required></textarea>
-
-                            <div class="col-lg-3 col-4 mx-auto">
-                                <button type="submit" class="form-control" id="subscribe">Submit</button>
+                                </div>
                             </div>
-                        </form>
-
-                        <div class="news-author d-flex flex-wrap align-items-center">
-                            <img th:src="@{assets/images/author/alexander-hipp-iEEBWgY_6lA-unsplash.jpg}"
-                                 class="img-fluid news-author-image" alt="">
-
-                            <div class="ms-4 w-50">
-                                <p class="mb-2">Donec pharetra tellus nulla, aliquam elementum lorem hendrerit non.</p>
-
-                                <a href="#">David Martin</a>
-                            </div>
-
-                            <span class="ms-auto">14 hours ago</span>
-                        </div>
-
-                        <div class="news-author d-flex flex-wrap align-items-center">
-                            <img th:src="@{assets/images/author/shoeib-abolhassani-ojl7T2Ah93U-unsplash.jpg}"
-                                 class="img-fluid news-author-image" alt="">
-
-                            <div class="ms-4 w-50">
-                                <p class="mb-2">Quisque non libero ut mauris fermentum efficitur ac ut nibh.</p>
-
-                                <a href="#">Jessica Noel</a>
-                            </div>
-
-                            <span class="ms-auto">3 days ago</span>
                         </div>
                     </div>
+                </section>
 
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <div th:insert="~{footer :: footer}"></div>
+            </main>
+        <div th:insert="~{footer :: footer}"></div>
     </body>
 </html>

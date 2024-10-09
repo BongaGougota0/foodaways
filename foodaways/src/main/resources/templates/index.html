@@ -18,11 +18,13 @@
                         </div>
 
                         <div class="col-lg-7 col-12">
-                            <div id="carouselExampleCaptions" class="carousel carousel-fade hero-carousel slide" data-bs-ride="carousel">
+                            <div id="carouselExampleCaptions" class="carousel carousel-fade hero-carousel slide"
+                                 data-bs-ride="carousel">
                                 <div class="carousel-inner">
                                     <div class="carousel-item active">
                                         <div class="carousel-image-wrap">
-                                            <img th:src="@{assets/images/slide/jay-wennington-N_Y88TWmGwA-unsplash.jpg}" class="img-fluid carousel-image" alt="">
+                                            <img th:src="@{/assets/images/slide/jay-wennington-N_Y88TWmGwA-unsplash.jpg}"
+                                                 class="img-fluid carousel-image" alt="">
                                         </div>
                                         
                                         <div class="carousel-caption">
@@ -37,7 +39,7 @@
 
                                     <div class="carousel-item">
                                         <div class="carousel-image-wrap">
-                                            <img th:src="@{assets/images/slide/jason-leung-O67LZfeyYBk-unsplash.jpg}" class="img-fluid carousel-image" alt="">
+                                            <img th:src="@{/assets/images/slide/jason-leung-O67LZfeyYBk-unsplash.jpg}" class="img-fluid carousel-image" alt="">
                                         </div>
                                         
                                         <div class="carousel-caption">
@@ -52,7 +54,7 @@
 
                                     <div class="carousel-item">
                                         <div class="carousel-image-wrap">
-                                            <img th:src="@{assets/images/slide/ivan-torres-MQUqbmszGGM-unsplash.jpg}" class="img-fluid carousel-image" alt="">
+                                            <img th:src="@{/assets/images/slide/ivan-torres-MQUqbmszGGM-unsplash.jpg}" class="img-fluid carousel-image" alt="">
                                         </div>
                                         
                                         <div class="carousel-caption">
@@ -103,7 +105,7 @@
                                 <div class="menu-thumb">
                                     <a th:href="@{/product-view/{id}(id = ${special.productId})}">
                                         <div class="menu-image-wrap">
-                                            <img th:src="@{'assets/images/' + ${special.imageOfProduct}}"
+                                            <img th:src="@{'/assets/images/' + ${special.imageOfProduct}}"
                                                  class="img-fluid menu-image" alt="">
 
                                             <span class="menu-tag bg-warning">Lunch</span>
