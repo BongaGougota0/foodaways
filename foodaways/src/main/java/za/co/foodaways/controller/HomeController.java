@@ -20,7 +20,8 @@ public class HomeController {
     StoreUserRepository storeUserRepository;
     ProductsService productsService;
 
-    public HomeController(ProductsService service, StoreUserRepository userRepository, ReservationService reservationService){
+    public HomeController(ProductsService service, StoreUserRepository userRepository,
+                          ReservationService reservationService){
         this.storeUserRepository = userRepository;
         this.productsService = service;
         this.reservationService = reservationService;
@@ -34,12 +35,9 @@ public class HomeController {
     }
 
     @RequestMapping(value = "/home", method = {RequestMethod.GET})
-    public String loggedInHome(Model model, Authentication authentication, HttpSession session){
-        StoreUser userPerson = storeUserRepository.findByEmail(authentication.getName());
+    public String loggedInHome(Model model){
         ArrayList<Product> products = productsService.getAllProducts();
-        model.addAttribute("roles", authentication.getAuthorities().toString());
         model.addAttribute("specialProducts", products);
-        session.setAttribute("loggedInUser", userPerson);
         return "index.html";
     }
 
@@ -49,13 +47,11 @@ public class HomeController {
     }
 
     @RequestMapping(value = "/menu")
-    public String menu(Model model, Authentication authentication, HttpSession session){
-        StoreUser user = storeUserRepository.findByEmail(authentication.getName());
+    public String menu(Model model){
         ArrayList<Product> productArrayList = new ArrayList<>(productsService.getAllProducts());
         model.addAttribute("products", productArrayList);
         model.addAttribute("dinnerProducts", new ArrayList<Product>());
         model.addAttribute("lunchProducts", new ArrayList<Product>());
-        session.setAttribute("loggedInUser", user);
         return "menu.html";
     }
 

@@ -19,7 +19,8 @@ public class CustomerController {
     ProductsService productsService;
     StoreUserService userService;
 
-    public CustomerController(OrderService orderService, ProductsService productsService, StoreUserService userService){
+    public CustomerController(OrderService orderService, ProductsService productsService,
+                              StoreUserService userService){
         this.orderService = orderService;
         this.productsService = productsService;
         this.userService = userService;
@@ -59,9 +60,9 @@ public class CustomerController {
 
     //Cancel order
     @PostMapping(value = "/cancel-order")
-    public ModelAndView cancelOrder(){
-        ModelAndView mav = new ModelAndView();
-        return mav;
+    public String cancelOrder(@RequestParam("orderId") int orderId){
+        orderService.updateOrder(orderId, "CANCEL");
+        return "redirect:/my-orders";
     }
 
     //Review Order service

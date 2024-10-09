@@ -16,7 +16,6 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
     public void onAuthenticationSuccess(HttpServletRequest request,
                                         HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
-        System.out.println("-- User authentication : "+authentication.getAuthorities().toString());
         String userDestinationOnSuccesslogin = determineUserSuccessLoginView(authentication);
         response.sendRedirect(userDestinationOnSuccesslogin);
     }
@@ -29,6 +28,6 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         } else if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_STORE_OWNER"))) {
             return "/store-manager/home";
         }
-        return "/";
+        return "/index";
     }
 }

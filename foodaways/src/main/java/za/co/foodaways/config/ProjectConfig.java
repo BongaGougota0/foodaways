@@ -28,19 +28,19 @@ public class ProjectConfig {
     @Bean
     SecurityFilterChain projectSecurityConfig(HttpSecurity http) throws Exception {
         http.csrf(d -> d.disable()).authorizeHttpRequests(
-                (re)-> re.requestMatchers("/","/index").permitAll()
+                (re)-> re.requestMatchers("/index").permitAll()
                 .requestMatchers("/login").permitAll()
                 .requestMatchers("/logout").permitAll()
                 .requestMatchers("/register").permitAll()
-                .requestMatchers("/about").authenticated()
-                .requestMatchers("/menu").authenticated()
+                .requestMatchers("/about").permitAll()
+                .requestMatchers("/menu").permitAll()
                 .requestMatchers("/contact").authenticated()
                 .requestMatchers("/addUser").permitAll()
                 .requestMatchers("/assets/images/**").permitAll()
                 .requestMatchers("/assets/**").permitAll()
                 .requestMatchers("video/**").permitAll()
                 .requestMatchers("/in/**").hasRole("CUSTOMER")
-                .requestMatchers("/home").authenticated()
+                .requestMatchers("/home").permitAll()
                 .requestMatchers("/product-view/**").permitAll()
                 .requestMatchers("/home/**").hasRole("CUSTOMER")
                 .requestMatchers("/store-manager").hasRole("STORE_OWNER")

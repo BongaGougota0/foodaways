@@ -3,7 +3,6 @@ package za.co.foodaways.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,16 +11,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 import za.co.foodaways.model.StoreUser;
 import za.co.foodaways.service.StoreUserService;
 
 @Controller
 public class AuthenticationController {
-    @Autowired
     PasswordEncoder passwordEncoder;
-    @Autowired
     StoreUserService storeUserService;
+
+    public AuthenticationController(PasswordEncoder passwordEncoder, StoreUserService storeUserService){
+        this.passwordEncoder = passwordEncoder;
+        this.storeUserService = storeUserService;
+    }
     @RequestMapping(value = "/login", method = {RequestMethod.GET, RequestMethod.POST})
     public String login(Model model,
                         @RequestParam(value = "error", required = false) String error,
@@ -43,15 +44,21 @@ public class AuthenticationController {
     }
 
     @RequestMapping(value = "/register", method = {RequestMethod.GET})
-    public String register(Model model){
+    public String register(Model model,
+                           @RequestParam(value = "error", required = false) String error){
         model.addAttribute("storeUser", new StoreUser());
+        String errorMessage = null;
+        if(error != null){
+            errorMessage = "An error occurred when trying to register, please try again.";
+        }
+        model.addAttribute("errorMessage", errorMessage);
         return "register.html";
     }
 
     @RequestMapping(value = "/addUser", method = {RequestMethod.POST})
     public String addNewUser(@Valid @ModelAttribute("storeUser") StoreUser storeUser, Errors errors){
         if(errors.hasErrors()){
-            return "redirect:/register";
+            return "redirect:/register?error=true";
         }
         storeUser.setPassword(passwordEncoder.encode(storeUser.getPassword()));
         int saved = storeUserService.createUser(storeUser);

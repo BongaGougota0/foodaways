@@ -13,15 +13,15 @@ import za.co.foodaways.repository.StoreRepository;
 import za.co.foodaways.repository.StoreUserRepository;
 
 @Service
-public class MasterService {
+public class AdminService {
     private final EntityManager entityManager;
     private final PasswordEncoder passwordEncoder;
     private final StoreUserRepository userRepository;
     private final StoreRepository storeRepository;
 
     @Autowired
-    public MasterService(EntityManager entityManager, PasswordEncoder passwordEncoder,
-                         StoreUserRepository userRepository, StoreRepository storeRepository){
+    public AdminService(EntityManager entityManager, PasswordEncoder passwordEncoder,
+                        StoreUserRepository userRepository, StoreRepository storeRepository){
         this.entityManager = entityManager;
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;

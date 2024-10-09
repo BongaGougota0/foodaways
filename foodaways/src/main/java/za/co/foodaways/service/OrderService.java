@@ -38,4 +38,8 @@ public class OrderService {
         storeOrders.addAll(storeOrdersById);
         return storeOrders;
     }
+
+    public void updateOrder(int orderId, String cancel) {
+
+    }
 }
