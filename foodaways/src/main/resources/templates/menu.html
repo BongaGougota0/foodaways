@@ -27,9 +27,7 @@
                             <h2 class="mb-lg-5 mb-4">Breakfast Menu</h2>
                         </div>
 
-                        <div th:each="product : ${products}">
-
-                            <div class="col-lg-4 col-md-6 col-12">
+                            <div class="col-lg-4 col-md-6 col-12" th:each="product : ${products}">
                                 <div class="menu-thumb">
                                     <a th:href="@{/product-view/{id}(id = ${product.productId})}">
                                         <div class="menu-image-wrap">
@@ -50,8 +48,6 @@
                                     </div>
                                 </div>
                             </div>
-
-                        </div>
 
                     </div>
                 </div>
