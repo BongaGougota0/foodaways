@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Page Not Found</title>
+</head>
+<body style="background-color: #f8f8f8; text-align: center; padding: 50px; font-family: 'Arial', sans-serif;">
+
+<div style="max-width: 600px; margin: auto; padding: 20px; background-color: #fff; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+    <h1 style="font-size: 72px; color: #ff6f61;">404</h1>
+    <h2 style="color: #333;">Oops! Page not found</h2>
+    <p style="font-size: 18px; color: #666;">
+        It looks like the page you're looking for doesn't exist. But don’t worry, we’ve got plenty of delicious options waiting for you!
+    </p>
+    <p th:text="${errorMessage}">This is the error message</p>
+    <img src="https://via.placeholder.com/150" alt="Plate of food" style="width: 100px; border-radius: 50%; margin: 20px auto;">
+
+    <a href="/" style="text-decoration: none; background-color: #ff6f61; color: white; padding: 12px 24px; border-radius: 5px; font-size: 16px;">
+        Go back to Home
+    </a>
+</div>
+
+</body>
+</html>

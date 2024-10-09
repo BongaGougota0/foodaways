@@ -98,7 +98,7 @@
                                     <div class="menu-thumb">
                                         <a th:href="@{/product-view/{id}(id = ${dinner.productId})}">
                                             <div class="menu-image-wrap">
-                                                <img th:src="@{${dinner.productImagePath}}"
+                                                <img th:src="@{'assets/images/' + ${dinner.imageOfProduct}}"
                                                      class="img-fluid menu-image" alt="">
 
                                                 <span class="menu-tag bg-warning">Lunch</span>

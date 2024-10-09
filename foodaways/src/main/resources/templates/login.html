@@ -58,12 +58,12 @@
     <h2>Login</h2>
     <li class="alert alert-success" role="alert" th:if="${!#strings.isEmpty(errorMessage)}"
         th:text="${errorMessage}" />
-    <form th:action="@{/login}" method="POST">
-        <input type="text" name="username" placeholder="Username" required><br>
-        <input type="password" name="password" placeholder="Password" required><br>
-        <input type="submit" value="Login">
-        <a th:href="@{/register}">Don't have account ? Register</a>
-    </form>
+        <form th:action="@{/login}" method="POST">
+            <input type="text" name="username" placeholder="Username" required><br>
+            <input type="password" name="password" placeholder="Password" required><br>
+            <input type="submit" value="Login">
+            <a th:href="@{/register}">Don't have account ? Register</a>
+        </form>
 </div>
 </body>
 </html>
