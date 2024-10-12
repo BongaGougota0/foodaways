@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
+import za.co.foodaways.exceptions.UserExistsException;
 import za.co.foodaways.model.StoreUser;
 import za.co.foodaways.service.StoreUserService;
 
@@ -28,6 +29,7 @@ public class AuthenticationController {
                         @RequestParam(value = "error", required = false) String error,
                         @RequestParam(value = "register", required = false) String register,
                         @RequestParam(value = "logout", required = false) String logout,
+                        @RequestParam(value = "account", required = false) String account,
                         @RequestParam(value = "login", required = false) String login){
         String errorMessage = null;
         if(error != null){
@@ -38,6 +40,8 @@ public class AuthenticationController {
             errorMessage = "logout successful.";
         } else if (login != null) {
             errorMessage = "Please login to your account";
+        }else if (account != null) {
+            errorMessage = "Account created! You may login";
         }
         model.addAttribute("errorMessage", errorMessage);
         return "login.html";
@@ -60,12 +64,17 @@ public class AuthenticationController {
         if(errors.hasErrors()){
             return "redirect:/register?error=true";
         }
+
+        if(storeUserService.getUserByEmail(storeUser.getEmail()) != null){
+            throw new UserExistsException("Email already exists, please login");
+        }
+
         storeUser.setPassword(passwordEncoder.encode(storeUser.getPassword()));
         int saved = storeUserService.createUser(storeUser);
         if(saved > 0){
-            return "redirect:/login?login=true";
-            }
-        return "redirect:/login?login=true";
+            return "redirect:/login?account=true";
+        }
+        return "redirect:/login?error=true";
     }
 
     @RequestMapping(value = "/logout", method = {RequestMethod.GET})
