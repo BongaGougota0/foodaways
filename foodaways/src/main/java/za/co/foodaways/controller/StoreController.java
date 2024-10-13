@@ -11,10 +11,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import za.co.foodaways.model.*;
 import za.co.foodaways.repository.StoreUserRepository;
-import za.co.foodaways.service.OrderService;
-import za.co.foodaways.service.ProductsService;
-import za.co.foodaways.service.ReservationService;
-import za.co.foodaways.service.StoreUserService;
+import za.co.foodaways.service.*;
+import za.co.foodaways.utils.Utils;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -32,15 +31,17 @@ public class StoreController {
     OrderService orderService;
     ProductsService productsService;
     StoreUserService storeUserService;
+    StoreManagerService storeManagerService;
     @Autowired
     public StoreController(ReservationService service, OrderService orderService,
                            StoreUserRepository userRepository, ProductsService productsService,
-                           StoreUserService storeUserService){
+                           StoreUserService storeUserService, StoreManagerService storeManagerService){
         this.reservationService = service;
         this.orderService = orderService;
         this.storeUserRepository = userRepository;
         this.productsService = productsService;
         this.storeUserService = storeUserService;
+        this.storeManagerService = storeManagerService;
     }
 
     @RequestMapping(value = "/home", method = {RequestMethod.GET, RequestMethod.POST})
@@ -49,7 +50,7 @@ public class StoreController {
         model.addAttribute("roles", authentication.getAuthorities().toString());
         ModelAndView mav = new ModelAndView("store_manager.html");
         mav.addObject("newProduct", new Product());
-        mav.addObject("products", productsService.getStoreProductsByManagerId(userPerson.getUserId()));
+        mav.addObject("products", storeManagerService.getStoreProductsByManagerId(userPerson.getUserId()));
         mav.addObject("productCategories", Arrays.asList("Lunch", "Dinner", "Breakfast"));
         session.setAttribute("loggedInUser", userPerson);
         session.setAttribute("managedStore", storeUserService.getManagedStoreByAdminId(userPerson.getUserId()));
@@ -102,13 +103,13 @@ public class StoreController {
         ModelAndView mav = new ModelAndView("redirect:/store-manager/home");
         StoreUser userPerson = storeUserRepository.findByEmail(authentication.getName());
         Store store = (Store)session.getAttribute("managedStore");
-        productsService.addProduct(newProduct, productImage, store, userPerson.getUserId());
+        storeManagerService.addProduct(newProduct, productImage, store, userPerson.getUserId());
         return mav;
     }
 
     @RequestMapping(value = "/delete-product/{productId}")
     public String deleteProductById(@PathVariable("productId")int productId){
-        productsService.deleteProductById(productId);
+        storeManagerService.deleteProductById(productId);
         return "redirect:/store-manager/home";
     }
 
@@ -120,24 +121,26 @@ public class StoreController {
         return "product_edit.html";
     }
 
-    @RequestMapping(value = "/records")
-    public String records(){
-        return "order.html";
-    }
-
     @RequestMapping(value = "/update-product", method = {RequestMethod.POST})
-    public String updateProductDetails(@RequestParam("productId") int productId, @ModelAttribute("updateProduct") Product updateProduct){
-        productsService.updateProduct(updateProduct, productId);
+    public String updateProductDetails(@RequestParam("productId") int productId,
+                                       MultipartFile productImage, @ModelAttribute("updateProduct") Product updateProduct){
+        if(!productImage.isEmpty()){
+            String newImageName = Utils.writeImage(productImage);
+            updateProduct.setImageOfProduct(newImageName);
+        }
+        storeManagerService.updateProduct(updateProduct, productId);
         return "redirect:/store-manager/home";
     }
 
     @RequestMapping(value = "/accept")
-    public String acceptOrder(){
-        return "redirect:/records";
+    public String acceptOrder(@RequestParam("orderId") int orderId){
+        orderService.acceptOrderUpdate(orderId);
+        return "redirect:/store-manager/home";
     }
 
     @RequestMapping(value = "/decline")
-    public String declineOrder(){
-        return "redirect:/records";
+    public String declineOrder(@RequestParam("orderId") int orderId, @RequestParam("declineReason") String declineReason){
+        orderService.declineOrderUpdate(orderId, declineReason);
+        return "redirect:/store-manager/home";
     }
 }

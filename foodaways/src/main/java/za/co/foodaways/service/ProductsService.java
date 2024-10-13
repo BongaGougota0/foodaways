@@ -13,6 +13,7 @@ import za.co.foodaways.queries.StoreQueries;
 import za.co.foodaways.model.Product;
 import za.co.foodaways.model.Store;
 import za.co.foodaways.repository.ProductsRepository;
+import za.co.foodaways.utils.Utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -85,32 +86,6 @@ public class ProductsService {
         return null;
     }
 
-    public void addProduct(Product newProduct, MultipartFile productImage, Store store, int storeAdminId){
-        String uploadDirectory = "src/main/resources/static/assets/images";
-        if(!productImage.isEmpty()){
-            String fileName = productImage.getOriginalFilename();
-            try {
-                File newDir = new File(uploadDirectory);
-                if(!newDir.exists()){newDir.mkdirs();}
-                byte[] fileBytes = productImage.getBytes();
-                Path path = Paths.get(uploadDirectory, fileName);
-                Files.write(path, fileBytes);
-                newProduct.setProductImagePath(String.valueOf(path));
-                newProduct.setImageOfProduct(fileName);
-                newProduct.setStore(store);
-                this.adminAddNewProduct(newProduct, storeAdminId);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }else if(productImage == null || productImage.isEmpty()) {
-            this.adminAddNewProduct(newProduct, storeAdminId);
-        }
-
-        Product savedProduct = productsRepository.save(newProduct);
-        if(savedProduct != null){
-            //Do something
-        }
-    }
 
     public Product getProductById(int productId) {
         boolean check = productsRepository.findById(productId).isPresent();
@@ -120,35 +95,5 @@ public class ProductsService {
         return productsRepository.findById(productId).get();
     }
 
-    // --------------------------- Store Manager Methods
-    public void updateProduct(Product updateProduct, int productId){
-        Product productToUpdate = productsRepository.findById(productId).get();
-       productToUpdate.setProductPrice(updateProduct.getProductPrice());
-       productToUpdate.setProductName(updateProduct.getProductName());
-       productToUpdate.setProductCategory(updateProduct.getProductCategory());
-       productToUpdate.setMenuItems(updateProduct.getMenuItems());
 
-       //image update : check first
-        // delete old
-        if(updateProduct.imageOfProduct != null & !productToUpdate.getImageOfProduct().equals(updateProduct.imageOfProduct)){
-            productToUpdate.setImageOfProduct(updateProduct.getImageOfProduct());
-        }
-        productsRepository.save(productToUpdate);
-    }
-    public List<Product> getStoreProductsByManagerId(int managerId){
-        return productsRepository.findStoreProductsByAdminId(managerId);
-    }
-
-    @Transactional
-    public void adminAddNewProduct(Product product, int adminId){
-        productsRepository.save(product);
-    }
-
-    public void deleteProductById(int productId) {
-        Product product = productsRepository.findById(productId).get();
-        if(product != null){
-            product.setStore(null);
-            productsRepository.delete(product);
-        }
-    }
 }

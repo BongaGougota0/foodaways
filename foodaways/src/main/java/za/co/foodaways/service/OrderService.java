@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import za.co.foodaways.model.Order;
+import za.co.foodaways.model.OrderStatus;
 import za.co.foodaways.repository.OrderRepository;
 
 import java.util.ArrayList;
@@ -16,6 +17,17 @@ import java.util.Optional;
 public class OrderService {
     @Autowired
     OrderRepository orderRepository;
+
+    public void declineOrderUpdate(int orderId, String declineReason){
+        Order order = orderRepository.findById(orderId).get();
+        order.setOrderStatus(OrderStatus.Status.ORDER_DECLINED.name());
+    }
+
+    public void acceptOrderUpdate(int orderId){
+        Order order = orderRepository.findById(orderId).get();
+        order.setOrderStatus(OrderStatus.Status.ORDER_ACCEPTED.name());
+        orderRepository.save(order);
+    }
 
     public String newOrder(Order newOrder){
         Order order = orderRepository.save(newOrder);

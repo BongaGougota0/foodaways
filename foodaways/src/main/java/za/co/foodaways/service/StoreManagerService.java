@@ -2,12 +2,22 @@ package za.co.foodaways.service;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.multipart.MultipartFile;
 import za.co.foodaways.model.Order;
+import za.co.foodaways.model.OrderStatus;
 import za.co.foodaways.model.Product;
+import za.co.foodaways.model.Store;
+import za.co.foodaways.repository.ProductsRepository;
 import za.co.foodaways.repository.StoreManager;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -17,13 +27,48 @@ import java.util.stream.Collectors;
 public class StoreManagerService implements StoreManager {
 
     private final EntityManager entityManager;
+    ProductsRepository productsRepository;
     @Autowired
-    public StoreManagerService(EntityManager entityManager){
+    public StoreManagerService(EntityManager entityManager, ProductsRepository productsRepository){
         this.entityManager = entityManager;
+        this.productsRepository = productsRepository;
     }
     @Override
     public void addNewProduct(Product newProduct) {
         entityManager.persist(newProduct);
+    }
+
+
+    public void addProduct(Product newProduct, MultipartFile productImage, Store store, int storeAdminId){
+        String uploadDirectory = "src/main/resources/static/assets/images";
+        if(!productImage.isEmpty()){
+            String fileName = productImage.getOriginalFilename();
+            try {
+                File newDir = new File(uploadDirectory);
+                if(!newDir.exists()){newDir.mkdirs();}
+                byte[] fileBytes = productImage.getBytes();
+                Path path = Paths.get(uploadDirectory, fileName);
+                Files.write(path, fileBytes);
+                newProduct.setProductImagePath(String.valueOf(path));
+                newProduct.setImageOfProduct(fileName);
+                newProduct.setStore(store);
+                this.adminAddNewProduct(newProduct, storeAdminId);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }else if(productImage == null || productImage.isEmpty()) {
+            this.adminAddNewProduct(newProduct, storeAdminId);
+        }
+
+        Product savedProduct = productsRepository.save(newProduct);
+        if(savedProduct != null){
+            //Do something
+        }
+    }
+
+    @Transactional
+    public void adminAddNewProduct(Product product, int adminId){
+        productsRepository.save(product);
     }
 
     @Override
@@ -38,6 +83,21 @@ public class StoreManagerService implements StoreManager {
            // Update applicable details here.
 //           updateOrder = orderFirst.get().orderStatus;
        }
+    }
+
+    public void updateProduct(Product updateProduct, int productId){
+        Product productToUpdate = productsRepository.findById(productId).get();
+        productToUpdate.setProductPrice(updateProduct.getProductPrice());
+        productToUpdate.setProductName(updateProduct.getProductName());
+        productToUpdate.setProductCategory(updateProduct.getProductCategory());
+        productToUpdate.setMenuItems(updateProduct.getMenuItems());
+
+        //image update : check first
+        // delete old
+        if(updateProduct.imageOfProduct != null & !productToUpdate.getImageOfProduct().equals(updateProduct.imageOfProduct)){
+            productToUpdate.setImageOfProduct(updateProduct.getImageOfProduct());
+        }
+        productsRepository.save(productToUpdate);
     }
 
     @Override
@@ -58,6 +118,18 @@ public class StoreManagerService implements StoreManager {
 
     }
 
+    public List<Product> getStoreProductsByManagerId(int managerId){
+        return productsRepository.findStoreProductsByAdminId(managerId);
+    }
+
+    public void deleteProductById(int productId) {
+        Product product = productsRepository.findById(productId).get();
+        if(product != null){
+            product.setStore(null);
+            productsRepository.delete(product);
+        }
+    }
+
     @Override
     public List<Order> getAllStoreOrders(int storeId) {
         return null;
@@ -73,7 +145,7 @@ public class StoreManagerService implements StoreManager {
             completedOrders = typedQuery.getResultList()
                             .stream()
                             .peek(System.out::println) // Preview check function working. # Comment out
-                            .filter( order -> order.orderStatus == 1)
+                            .filter( order -> order.orderStatus.equals(OrderStatus.Status.DELIVERED))
                             .collect(Collectors.toList());
         }
         return completedOrders;
@@ -88,7 +160,7 @@ public class StoreManagerService implements StoreManager {
         if(!typedQuery.getResultList().isEmpty()){
             cancelledOrders = typedQuery.getResultList()
                     .stream()
-                    .filter( order -> order.orderStatus == 3)
+                    .filter( order -> order.orderStatus.equals(OrderStatus.Status.ORDER_ACCEPTED))
                     .collect(Collectors.toList());
         }
         return cancelledOrders;
@@ -103,7 +175,7 @@ public class StoreManagerService implements StoreManager {
         if(!typedQuery.getResultList().isEmpty()){
             inProgressOrders = typedQuery.getResultList()
                     .stream()
-                    .filter( order -> order.orderStatus == 2)
+                    .filter( order -> order.orderStatus.equals(OrderStatus.Status.PREPARING_ORDER))
                     .collect(Collectors.toList());
         }
         return inProgressOrders;

@@ -5,6 +5,7 @@ public class OrderStatus {
         public enum Status{
             ORDER_PLACED("order_placed"),
             ORDER_ACCEPTED("order_accepted"),
+            ORDER_DECLINED("order_declined"),
             PREPARING_ORDER("preparing_order"),
             DELIVERED("delivered"),
             IN_TRANSIT("in_transit");

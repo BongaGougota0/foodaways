@@ -13,7 +13,7 @@ public class Order extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     public Integer orderId;
-    public int orderStatus;
+    public String orderStatus;
     public ArrayList<Product> orderItems;
 
     // Customer Order Mapping.
