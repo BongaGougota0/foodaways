@@ -22,6 +22,7 @@ public class Product extends BaseEntity{
     public String productImagePath; // Path to image
     public String imageOfProduct;
     public double productPrice;
+    public String productCategory;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "store_id", referencedColumnName = "storeId", nullable = false)

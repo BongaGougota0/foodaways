@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 @Controller
 @RequestMapping("store-manager")
@@ -48,6 +50,7 @@ public class StoreController {
         ModelAndView mav = new ModelAndView("store_manager.html");
         mav.addObject("newProduct", new Product());
         mav.addObject("products", productsService.getStoreProductsByManagerId(userPerson.getUserId()));
+        mav.addObject("productCategories", Arrays.asList("Lunch", "Dinner", "Breakfast"));
         session.setAttribute("loggedInUser", userPerson);
         session.setAttribute("managedStore", storeUserService.getManagedStoreByAdminId(userPerson.getUserId()));
         return mav;
@@ -97,28 +100,9 @@ public class StoreController {
     public ModelAndView addProductToStore(@ModelAttribute("newProduct")Product newProduct,
                                           MultipartFile productImage, Authentication authentication, HttpSession session){
         ModelAndView mav = new ModelAndView("redirect:/store-manager/home");
-        System.out.println("View store id from http_session " +session.getAttribute("managedStore").toString());
         StoreUser userPerson = storeUserRepository.findByEmail(authentication.getName());
-        String uploadDirectory = "src/main/resources/static/assets/images";
-        if(!productImage.isEmpty()){
-            String fileName = productImage.getOriginalFilename();
-            try {
-                File newDir = new File(uploadDirectory);
-                if(!newDir.exists()){newDir.mkdirs();}
-                byte[] fileBytes = productImage.getBytes();
-                Path path = Paths.get(uploadDirectory, fileName);
-                Files.write(path, fileBytes);
-                newProduct.setProductImagePath(String.valueOf(path));
-                Store store = (Store)session.getAttribute("managedStore");
-                newProduct.setImageOfProduct(fileName);
-                newProduct.setStore(store);
-                productsService.adminAddNewProduct(newProduct, userPerson.getUserId());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }else if(productImage == null || productImage.isEmpty()) {
-            productsService.adminAddNewProduct(newProduct, userPerson.getUserId());
-        }
+        Store store = (Store)session.getAttribute("managedStore");
+        productsService.addProduct(newProduct, productImage, store, userPerson.getUserId());
         return mav;
     }
 
@@ -128,22 +112,12 @@ public class StoreController {
         return "redirect:/store-manager/home";
     }
 
-    @RequestMapping(value = "/update-product/{productId}")
-    public String updateProduct(Model model, @PathVariable("productId") int productId){
-        // Get product and goto product view
-        Product toUpdate = productsService.getProductById(productId);
-        if(toUpdate != null){
-            model.addAttribute("productToUpdate", toUpdate);
-            return  "redirect:/store-manager/product-edit-page/"+toUpdate.getProductId();
-        }
-        return "redirect:/store-manager/home";
-    }
-
     @RequestMapping(value = "/product-edit-page/{productId}")
-    public ModelAndView editProductPage(Model model, @PathVariable("productId") int productId){
-        ModelAndView mav = new ModelAndView("edit_product_page.html");
-        mav.addObject("toUpdateProduct",model.getAttribute("productToUpdate"));
-        return mav;
+    public String updateProduct(Model model, @PathVariable("productId") int productId){
+        Product toUpdateProduct = productsService.getProductById(productId);
+        model.addAttribute("productToUpdate", toUpdateProduct);
+        model.addAttribute("productCategories", Arrays.asList("Lunch", "Dinner", "Breakfast"));
+        return "product_edit.html";
     }
 
     @RequestMapping(value = "/records")
@@ -152,8 +126,8 @@ public class StoreController {
     }
 
     @RequestMapping(value = "/update-product", method = {RequestMethod.POST})
-    public String updateProductDetails(@ModelAttribute("updateProduct") Product updateProduct, int productId){
-        productsService.adminUpdateProduct(updateProduct, productId);
+    public String updateProductDetails(@RequestParam("productId") int productId, @ModelAttribute("updateProduct") Product updateProduct){
+        productsService.updateProduct(updateProduct, productId);
         return "redirect:/store-manager/home";
     }
 

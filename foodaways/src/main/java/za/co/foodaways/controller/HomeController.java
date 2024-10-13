@@ -1,11 +1,14 @@
 package za.co.foodaways.controller;
 
 import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import za.co.foodaways.dto.ProductDto;
+import za.co.foodaways.mapper.DtoMapper;
 import za.co.foodaways.model.Product;
 import za.co.foodaways.model.Reservation;
 import za.co.foodaways.model.StoreUser;
@@ -50,8 +53,8 @@ public class HomeController {
     public String menu(Model model){
         ArrayList<Product> productArrayList = new ArrayList<>(productsService.getAllProducts());
         model.addAttribute("products", productArrayList);
-        model.addAttribute("dinnerProducts", new ArrayList<Product>());
-        model.addAttribute("lunchProducts", new ArrayList<Product>());
+        model.addAttribute("dinnerProducts", productsService.getProductsForMenuDisplay().get("dinner"));
+        model.addAttribute("lunchProducts", productsService.getProductsForMenuDisplay().get("lunch"));
         return "menu.html";
     }
 
