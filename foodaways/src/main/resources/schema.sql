@@ -77,3 +77,14 @@
 --     FOREIGN KEY (user_id) REFERENCES store_user(id),
 --     FOREIGN KEY (order_id) REFERENCES customer_orders(id)
 --);
+
+--CREATE TABLE IF NOT EXISTS `product_reviews`(
+--    `review_id` int NOT NULL,
+--    `user_id` int NOT NULL,
+--    `product_id` int NOT NULL,
+--    `comments` VARCHAR(255),
+--    `rating` int NOT NULL,
+--    FOREIGN KEY (user_id) REFERENCES store_user(user_id),
+--    FOREIGN KEY (product_id) REFERENCES product(product_id),
+--    PRIMARY KEY(user_id, product_id)
+--);
