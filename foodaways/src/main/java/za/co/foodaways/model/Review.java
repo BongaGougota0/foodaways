@@ -1,19 +1,26 @@
 package za.co.foodaways.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
+import lombok.Getter;
+import lombok.Setter;
 
-@Entity(name = "reviews")
+import java.util.HashSet;
+import java.util.Set;
+
+@Getter
+@Setter
+@Entity
 public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
-    private Integer id;
+    private int reviewId;
     private int userId;
     private int orderId;
     private String comments;
     @Max(value=5)
     private int rating;
+
+    @ManyToMany(mappedBy = "reviews", fetch = FetchType.EAGER,cascade = CascadeType.PERSIST)
+    public Set<Product> productReview = new HashSet<>();
 }

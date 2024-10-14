@@ -24,5 +24,5 @@ public class Store extends  BaseEntity{
 
     @OneToMany(mappedBy = "storeOrder", fetch = FetchType.LAZY,
             cascade = CascadeType.PERSIST, targetEntity = Order.class)
-    public Set<Order> orders;
+    public Set<Order> orders = new HashSet<>();
 }
