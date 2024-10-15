@@ -98,14 +98,14 @@
                     <div class="row">
 
                         <div class="col-12">
-                            <h2 class="text-center mb-lg-5 mb-4">Special Menus</h2>
+                            <h2 class="text-center mb-lg-5 mb-4">Dinner Menu</h2>
                         </div>
 
-                            <div class="col-lg-4 col-md-6 col-12" th:each="special : ${specialProducts}">
+                            <div class="col-lg-4 col-md-6 col-12" th:each="d : ${dinner}">
                                 <div class="menu-thumb">
-                                    <a th:href="@{/product-view/{id}(id = ${special.productId})}">
+                                    <a th:href="@{/product-view/{id}(id = ${d.productId})}">
                                         <div class="menu-image-wrap">
-                                            <img th:src="@{'/assets/images/' + ${special.imageOfProduct}}"
+                                            <img th:src="@{'/assets/images/' + ${d.imageOfProduct}}"
                                                  class="img-fluid menu-image" alt="">
 
                                             <span class="menu-tag bg-warning">Lunch</span>
@@ -115,10 +115,10 @@
 
                                     <div class="menu-info d-flex flex-wrap align-items-center">
                                         <div class="menu-info d-flex flex-wrap align-items-center">
-                                            <h4 class="mb-0" th:text="${special.productName}"></h4>
-                                            <p th:text="${special.menuItems}"></p>
+                                            <h4 class="mb-0" th:text="${d.productName}"></h4>
+                                            <p th:text="${d.menuItems}"></p>
                                             <span class="price-tag bg-white shadow-lg ms-4"
-                                                  th:text="${special.productPrice}"><small>R</small>
+                                                  th:text="${d.productPrice}"><small>R</small>
                                             </span>
                                         </div>
                                     </div>
