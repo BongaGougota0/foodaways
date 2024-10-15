@@ -15,19 +15,23 @@ import za.co.foodaways.dto.ProductDto;
 import za.co.foodaways.mapper.DtoMapper;
 import za.co.foodaways.mapper.EntityMapper;
 import za.co.foodaways.model.Product;
+import za.co.foodaways.model.Review;
 import za.co.foodaways.model.StoreUser;
 import za.co.foodaways.repository.StoreUserRepository;
 import za.co.foodaways.security.CustomAuthenticationSuccessHandler;
+import za.co.foodaways.service.StoreService;
 
 import java.util.List;
 
 @Configuration
 public class ProjectConfig {
     private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
+    private final StoreService storeService;
 
     @Autowired
-    public ProjectConfig(CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler) {
+    public ProjectConfig(CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler, StoreService storeService) {
         this.customAuthenticationSuccessHandler = customAuthenticationSuccessHandler;
+        this.storeService = storeService;
     }
 
     @Bean
@@ -39,6 +43,7 @@ public class ProjectConfig {
                                 .requestMatchers("/register").permitAll()
                                 .requestMatchers("/about").permitAll()
                                 .requestMatchers("/menu").permitAll()
+                                .requestMatchers("/all-products").permitAll()
                                 .requestMatchers("/contact").authenticated()
                                 .requestMatchers("/addUser").permitAll()
                                 .requestMatchers("/assets/images/**").permitAll()
@@ -66,6 +71,32 @@ public class ProjectConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public DtoMapper dtoMapper(){
+        return new DtoMapper() {
+            @Override
+            public ProductDto toDto(Product entity) {
+                return new ProductDto(entity.getProductId(), entity.getMenuItems(), entity.getProductName(),
+                        entity.getProductImagePath(), entity.getImageOfProduct(), entity.getProductCategory(),
+                        entity.getProductPrice(),
+                        entity.reviews.stream().mapToInt(Review::getRating).sum(),0);
+            }
+
+            @Override
+            public Product toEntity(ProductDto dto) {
+                Product product = new Product();
+                product.setProductId(dto.getProductId());
+                product.setProductCategory(dto.getProductCategory());
+                product.setImageOfProduct(dto.getImageOfProduct());
+                product.setProductName(dto.getProductName());
+                product.setProductPrice(dto.getProductPrice());
+                product.setMenuItems(dto.getMenuItems());
+                product.setStore(storeService.findStoreByProductId(dto.getProductId()));
+                return product;
+            }
+        };
     }
 }
 
