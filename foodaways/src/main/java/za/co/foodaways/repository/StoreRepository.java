@@ -12,4 +12,8 @@ import java.util.Optional;
 public interface StoreRepository extends JpaRepository<Store, Integer> {
     @Query(nativeQuery = true, value = "SELECT * FROM store s WHERE s.manager_id = :manager_id LIMIT 1")
     Optional<Store> findByIdManagerId(@Param("manager_id") int managerId);
+
+    @Query(nativeQuery = true, value = "SELECT * FROM store s JOIN product p " +
+                                        "ON p.store_id = s.store_id WHERE p.product_id = :productId")
+    Store findStoreByProductId(int productId);
 }

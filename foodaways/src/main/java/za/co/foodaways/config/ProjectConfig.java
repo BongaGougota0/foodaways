@@ -49,6 +49,8 @@ public class ProjectConfig {
                                 .requestMatchers("/assets/images/**").permitAll()
                                 .requestMatchers("/assets/**").permitAll()
                                 .requestMatchers("video/**").permitAll()
+                                .requestMatchers("/foodaways/**").permitAll()
+                                .requestMatchers("/foodaways**").permitAll()
                                 .requestMatchers("/in/**").hasRole("CUSTOMER")
                                 .requestMatchers("/home").permitAll()
                                 .requestMatchers("/product-view/**").permitAll()
@@ -62,7 +64,7 @@ public class ProjectConfig {
                         .successHandler(customAuthenticationSuccessHandler)
                         .failureUrl("/login?error=true").permitAll())
                 .logout(logoutFormConfigure
-                        -> logoutFormConfigure.logoutSuccessUrl("/index")
+                        -> logoutFormConfigure.logoutSuccessUrl("/foodaways")
                         .invalidateHttpSession(true).permitAll())
                 .httpBasic().disable();
         return http.build();

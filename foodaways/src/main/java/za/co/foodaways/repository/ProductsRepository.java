@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import za.co.foodaways.model.Product;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -20,7 +21,13 @@ public interface ProductsRepository extends JpaRepository<Product,Integer> {
 
     @Transactional
     @Modifying
-    @Query(nativeQuery = true, value = "DELETE FROM product p WHERE p.product_id = :productId")
+    @Query(nativeQuery = true, value = "DELETE FROM products p WHERE p.product_id = :productId")
     void deleteProductById(@Param("productId") int productId);
+
+    @Query(nativeQuery = true, value = "SELECT * FROM products p WHERE p.product_category = :productCategory")
+    ArrayList<Product> findByProductCategory(@Param("productCategory") String productCategory);
+
+    @Query(nativeQuery = true, value = "SELECT * FROM products")
+    ArrayList<Product> getProductsByRatingEqualToAndGreater();
 
 }

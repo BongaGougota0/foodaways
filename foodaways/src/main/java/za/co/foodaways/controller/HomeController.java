@@ -1,26 +1,20 @@
 package za.co.foodaways.controller;
 
-import jakarta.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import za.co.foodaways.dto.ProductDto;
 import za.co.foodaways.mapper.DtoMapper;
 import za.co.foodaways.model.Product;
 import za.co.foodaways.model.Reservation;
-import za.co.foodaways.model.StoreUser;
 import za.co.foodaways.repository.StoreUserRepository;
 import za.co.foodaways.service.ProductsService;
 import za.co.foodaways.service.ReservationService;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Controller
+@RequestMapping("/foodaways")
 public class HomeController {
     public ReservationService reservationService;
     StoreUserRepository storeUserRepository;
@@ -35,7 +29,7 @@ public class HomeController {
         this.dtoMapper = dtoMapper;
     }
 
-    @RequestMapping(value = {"/index"}, method = {RequestMethod.GET})
+    @RequestMapping(value = {"", "/home"}, method = {RequestMethod.GET})
     public String home(Model model){
         model.addAttribute("reservation", new Reservation());
         model.addAttribute("lunchList", productsService.getProductsForMenuDisplay().get("Lunch").stream().map(dtoMapper::toDto).limit(10));
@@ -44,20 +38,12 @@ public class HomeController {
         return "index.html";
     }
 
-    @RequestMapping(value = "/home", method = {RequestMethod.GET})
-    public String loggedInHome(Model model){
-        model.addAttribute("lunchList", productsService.getProductsForMenuDisplay().get("Lunch").stream().map(dtoMapper::toDto).limit(10));
-        model.addAttribute("dinnerList", productsService.getProductsForMenuDisplay().get("Dinner").stream().map(dtoMapper::toDto).limit(10));
-        model.addAttribute("breakfastList", productsService.getProductsForMenuDisplay().get("Breakfast").stream().map(dtoMapper::toDto).limit(10));
-        return "index.html";
-    }
-
-    @RequestMapping(value = "/about")
+    @GetMapping(value = "/about")
     public String about(){
         return "about.html";
     }
 
-    @RequestMapping(value = "/menu")
+    @GetMapping(value = "/menu")
     public String menu(Model model){
         model.addAttribute("breakfastList", productsService.getProductsForMenuDisplay().get("Breakfast").stream().map(dtoMapper::toDto).limit(15));
         model.addAttribute("dinnerList", productsService.getProductsForMenuDisplay().get("Dinner").stream().map(dtoMapper::toDto).limit(15));
@@ -65,26 +51,39 @@ public class HomeController {
         return "menu.html";
     }
 
-    @RequestMapping(value = "/contact")
+    @GetMapping(value = "/contact")
     public String contact(){
         return "contact.html";
     }
 
-    @RequestMapping(value = "/best-sellers")
-    public String bestSellers(){
-        return "index.html";
+    @GetMapping(value = "/best-rating")
+    public String bestSellers(@RequestParam("productCategory") String rating, Model model){
+        model.addAttribute("product_filter", "Best Rated");
+        model.addAttribute("productList", productsService.getProductsByBestRating(rating)
+                .stream().map(dtoMapper::toDto));
+        return "products_by_category.html";
     }
 
-    @RequestMapping(value = "/news")
-    public String news(){
-        return "news.html";
+    @GetMapping(value = "/products-rated")
+    public String bestSellers(@RequestParam("rating") double rating, Model model){
+        model.addAttribute("product_filter", "Best Rated");
+        model.addAttribute("productList", productsService.getProductsByRatingEqualToAndGreater((int)rating)
+                .stream().map(dtoMapper::toDto));
+        return "products_by_category.html";
+    }
+
+    @GetMapping(value = "/products-by-category")
+    public String productByCategory(@RequestParam("category") String category, Model model){
+        model.addAttribute("productList",productsService.getProductsByCategory(category).stream().map(dtoMapper::toDto));
+        model.addAttribute("category_name", category);
+        return "products_by_category.html";
     }
 
     @PostMapping(value = "/createReservation")
     public ModelAndView createReservation(@ModelAttribute("reservation")Reservation reservation){
         reservationService.addReservation(reservation);
         ModelAndView mav = new ModelAndView();
-        mav.setViewName("redirect:/home");
+        mav.setViewName("redirect:foodaways/home");
         return mav;
     }
 

@@ -3,6 +3,7 @@ package za.co.foodaways.service;
 import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import za.co.foodaways.model.Review;
 import za.co.foodaways.model.Roles;
 import za.co.foodaways.model.Store;
 import za.co.foodaways.model.StoreUser;
@@ -51,4 +52,6 @@ public class StoreUserService {
         return new Store();
     }
 
+    public void submitReview(Review review) {
+    }
 }

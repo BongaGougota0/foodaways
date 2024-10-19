@@ -39,18 +39,4 @@ public class OrderController {
         return mav;
     }
 
-    @RequestMapping(value = "/new-order")
-    public ModelAndView newOrder(@ModelAttribute("newOrder") Order order){
-        // First check all items in the cart belong to the same store (same ID store)
-        Optional<Integer> firstProduct = order.orderItems.stream().map(Product::getStoreId).findFirst();
-        boolean idsTheSame = order.orderItems.stream()
-                .allMatch( product -> product.getStoreId() == firstProduct.orElse(-1));
-        if(idsTheSame){
-            String orderStatus = orderService.newOrder(order);
-            System.out.println("Order created \n Order status "+orderStatus);
-        }
-        ModelAndView mav = new ModelAndView();
-        mav.setViewName("redirect:/home");
-        return mav;
-    }
 }

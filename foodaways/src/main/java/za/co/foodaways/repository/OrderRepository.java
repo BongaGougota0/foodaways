@@ -17,4 +17,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
 
     @Query(nativeQuery = true, value = "SELECT * FROM Orders o WHERE o.store_id = :storeId")
     ArrayList<Order> findOrdersByStoreId(@Param("storeId") int storeId);
+
+    @Query(nativeQuery = true, value = "SELECT * FROM Orders o WHERE o.user_id = :userId")
+    ArrayList<Order> findUserOrdersById(@Param("userId") int userId);
 }

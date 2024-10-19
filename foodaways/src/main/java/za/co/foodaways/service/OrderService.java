@@ -29,7 +29,7 @@ public class OrderService {
         orderRepository.save(order);
     }
 
-    public String newOrder(Order newOrder){
+    public String customerNewOrder(Order newOrder, int userId){
         Order order = orderRepository.save(newOrder);
         if(order.orderId != null && order.orderId >= 1){
             return "saved";
@@ -53,5 +53,10 @@ public class OrderService {
 
     public void updateOrder(int orderId, String cancel) {
 
+    }
+
+    public ArrayList<Order> getCustomerOrdersById(Integer userId) {
+//      ArrayList<Order> customerOrders = new ArrayList<>();
+        return orderRepository.findUserOrdersById(userId);
     }
 }
