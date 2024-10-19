@@ -26,7 +26,7 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
-                <a class="navbar-brand" th:href="@{/index}">
+                <a class="navbar-brand" th:href="@{/foodaways}">
                     foodaways
                 </a>
 
@@ -38,19 +38,19 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav mx-auto">
                         <li class="nav-item">
-                            <a class="nav-link " th:href="@{/home}">Home</a>
+                            <a class="nav-link " th:href="@{/foodaways}">Home</a>
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link" th:href="@{/menu}">Menu</a>
+                            <a class="nav-link" th:href="@{/foodaways/menu}">Menu</a>
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link" th:href="@{/contact}">Contact</a>
+                            <a class="nav-link" th:href="@{/foodaways/contact}">Contact</a>
                         </li>
 
                         <li sec:authorize="hasRole('ROLE_CUSTOMER')" class="nav-item">
-                            <a id="cart-count" class="nav-link" th:href="@{/contact}">Cart </a>
+                            <a id="cart-count" class="nav-link" th:href="@{/foodaways/contact}">Cart </a>
                         </li>
 
                     </ul>

@@ -29,7 +29,7 @@
 
                             <div class="col-lg-4 col-md-6 col-12" th:each="product : ${breakfastList}">
                                 <div class="menu-thumb">
-                                    <a th:href="@{/product-view/{id}(id = ${product.productId})}">
+                                    <a th:href="@{/foodaways/product-view/{id}(id = ${product.productId})}">
                                         <div class="menu-image-wrap">
                                             <img th:src="@{'/assets/images/' + ${product.imageOfProduct}}"
                                                     class="img-fluid menu-image" alt="">
@@ -97,7 +97,7 @@
 
                                 <div class="col-lg-4 col-md-6 col-12" th:each="dinner : ${dinnerList}">
                                     <div class="menu-thumb">
-                                        <a th:href="@{/product-view/{id}(id = ${dinner.productId})}">
+                                        <a th:href="@{/foodaways/product-view/{id}(id = ${dinner.productId})}">
                                             <div class="menu-image-wrap">
                                                 <img th:src="@{'assets/images/' + ${dinner.imageOfProduct}}"
                                                      class="img-fluid menu-image" alt="">
