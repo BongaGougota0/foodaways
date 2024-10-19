@@ -27,14 +27,14 @@
                             <h2 class="mb-lg-5 mb-4">Breakfast Menu</h2>
                         </div>
 
-                            <div class="col-lg-4 col-md-6 col-12" th:each="product : ${breakfast}">
+                            <div class="col-lg-4 col-md-6 col-12" th:each="product : ${breakfastList}">
                                 <div class="menu-thumb">
                                     <a th:href="@{/product-view/{id}(id = ${product.productId})}">
                                         <div class="menu-image-wrap">
                                             <img th:src="@{'/assets/images/' + ${product.imageOfProduct}}"
                                                     class="img-fluid menu-image" alt="">
 
-                                            <span class="menu-tag bg-warning">Lunch</span>
+                                            <span class="menu-tag bg-warning" th:text="${product.productCategory}"></span>
                                             <a class="add-to-cart" onclick="addToCart(this)">Add To Cart</a>
                                         </div>
                                     </a>
@@ -61,14 +61,14 @@
                             <h2 class="mb-lg-5 mb-4">Lunch Menu</h2>
                         </div>
 
-                            <div class="col-lg-4 col-md-6 col-12" th:each="lunch : ${lunchProducts}">
+                            <div class="col-lg-4 col-md-6 col-12" th:each="lunch : ${lunchList}">
                                 <div class="menu-thumb">
                                     <a th:href="@{/product-view/{id}(id = ${lunch.productId})}">
                                         <div class="menu-image-wrap">
                                             <img th:src="@{'assets/images/' + ${lunch.imageOfProduct}}"
                                                  class="img-fluid menu-image" alt="">
 
-                                            <span class="menu-tag bg-warning">Lunch</span>
+                                            <span class="menu-tag bg-warning" th:text="${lunch.productCategory}"></span>
                                             <a class="add-to-cart" onclick="addToCart(this)">Add To Cart</a>
                                         </div>
                                     </a>
@@ -93,15 +93,16 @@
 
                         <div class="col-12">
                             <h2 class="mb-lg-5 mb-4">Dinner Menu</h2>
+                        </div>
 
-                                <div class="col-lg-4 col-md-6 col-12" th:each="dinner : ${dinnerProducts}">
+                                <div class="col-lg-4 col-md-6 col-12" th:each="dinner : ${dinnerList}">
                                     <div class="menu-thumb">
                                         <a th:href="@{/product-view/{id}(id = ${dinner.productId})}">
                                             <div class="menu-image-wrap">
                                                 <img th:src="@{'assets/images/' + ${dinner.imageOfProduct}}"
                                                      class="img-fluid menu-image" alt="">
 
-                                                <span class="menu-tag bg-warning">Lunch</span>
+                                                <span class="menu-tag bg-warning" th:text="${dinner.productCategory}"></span>
                                                 <a class="add-to-cart" onclick="addToCart(this)">Add To Cart</a>
                                             </div>
                                         </a>

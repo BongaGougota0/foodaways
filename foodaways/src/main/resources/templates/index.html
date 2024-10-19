@@ -46,7 +46,7 @@
                                             <div class="d-flex align-items-center">
                                                 <h4 class="hero-text">Steak</h4>
 
-                                                <span class="price-tag ms-4"><small>$</small>26.50</span>
+                                                <span class="price-tag ms-4"><small>R</small>126.50</span>
                                             </div>
 
                                         </div>
@@ -61,7 +61,7 @@
                                             <div class="d-flex align-items-center">
                                                 <h4 class="hero-text">Sausage Pasta</h4>
 
-                                                <span class="price-tag ms-4"><small>$</small>18.25</span>
+                                                <span class="price-tag ms-4"><small>R</small>90.00</span>
                                             </div>
 
                                         </div>
@@ -101,14 +101,14 @@
                             <h2 class="text-center mb-lg-5 mb-4">Breakfast Menu</h2>
                         </div>
 
-                            <div class="col-lg-4 col-md-6 col-12" th:each="bf : ${breakfast}">
+                            <div class="col-lg-4 col-md-6 col-12" th:each="bf : ${breakfastList}">
                                 <div class="menu-thumb">
                                     <a th:href="@{/product-view/{id}(id = ${bf.productId})}">
                                         <div class="menu-image-wrap">
                                             <img th:src="@{'/assets/images/' + ${bf.imageOfProduct}}"
                                                  class="img-fluid menu-image" alt="">
 
-                                            <span class="menu-tag bg-warning" th:txt="${bf.productCategory}"></span>
+                                            <span class="menu-tag bg-warning" th:text="${bf.productCategory}"></span>
                                             <a class="add-to-cart" onclick="addToCart(this)">Add To Cart</a>
                                         </div>
                                     </a>
@@ -175,7 +175,7 @@
                             <h2 class="text-center mb-lg-5 mb-4">Dinner Menu</h2>
                         </div>
 
-                        <div class="col-lg-4 col-md-6 col-12" th:each="d : ${dinner}">
+                        <div class="col-lg-4 col-md-6 col-12" th:each="d : ${dinnerList}">
                             <div class="menu-thumb">
                                 <a th:href="@{/product-view/{id}(id = ${d.productId})}">
                                     <div class="menu-image-wrap">

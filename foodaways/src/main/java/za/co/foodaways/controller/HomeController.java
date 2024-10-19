@@ -38,16 +38,17 @@ public class HomeController {
     @RequestMapping(value = {"/index"}, method = {RequestMethod.GET})
     public String home(Model model){
         model.addAttribute("reservation", new Reservation());
-        model.addAttribute("dinner", productsService.getAllProducts()
-                .stream().map(dtoMapper::toDto).collect(Collectors.toList()));
+        model.addAttribute("lunchList", productsService.getProductsForMenuDisplay().get("Lunch").stream().map(dtoMapper::toDto).limit(10));
+        model.addAttribute("dinnerList", productsService.getProductsForMenuDisplay().get("Dinner").stream().map(dtoMapper::toDto).limit(5));
+        model.addAttribute("breakfastList", productsService.getProductsForMenuDisplay().get("Breakfast").stream().map(dtoMapper::toDto).limit(3));
         return "index.html";
     }
 
     @RequestMapping(value = "/home", method = {RequestMethod.GET})
     public String loggedInHome(Model model){
-        model.addAttribute("lunchList", productsService.getProductsForMenuDisplay().get("Lunch").stream().map(dtoMapper::toDto));
-        model.addAttribute("dinner", productsService.getProductsForMenuDisplay().get("Dinner").stream().map(dtoMapper::toDto));
-        model.addAttribute("breakfast", productsService.getProductsForMenuDisplay().get("Breakfast").stream().map(dtoMapper::toDto));
+        model.addAttribute("lunchList", productsService.getProductsForMenuDisplay().get("Lunch").stream().map(dtoMapper::toDto).limit(10));
+        model.addAttribute("dinnerList", productsService.getProductsForMenuDisplay().get("Dinner").stream().map(dtoMapper::toDto).limit(10));
+        model.addAttribute("breakfastList", productsService.getProductsForMenuDisplay().get("Breakfast").stream().map(dtoMapper::toDto).limit(10));
         return "index.html";
     }
 
@@ -58,9 +59,9 @@ public class HomeController {
 
     @RequestMapping(value = "/menu")
     public String menu(Model model){
-        model.addAttribute("breakfastProducts", productsService.getProductsForMenuDisplay().get("Breakfast").stream().map(dtoMapper::toDto));
-        model.addAttribute("dinnerProducts", productsService.getProductsForMenuDisplay().get("Dinner").stream().map(dtoMapper::toDto));
-        model.addAttribute("lunchProducts", productsService.getProductsForMenuDisplay().get("Lunch").stream().map(dtoMapper::toDto));
+        model.addAttribute("breakfastList", productsService.getProductsForMenuDisplay().get("Breakfast").stream().map(dtoMapper::toDto).limit(15));
+        model.addAttribute("dinnerList", productsService.getProductsForMenuDisplay().get("Dinner").stream().map(dtoMapper::toDto).limit(15));
+        model.addAttribute("lunchList", productsService.getProductsForMenuDisplay().get("Lunch").stream().map(dtoMapper::toDto).limit(20));
         return "menu.html";
     }
 
