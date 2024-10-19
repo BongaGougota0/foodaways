@@ -2,6 +2,7 @@ package za.co.foodaways.controller;
 
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,31 +17,37 @@ import za.co.foodaways.repository.StoreUserRepository;
 import za.co.foodaways.service.ProductsService;
 import za.co.foodaways.service.ReservationService;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class HomeController {
     public ReservationService reservationService;
     StoreUserRepository storeUserRepository;
     ProductsService productsService;
+    DtoMapper dtoMapper;
 
     public HomeController(ProductsService service, StoreUserRepository userRepository,
-                          ReservationService reservationService){
+                          ReservationService reservationService, DtoMapper dtoMapper){
         this.storeUserRepository = userRepository;
         this.productsService = service;
         this.reservationService = reservationService;
+        this.dtoMapper = dtoMapper;
     }
 
     @RequestMapping(value = {"/index"}, method = {RequestMethod.GET})
     public String home(Model model){
         model.addAttribute("reservation", new Reservation());
-        model.addAttribute("specialProducts", productsService.getAllProducts());
+        model.addAttribute("dinner", productsService.getAllProducts()
+                .stream().map(dtoMapper::toDto).collect(Collectors.toList()));
         return "index.html";
     }
 
     @RequestMapping(value = "/home", method = {RequestMethod.GET})
     public String loggedInHome(Model model){
-        ArrayList<Product> products = productsService.getAllProducts();
-        model.addAttribute("specialProducts", products);
+        model.addAttribute("lunchList", productsService.getProductsForMenuDisplay().get("Lunch").stream().map(dtoMapper::toDto));
+        model.addAttribute("dinner", productsService.getProductsForMenuDisplay().get("Dinner").stream().map(dtoMapper::toDto));
+        model.addAttribute("breakfast", productsService.getProductsForMenuDisplay().get("Breakfast").stream().map(dtoMapper::toDto));
         return "index.html";
     }
 
@@ -51,10 +58,9 @@ public class HomeController {
 
     @RequestMapping(value = "/menu")
     public String menu(Model model){
-        ArrayList<Product> productArrayList = new ArrayList<>(productsService.getAllProducts());
-        model.addAttribute("products", productArrayList);
-        model.addAttribute("dinnerProducts", productsService.getProductsForMenuDisplay().get("dinner"));
-        model.addAttribute("lunchProducts", productsService.getProductsForMenuDisplay().get("lunch"));
+        model.addAttribute("breakfastProducts", productsService.getProductsForMenuDisplay().get("Breakfast").stream().map(dtoMapper::toDto));
+        model.addAttribute("dinnerProducts", productsService.getProductsForMenuDisplay().get("Dinner").stream().map(dtoMapper::toDto));
+        model.addAttribute("lunchProducts", productsService.getProductsForMenuDisplay().get("Lunch").stream().map(dtoMapper::toDto));
         return "menu.html";
     }
 
@@ -81,7 +87,7 @@ public class HomeController {
         return mav;
     }
 
-    @RequestMapping(value = "/product-view/{productId}")
+    @GetMapping(value = "/product-view/{productId}")
     public String productView(Model model, @PathVariable("productId") int productId){
         Product product = productsService.getProductById(productId);
         model.addAttribute("product", product);
