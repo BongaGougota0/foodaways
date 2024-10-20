@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Orders</title>
+    <link href="/assets/css/modal_style.css" rel="stylesheet">
+</head>
+
+<body>
+
+<div th:insert="~{header :: header}"></div>
+
+<!-- Main Content -->
+<div class="content">
+    <div class="header"></div>
+
+    <div class="store-data">
+        <h2>My Orders</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Order Number</th>
+                <th>Order Status</th>
+                <th>Menu Items</th>
+                <th>Order Total</th>
+                <th>Cancel Order</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="order : ${customerOrderList}">
+                <td>
+                    <a th:text="${order.orderId}">
+                    </a>
+                </td>
+                <td>
+                    <a th:text="${order.orderStatus}">
+                    </a>
+                </td>
+                <td>
+                    <a th:text="${order.orderItems}"></a>
+                </td>
+
+                <td th:text="${order.getOrderTotal()}"></td>
+                <td>
+                    <a th:href="@{/in/cancel-order/{orderId}(orderId = ${order.orderId})}">Cancel</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script src="/assets/js/none.js"></script>
+</body>
+</html>
