@@ -10,7 +10,7 @@ import java.util.ArrayList;
 @Getter
 public class OrderDto {
     public int orderStatus;
-    public ArrayList<Product> orderItems;
+    public ArrayList<ProductDto> orderItems;
     public int userId;
     public int storeId;
 }

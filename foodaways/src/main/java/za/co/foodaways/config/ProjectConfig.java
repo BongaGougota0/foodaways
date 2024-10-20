@@ -37,24 +37,17 @@ public class ProjectConfig {
     @Bean
     SecurityFilterChain projectSecurityConfig(HttpSecurity http) throws Exception {
         http.csrf(d -> d.disable()).authorizeHttpRequests(
-                        (re) -> re.requestMatchers("/index").permitAll()
-                                .requestMatchers("/login").permitAll()
+                        (re) -> re.requestMatchers("/login").permitAll()
                                 .requestMatchers("/logout").permitAll()
                                 .requestMatchers("/register").permitAll()
-                                .requestMatchers("/about").permitAll()
-                                .requestMatchers("/menu").permitAll()
                                 .requestMatchers("/all-products").permitAll()
-                                .requestMatchers("/contact").authenticated()
                                 .requestMatchers("/addUser").permitAll()
                                 .requestMatchers("/assets/images/**").permitAll()
                                 .requestMatchers("/assets/**").permitAll()
                                 .requestMatchers("video/**").permitAll()
-                                .requestMatchers("/foodaways/**").permitAll()
-                                .requestMatchers("/foodaways**").permitAll()
+                                .requestMatchers("/foodaways/**","/").permitAll()
                                 .requestMatchers("/in/**").hasRole("CUSTOMER")
-                                .requestMatchers("/home").permitAll()
-                                .requestMatchers("/product-view/**").permitAll()
-                                .requestMatchers("/home/**").hasRole("CUSTOMER")
+                                .requestMatchers("**/product-view/**").permitAll()
                                 .requestMatchers("/store-manager").hasRole("STORE_OWNER")
                                 .requestMatchers("/store-manager/**").hasRole("STORE_OWNER")
                                 .requestMatchers("/foodaways-admin").hasRole("ADMIN")
@@ -64,7 +57,7 @@ public class ProjectConfig {
                         .successHandler(customAuthenticationSuccessHandler)
                         .failureUrl("/login?error=true").permitAll())
                 .logout(logoutFormConfigure
-                        -> logoutFormConfigure.logoutSuccessUrl("/foodaways")
+                        -> logoutFormConfigure.logoutSuccessUrl("/foodaways/")
                         .invalidateHttpSession(true).permitAll())
                 .httpBasic().disable();
         return http.build();

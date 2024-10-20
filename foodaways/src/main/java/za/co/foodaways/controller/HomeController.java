@@ -29,7 +29,7 @@ public class HomeController {
         this.dtoMapper = dtoMapper;
     }
 
-    @RequestMapping(value = {"", "/home"}, method = {RequestMethod.GET})
+    @RequestMapping(value = {"/", "/home"}, method = {RequestMethod.GET})
     public String home(Model model){
         model.addAttribute("reservation", new Reservation());
         model.addAttribute("lunchList", productsService.getProductsForMenuDisplay().get("Lunch").stream().map(dtoMapper::toDto).limit(10));
@@ -91,6 +91,6 @@ public class HomeController {
     public String productView(Model model, @PathVariable("productId") int productId){
         Product product = productsService.getProductById(productId);
         model.addAttribute("product", product);
-        return "productDetail.html";
+        return "product_detail.html";
     }
 }

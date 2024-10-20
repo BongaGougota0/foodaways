@@ -8,7 +8,8 @@ public class OrderStatus {
             ORDER_DECLINED("order_declined"),
             PREPARING_ORDER("preparing_order"),
             DELIVERED("delivered"),
-            IN_TRANSIT("in_transit");
+            IN_TRANSIT("in_transit"),
+            ERROR_PLACING_ORDER("error_placing_order");
 
             private String orderStatus;
 

@@ -4,19 +4,34 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import za.co.foodaways.model.Order;
-import za.co.foodaways.model.OrderStatus;
+import za.co.foodaways.dto.OrderDto;
+import za.co.foodaways.exceptions.MultiStoreOrderException;
+import za.co.foodaways.mapper.DtoMapper;
+import za.co.foodaways.model.*;
 import za.co.foodaways.repository.OrderRepository;
+import za.co.foodaways.repository.StoreRepository;
+import za.co.foodaways.repository.StoreUserRepository;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
-    @Autowired
     OrderRepository orderRepository;
+    StoreUserRepository storeUserRepository;
+    StoreRepository storeRepository;
+    DtoMapper dtoMapper;
+
+    public OrderService(OrderRepository orderRepository, StoreUserRepository storeUserRepository, StoreRepository storeRepository, DtoMapper dtoMapper){
+        this.orderRepository = orderRepository;
+        this.storeUserRepository = storeUserRepository;
+        this.storeRepository = storeRepository;
+        this.dtoMapper = dtoMapper;
+    }
 
     public void declineOrderUpdate(int orderId, String declineReason){
         Order order = orderRepository.findById(orderId).get();
@@ -29,12 +44,26 @@ public class OrderService {
         orderRepository.save(order);
     }
 
-    public String customerNewOrder(Order newOrder, int userId){
-        Order order = orderRepository.save(newOrder);
-        if(order.orderId != null && order.orderId >= 1){
-            return "saved";
+    public String customerNewOrder(OrderDto newOrder, StoreUser user){
+        ArrayList<Product> products = newOrder.orderItems.stream()
+                .map(dtoMapper::toEntity).collect(Collectors.toCollection(ArrayList::new));
+        Product randomProduct = products.stream().findFirst().get();
+       boolean predicate = products.stream().allMatch(product -> product.getStoreId() == randomProduct.getStoreId());
+        if(predicate){
+            // go on and place order
+            Store store = storeRepository.findStoreByProductId(randomProduct.getStoreId());
+            Order order = new Order();
+            order.setOrderStatus(OrderStatus.Status.ORDER_PLACED.name());
+            order.setUser(user);
+            order.setStoreOrder(store);
+            order.setOrderItems(products);
+            // order total ?!
+            Order placedOrder = orderRepository.save(order);
+            return placedOrder.getOrderStatus();
+        }else {
+            throw new MultiStoreOrderException("You cannot place a single order to multiple store.\n " +
+                    "Please make your order has products to the same store.");
         }
-        return "order_not_created";
     }
 
     public List<Order> getStoreOrders(int storeId){
