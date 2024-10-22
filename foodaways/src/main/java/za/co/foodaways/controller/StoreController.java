@@ -44,23 +44,25 @@ public class StoreController {
         this.storeManagerService = storeManagerService;
     }
 
-    @RequestMapping(value = "/home", method = {RequestMethod.GET, RequestMethod.POST})
-    public ModelAndView storeManagerHome(Model model, Authentication authentication, HttpSession session){
+    @RequestMapping(value = "/home")
+    public ModelAndView storeHome(Model model, HttpSession session, Authentication authentication){
+        ModelAndView mav = new ModelAndView("store_home.html");
+        model.addAttribute("roles", authentication.getAuthorities().toString());
         StoreUser userPerson = storeUserRepository.findByEmail(authentication.getName());
+        session.setAttribute("loggedInUser", userPerson);
+        return mav;
+    }
+
+    @RequestMapping(value = "/products", method = {RequestMethod.GET, RequestMethod.POST})
+    public ModelAndView storeProducts(Model model, Authentication authentication, HttpSession session){
+        StoreUser userPerson = (StoreUser) session.getAttribute("loggedInUser");
         model.addAttribute("roles", authentication.getAuthorities().toString());
         ModelAndView mav = new ModelAndView("store_manager.html");
         mav.addObject("newProduct", new Product());
         mav.addObject("products", storeManagerService.getStoreProductsByManagerId(userPerson.getUserId()));
         mav.addObject("productCategories", Arrays.asList("Lunch", "Dinner", "Breakfast"));
-        session.setAttribute("loggedInUser", userPerson);
         session.setAttribute("managedStore", storeUserService.getManagedStoreByAdminId(userPerson.getUserId()));
         return mav;
-    }
-
-    @RequestMapping(value = "/testPost")
-    public String testPost(Model model, @ModelAttribute("reservation") Reservation reservation){
-        model.addAttribute("reservation", new Reservation());
-        return "store_layout.html";
     }
 
     @RequestMapping(value = "/orders", method = {RequestMethod.GET, RequestMethod.POST})

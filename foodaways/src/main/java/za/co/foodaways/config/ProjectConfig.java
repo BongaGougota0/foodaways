@@ -1,27 +1,18 @@
 package za.co.foodaways.config;
 
-import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.stereotype.Component;
 import za.co.foodaways.dto.ProductDto;
 import za.co.foodaways.mapper.DtoMapper;
-import za.co.foodaways.mapper.EntityMapper;
 import za.co.foodaways.model.Product;
 import za.co.foodaways.model.Review;
-import za.co.foodaways.model.StoreUser;
-import za.co.foodaways.repository.StoreUserRepository;
 import za.co.foodaways.security.CustomAuthenticationSuccessHandler;
 import za.co.foodaways.service.StoreService;
-
-import java.util.List;
 
 @Configuration
 public class ProjectConfig {
