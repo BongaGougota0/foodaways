@@ -146,6 +146,9 @@ strong {
   font-weight: var(--font-weight-bold);
 }
 
+.capture_data{
+    display : none;
+}
 
 /*---------------------------------------
   CUSTOM BUTTON              
