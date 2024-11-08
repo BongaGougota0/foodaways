@@ -12,6 +12,8 @@ import za.co.foodaways.repository.StoreUserRepository;
 import za.co.foodaways.service.ProductsService;
 import za.co.foodaways.service.ReservationService;
 
+import java.util.ArrayList;
+
 
 @Controller
 @RequestMapping("/foodaways")
@@ -32,9 +34,24 @@ public class HomeController {
     @RequestMapping(value = {"/", "/home"}, method = {RequestMethod.GET})
     public String home(Model model){
         model.addAttribute("reservation", new Reservation());
-        model.addAttribute("lunchList", productsService.getProductsForMenuDisplay().get("Lunch").stream().map(dtoMapper::toDto).limit(10));
-        model.addAttribute("dinnerList", productsService.getProductsForMenuDisplay().get("Dinner").stream().map(dtoMapper::toDto).limit(5));
-        model.addAttribute("breakfastList", productsService.getProductsForMenuDisplay().get("Breakfast").stream().map(dtoMapper::toDto).limit(3));
+        if(productsService.getProductsForMenuDisplay().get("Lunch") != null){
+            model.addAttribute("lunchList", productsService.getProductsForMenuDisplay().get("Lunch")
+                    .stream().map(dtoMapper::toDto).limit(10));
+        }else {
+            model.addAttribute("lunchList",new ArrayList<>());
+        }
+        if(productsService.getProductsForMenuDisplay().get("Dinner") != null){
+            model.addAttribute("dinnerList", productsService.getProductsForMenuDisplay().get("Dinner")
+                    .stream().map(dtoMapper::toDto).limit(5));
+        }  else {
+            model.addAttribute("dinnerList",new ArrayList<>());
+        }
+        if(productsService.getProductsForMenuDisplay().get("Breakfast") != null){
+            model.addAttribute("breakfastList", productsService.getProductsForMenuDisplay().get("Breakfast")
+                    .stream().map(dtoMapper::toDto).limit(5));
+        }else {
+            model.addAttribute("breakfastList",new ArrayList<>());
+        }
         return "index.html";
     }
 
@@ -45,9 +62,24 @@ public class HomeController {
 
     @GetMapping(value = "/menu")
     public String menu(Model model){
-        model.addAttribute("breakfastList", productsService.getProductsForMenuDisplay().get("Breakfast").stream().map(dtoMapper::toDto).limit(15));
-        model.addAttribute("dinnerList", productsService.getProductsForMenuDisplay().get("Dinner").stream().map(dtoMapper::toDto).limit(15));
-        model.addAttribute("lunchList", productsService.getProductsForMenuDisplay().get("Lunch").stream().map(dtoMapper::toDto).limit(20));
+        if(productsService.getProductsForMenuDisplay().get("Lunch") != null){
+            model.addAttribute("lunchList", productsService.getProductsForMenuDisplay().get("Lunch")
+                    .stream().map(dtoMapper::toDto).limit(15));
+        }else {
+            model.addAttribute("lunchList",new ArrayList<>());
+        }
+        if(productsService.getProductsForMenuDisplay().get("Dinner") != null){
+            model.addAttribute("dinnerList", productsService.getProductsForMenuDisplay().get("Dinner")
+                    .stream().map(dtoMapper::toDto).limit(15));
+        }  else {
+            model.addAttribute("dinnerList",new ArrayList<>());
+        }
+        if(productsService.getProductsForMenuDisplay().get("Breakfast") != null){
+            model.addAttribute("breakfastList", productsService.getProductsForMenuDisplay().get("Breakfast")
+                    .stream().map(dtoMapper::toDto).limit(20));
+        }else {
+            model.addAttribute("breakfastList",new ArrayList<>());
+        }
         return "menu.html";
     }
 
