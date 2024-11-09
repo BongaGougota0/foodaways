@@ -1,17 +1,17 @@
---create database foodawaysDB;
+--CREATE SCHEMA `foodawaysDB`;
 --
---use foodawaysDB;
+--USE `foodawaysDB`;
 --
 --CREATE TABLE IF NOT EXISTS `roles` (
 --  `role_id` int AUTO_INCREMENT,
---  `role` varchar(20) NOT NULL,
+--  `role_name` varchar(20) NOT NULL,
 --  PRIMARY KEY (`role_id`)
 --);
 --
 --CREATE TABLE IF NOT EXISTS `store_user` (
 --  `user_id` int AUTO_INCREMENT,
 --  `full_name` varchar(100) NOT NULL,
---  `mobile_number` varchar(10) NOT NULL,
+--  `phone_number` varchar(10) NOT NULL,
 --  `email` varchar(100) NOT NULL,
 --  `password` varchar(350) NOT NULL,
 --  `role_id` INT NOT NULL,
@@ -23,24 +23,27 @@
 --  `store_id` int AUTO_INCREMENT,
 --  `store_name` varchar(100) NOT NULL,
 --  `store_number` varchar(15) NOT NULL,
---  `location` varchar(100) NOT NULL,
---  `store_owner` INT NULL,
+--  `store_location` varchar(100) NOT NULL,
+--  `manager_id` INT NULL,
 --  PRIMARY KEY (store_id),
 --  FOREIGN KEY (store_owner) REFERENCES store_user(user_id)
---);
---
---CREATE TABLE IF NOT EXISTS `status` (
---   `status_id` int AUTO_INCREMENT PRIMARY KEY,
---   `status` varchar(20) NOT NULL
 --);
 --
 --CREATE TABLE IF NOT EXISTS `product` (
 --    `product_id` int AUTO_INCREMENT PRIMARY KEY,
 --    `menu_items` VARCHAR(500),
+--    `product_name` VARCHAR(50) NOT NULL,
 --    `product_image` VARCHAR(500) NULL,
+--    `product_image_path` VARCHAR(500) NULL,
+--    `product_category` VARCHAR(50) NULL,
 --    `product_price` double NOT NULL,
 --    `product_store` int NOT NULL,
 --    FOREIGN KEY (product_store) REFERENCES store(store_id)
+--);
+--
+--CREATE TABLE IF NOT EXISTS `status` (
+--   `status_id` int AUTO_INCREMENT PRIMARY KEY,
+--   `status` varchar(20) NOT NULL
 --);
 --
 --CREATE TABLE IF NOT EXISTS `customer_orders` (
@@ -54,30 +57,9 @@
 --    `order_to` int NOT NULL,
 --    FOREIGN KEY (order_status) REFERENCES status(status_id),
 --    FOREIGN KEY (user_id) REFERENCES store_user(user_id),
---    FOREIGN KEY (order_to) REFERENCES store(store_id),
+--    FOREIGN KEY (order_to) REFERENCES store(store_id)
 --);
 --
---CREATE TABLE IF NOT EXISTS `reservation`(
---    `id` int AUTO_INCREMENT PRIMARY KEY,
---    `full_name` VARCHAR(40),
---    `email_address` VARCHAR(100),
---    `phone_number` VARCHAR(18),
---    `person_count` INT,
---    `res_date` VARCHAR(20),
---    `res_time` VARCHAR(20),
---    `reservation_comments` VARCHAR(500)
---);
-
---CREATE TABLE IF NOT EXISTS `reviews` (
---    `review_id` int AUTO_INCREMENT PRIMARY KEY,
---    `user_id` int NOT NULL,
---    `order_id` int NOT NULL,
---    `comments` VARCHAR(255),
---    `rating` int NOT NULL,
---     FOREIGN KEY (user_id) REFERENCES store_user(user_id),
---     FOREIGN KEY (order_id) REFERENCES customer_orders(order_id)
---);
-
 --CREATE TABLE IF NOT EXISTS `product_reviews`(
 --    `review_id` int NOT NULL,
 --    `user_id` int NOT NULL,
@@ -88,3 +70,13 @@
 --    FOREIGN KEY (product_id) REFERENCES product(product_id),
 --    PRIMARY KEY(user_id, product_id)
 --);
+--
+--INSERT INTO roles(role_id, role_name) VALUES(1,"ADMIN"), (2,"CUSTOMER"), (3,"STORE_OWNER");
+--INSERT INTO status(status_id, status) VALUES(1,"IN_PROGRESS"), (2,"ORDER_COMPLETED"), (3,"ORDER_PLACED"),
+-- (4,"ORDER_DELIVERED"), (5,"ORDER_DECLINED");
+--
+--INSERT INTO store_user(user_id, full_name, phone_number, email, password,role_id)
+-- VALUES (2,"Bonga Gee", "0694772226","bonga@galapagos.com","$2a$10$gDbQErVkE6bXxk2WaIg5W.EiU3t8Hu4xKNQg5U7lMSQ1Bk74Jy8Fa",3);
+--
+--INSERT INTO store(store_id, store_name, store_number, store_location, store_owner)
+-- VALUES(1,"Galapagos","0128902323","LillyBank",2);

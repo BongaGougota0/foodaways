@@ -65,7 +65,7 @@
                                 <div class="menu-thumb">
                                     <a th:href="@{/product-view/{id}(id = ${lunch.productId})}">
                                         <div class="menu-image-wrap">
-                                            <img th:src="@{'assets/images/' + ${lunch.imageOfProduct}}"
+                                            <img th:src="@{'/assets/images/' + ${lunch.imageOfProduct}}"
                                                  class="img-fluid menu-image" alt="">
 
                                             <span class="menu-tag bg-warning" th:text="${lunch.productCategory}"></span>
@@ -99,7 +99,7 @@
                                     <div class="menu-thumb">
                                         <a th:href="@{/foodaways/product-view/{id}(id = ${dinner.productId})}">
                                             <div class="menu-image-wrap">
-                                                <img th:src="@{'assets/images/' + ${dinner.imageOfProduct}}"
+                                                <img th:src="@{'/assets/images/' + ${dinner.imageOfProduct}}"
                                                      class="img-fluid menu-image" alt="">
 
                                                 <span class="menu-tag bg-warning" th:text="${dinner.productCategory}"></span>

@@ -43,6 +43,7 @@ public class StoreManagerService implements StoreManager {
         String uploadDirectory = "src/main/resources/static/assets/images";
         if(!productImage.isEmpty()){
             String fileName = productImage.getOriginalFilename();
+            newProduct.setStore(store);
             try {
                 File newDir = new File(uploadDirectory);
                 if(!newDir.exists()){newDir.mkdirs();}
@@ -51,7 +52,7 @@ public class StoreManagerService implements StoreManager {
                 Files.write(path, fileBytes);
                 newProduct.setProductImagePath(String.valueOf(path));
                 newProduct.setImageOfProduct(fileName);
-                newProduct.setStore(store);
+
                 this.adminAddNewProduct(newProduct, storeAdminId);
             } catch (IOException e) {
                 throw new RuntimeException(e);
