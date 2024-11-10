@@ -12,6 +12,7 @@ import za.co.foodaways.model.Product;
 import za.co.foodaways.model.Store;
 import za.co.foodaways.repository.ProductsRepository;
 import za.co.foodaways.repository.StoreManager;
+import za.co.foodaways.utils.Utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,31 +41,12 @@ public class StoreManagerService implements StoreManager {
 
 
     public void addProduct(Product newProduct, MultipartFile productImage, Store store, int storeAdminId){
-        String uploadDirectory = "src/main/resources/static/assets/images";
-        if(!productImage.isEmpty()){
-            String fileName = productImage.getOriginalFilename();
-            newProduct.setStore(store);
-            try {
-                File newDir = new File(uploadDirectory);
-                if(!newDir.exists()){newDir.mkdirs();}
-                byte[] fileBytes = productImage.getBytes();
-                Path path = Paths.get(uploadDirectory, fileName);
-                Files.write(path, fileBytes);
-                newProduct.setProductImagePath(String.valueOf(path));
-                newProduct.setImageOfProduct(fileName);
-
-                this.adminAddNewProduct(newProduct, storeAdminId);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }else if(productImage == null || productImage.isEmpty()) {
-            this.adminAddNewProduct(newProduct, storeAdminId);
-        }
-
+        String imageName = Utils.writeImage(productImage);
+        newProduct.setImageOfProduct(imageName);
+        newProduct.setProductImagePath("..");
+        newProduct.setStore(store);
+        this.adminAddNewProduct(newProduct, storeAdminId);
         Product savedProduct = productsRepository.save(newProduct);
-        if(savedProduct != null){
-            //Do something
-        }
     }
 
     @Transactional
