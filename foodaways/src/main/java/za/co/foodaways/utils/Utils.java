@@ -8,21 +8,21 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class Utils {
-    private static String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    private static final String UPLOAD_DIRECTORY = "src/main/resources/static/assets/images";
+    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     public static String writeImage(MultipartFile productImage) {
-        String uploadDirectory = "src/main/resources/static/assets/images";
         String fileName = null;
         if (!productImage.isEmpty()) {
             fileName = productImage.getOriginalFilename();
 //            String nameExtension = fileName.split(".")[1];
             fileName = getRandomName(10, ".png");
             try {
-                File newDir = new File(uploadDirectory);
+                File newDir = new File(UPLOAD_DIRECTORY);
                 if (!newDir.exists()) {
                     newDir.mkdirs();
                 }
                 byte[] fileBytes = productImage.getBytes();
-                Path path = Paths.get(uploadDirectory, fileName);
+                Path path = Paths.get(UPLOAD_DIRECTORY, fileName);
                 Files.write(path, fileBytes);
                 return fileName;
             } catch (IOException e) {
@@ -42,6 +42,19 @@ public class Utils {
             sb.append(character);
         }
         return  sb.append(extension).toString();
+    }
+    
+    public static String deleteImage(String filename){
+        if(filename.equalsIgnoreCase("default.png")){
+            return "default_file";
+        }
+        try{
+            Path path = Paths.get(UPLOAD_DIRECTORY, filename);
+            Files.deleteIfExists(path);
+            return "deleted";
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

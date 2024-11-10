@@ -109,6 +109,7 @@ public class StoreManagerService implements StoreManager {
         Product product = productsRepository.findById(productId).get();
         if(product != null){
             product.setStore(null);
+            Utils.deleteImage(product.imageOfProduct);
             productsRepository.delete(product);
         }
     }
