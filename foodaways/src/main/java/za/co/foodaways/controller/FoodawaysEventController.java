@@ -28,7 +28,7 @@ public class FoodawaysEventController {
         this.orderDtoMapper = orderDtoMapper;
     }
 
-    @GetMapping(path = "/store-manager/{storeId}/orders", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @GetMapping(path = "/store-manager/orders/{storeId}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<ServerSentEvent<ArrayList<OrderDto>>> getStoreOrder(@PathVariable("storeId") int storeId){
         //First fetch from DB
         ArrayList<OrderDto> listOfOrders = orderService.getStoreOrders(storeId)
