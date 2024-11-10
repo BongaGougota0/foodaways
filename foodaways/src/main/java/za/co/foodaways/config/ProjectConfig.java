@@ -48,8 +48,6 @@ public class ProjectConfig {
                                 .requestMatchers("/store-manager/completed-orders").hasRole("STORE_OWNER")
                                 .requestMatchers("/store-manager/delivered-orders").hasRole("STORE_OWNER")
                                 .requestMatchers("/store-manager/sales-details").hasRole("STORE_OWNER")
-                                .requestMatchers("/store-manager/product-edit-page/**").hasRole("STORE_OWNER")
-                                .requestMatchers("/store-manager/delete-product/**").hasRole("STORE_OWNER")
                                 .requestMatchers("/foodaways-admin").hasRole("ADMIN")
                                 .requestMatchers("/foodaways-admin/**").hasRole("ADMIN")
                                 .requestMatchers("/error?continue").authenticated())
