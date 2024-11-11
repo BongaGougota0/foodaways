@@ -34,7 +34,7 @@ public class OrderController {
     public ModelAndView displayOrderPage(Authentication authentication){
         int storeId = storeUserService.findUserByEmail(authentication.getName()).managedStore.storeId;
         List<Order> orderList = orderService.getStoreOrders(storeId);
-        ModelAndView mav = new ModelAndView("order.html");
+        ModelAndView mav = new ModelAndView("store_orders.html");
         mav.addObject("storeOrders", orderList);
         return mav;
     }

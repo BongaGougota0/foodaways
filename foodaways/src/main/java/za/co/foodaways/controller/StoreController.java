@@ -3,12 +3,14 @@ package za.co.foodaways.controller;
 import jakarta.persistence.EntityManager;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import reactor.core.publisher.Flux;
 import za.co.foodaways.model.*;
 import za.co.foodaways.repository.StoreUserRepository;
 import za.co.foodaways.service.*;
@@ -19,8 +21,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Controller
 @RequestMapping("store-manager")
@@ -70,28 +75,39 @@ public class StoreController {
     }
 
     @RequestMapping(value = "/orders", method = {RequestMethod.GET, RequestMethod.POST})
-    public ModelAndView storeOrders(){
-        ModelAndView mav = new ModelAndView("order.html");
-        mav.addObject("storeOrders", orderService.getStoreOrdersByStatus(1));
+    public ModelAndView storeOrders(Model model, HttpSession session){
+        ModelAndView mav = new ModelAndView("store_orders.html");
+        Store store = (Store) session.getAttribute("managedStore");
+        model.addAttribute("storeId", store.getStoreId());
+        model.addAttribute("storeName", store.getStoreName());
+        mav.addObject("storeOrders", orderService.getStoreOrdersByStatus(store.getStoreId()));
         return mav;
     }
+
+    @GetMapping(path = "/new-orders/{storeId}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<Order> getStoreOrdersById(@PathVariable("storeId") int storeId) throws IOException {
+        Stream<Order> storeOrders = storeManagerService.getAllStoreOrders(storeId).stream();
+        return Flux.fromStream(storeOrders)
+                .delayElements(Duration.ofMillis(300));
+    }
+
     @RequestMapping(value = "/completed-orders", method = {RequestMethod.GET, RequestMethod.POST})
     public ModelAndView storeCompletedOrders(){
-        ModelAndView mav = new ModelAndView("order.html");
+        ModelAndView mav = new ModelAndView("store_orders.html");
         mav.addObject("storeOrders", orderService.getStoreOrdersByStatus(1));
         return mav;
     }
 
     @RequestMapping(value = "/delivered-orders", method = {RequestMethod.GET, RequestMethod.POST})
     public ModelAndView storeDeliveredOrders(){
-        ModelAndView mav = new ModelAndView("order.html");
+        ModelAndView mav = new ModelAndView("store_orders.html");
         mav.addObject("storeOrders", orderService.getStoreOrdersByStatus(1));
         return mav;
     }
 
     @RequestMapping(value = "/store-manager/sales-details", method = {RequestMethod.GET, RequestMethod.POST})
     public ModelAndView storeSalesDetails(){
-        ModelAndView mav = new ModelAndView("order.html");
+        ModelAndView mav = new ModelAndView("store_orders.html");
         mav.addObject("storeOrders", orderService.getStoreOrdersByStatus(1));
         return mav;
     }
