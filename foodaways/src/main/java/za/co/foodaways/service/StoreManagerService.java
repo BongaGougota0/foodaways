@@ -10,6 +10,7 @@ import za.co.foodaways.model.Order;
 import za.co.foodaways.model.OrderStatus;
 import za.co.foodaways.model.Product;
 import za.co.foodaways.model.Store;
+import za.co.foodaways.repository.OrderRepository;
 import za.co.foodaways.repository.ProductsRepository;
 import za.co.foodaways.repository.StoreManager;
 import za.co.foodaways.utils.Utils;
@@ -29,10 +30,13 @@ public class StoreManagerService implements StoreManager {
 
     private final EntityManager entityManager;
     ProductsRepository productsRepository;
+    OrderRepository orderRepository;
+
     @Autowired
-    public StoreManagerService(EntityManager entityManager, ProductsRepository productsRepository){
+    public StoreManagerService(EntityManager entityManager, ProductsRepository productsRepository, OrderRepository orderRepository){
         this.entityManager = entityManager;
         this.productsRepository = productsRepository;
+        this.orderRepository = orderRepository;
     }
     @Override
     public void addNewProduct(Product newProduct) {
@@ -115,8 +119,8 @@ public class StoreManagerService implements StoreManager {
     }
 
     @Override
-    public List<Order> getAllStoreOrders(int storeId) {
-        return null;
+    public ArrayList<Order> getAllStoreOrders(int storeId) {
+        return orderRepository.findOrdersByStoreId(storeId);
     }
 
     @Override

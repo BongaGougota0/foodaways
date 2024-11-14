@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -27,7 +28,7 @@ public class ProjectConfig {
 
     @Bean
     SecurityFilterChain projectSecurityConfig(HttpSecurity http) throws Exception {
-        http.csrf(d -> d.disable()).authorizeHttpRequests(
+        http.authorizeHttpRequests(
                         (re) -> re.requestMatchers("/login").permitAll()
                                 .requestMatchers("/logout").permitAll()
                                 .requestMatchers("/register").permitAll()
@@ -48,24 +49,24 @@ public class ProjectConfig {
                                 .requestMatchers("/in/add-product-to-cart/**").hasRole("CUSTOMER")
                                 .requestMatchers("/store-manager/home").hasRole("STORE_OWNER")
                                 .requestMatchers("/store-manager/products").hasRole("STORE_OWNER")
-                                .requestMatchers("/store-manager/orders").hasRole("STORE_OWNER")
+                                .requestMatchers("/store-manager/orders/**").hasRole("STORE_OWNER")
                                 .requestMatchers("/store-manager/new-orders/**").permitAll()
                                 .requestMatchers("/store-manager/add-new-product").hasRole("STORE_OWNER")
                                 .requestMatchers("/store-manager/store-products-menu").hasRole("STORE_OWNER")
                                 .requestMatchers("/store-manager/completed-orders").hasRole("STORE_OWNER")
                                 .requestMatchers("/store-manager/delivered-orders").hasRole("STORE_OWNER")
                                 .requestMatchers("/store-manager/sales-details").hasRole("STORE_OWNER")
-                                .requestMatchers("/store-manager/orders/*").hasRole("STORE_OWNER")
                                 .requestMatchers("/foodaways-admin").hasRole("ADMIN")
                                 .requestMatchers("/foodaways-admin/**").hasRole("ADMIN")
                                 .requestMatchers("/error?continue").authenticated())
+                .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(loginFormConfigure -> loginFormConfigure.loginPage("/login")
                         .successHandler(customAuthenticationSuccessHandler)
                         .failureUrl("/login?error=true").permitAll())
                 .logout(logoutFormConfigure
                         -> logoutFormConfigure.logoutSuccessUrl("/foodaways/")
-                        .invalidateHttpSession(true).permitAll())
-                .httpBasic().disable();
+                        .invalidateHttpSession(true).permitAll());
+
         return http.build();
     }
 

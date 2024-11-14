@@ -1,5 +1,5 @@
 function fetchStoreOrders(storeId) {
-    const eventSource = new EventSource(`/orders/${storeId}`);
+    const eventSource = new EventSource(`http://localhost:8080/store-manager/new-orders/${storeId}`);
     const ordersContainer = document.getElementById('orders-container');
     eventSource.onmessage = function(event) {
         const order = JSON.parse(event.data);
@@ -38,4 +38,3 @@ function fetchStoreOrders(storeId) {
     };
 }
 
-window.onload = fetchStoreOrders([[${storeId}]]);

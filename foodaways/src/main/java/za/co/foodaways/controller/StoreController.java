@@ -4,6 +4,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.http.codec.ServerSentEvent;
+import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import reactor.core.publisher.Flux;
+import za.co.foodaways.dto.OrderDto;
+import za.co.foodaways.mapper.OrderDtoMapper;
 import za.co.foodaways.model.*;
 import za.co.foodaways.repository.StoreUserRepository;
 import za.co.foodaways.service.*;
@@ -37,16 +41,18 @@ public class StoreController {
     ProductsService productsService;
     StoreUserService storeUserService;
     StoreManagerService storeManagerService;
+    OrderDtoMapper orderDtoMapper;
     @Autowired
     public StoreController(ReservationService service, OrderService orderService,
                            StoreUserRepository userRepository, ProductsService productsService,
-                           StoreUserService storeUserService, StoreManagerService storeManagerService){
+                           StoreUserService storeUserService, StoreManagerService storeManagerService, OrderDtoMapper orderDtoMapper){
         this.reservationService = service;
         this.orderService = orderService;
         this.storeUserRepository = userRepository;
         this.productsService = productsService;
         this.storeUserService = storeUserService;
         this.storeManagerService = storeManagerService;
+        this.orderDtoMapper = orderDtoMapper;
     }
 
     @RequestMapping(value = "/home")
@@ -84,11 +90,17 @@ public class StoreController {
         return mav;
     }
 
-    @GetMapping(path = "/new-orders/{storeId}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public Flux<Order> getStoreOrdersById(@PathVariable("storeId") int storeId) throws IOException {
-        Stream<Order> storeOrders = storeManagerService.getAllStoreOrders(storeId).stream();
-        return Flux.fromStream(storeOrders)
-                .delayElements(Duration.ofMillis(300));
+    @CrossOrigin(origins = "http://localhost:8080/")
+    @GetMapping(path = "/new-orders/{storeId}", produces = "text/event-stream")
+    public Flux<OrderDto> getStoreOrder(@PathVariable("storeId") int storeId){
+        //First fetch from DB
+        ArrayList<OrderDto> listOfOrders = orderService.getStoreOrders(storeId)
+        .stream()
+        .map(orderDtoMapper::toDto).collect(Collectors.toCollection(ArrayList::new));
+        // events received by Js function.
+        System.out.println(listOfOrders);
+        return Flux.fromStream(listOfOrders.stream())
+                .delayElements(Duration.ofMillis(5000));
     }
 
     @RequestMapping(value = "/completed-orders", method = {RequestMethod.GET, RequestMethod.POST})
