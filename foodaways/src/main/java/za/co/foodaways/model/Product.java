@@ -40,6 +40,6 @@ public class Product extends BaseEntity{
     public Set<Review> reviews = new HashSet<>();
 
     public int getStoreId(){
-        return store.storeId;
+        return store.getStoreId();
     }
 }

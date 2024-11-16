@@ -2,6 +2,7 @@ package za.co.foodaways.controller;
 
 import jakarta.persistence.EntityManager;
 import jakarta.servlet.http.HttpSession;
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.codec.ServerSentEvent;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import reactor.core.publisher.Flux;
+import za.co.foodaways.dto.CartDto;
 import za.co.foodaways.dto.OrderDto;
 import za.co.foodaways.mapper.OrderDtoMapper;
 import za.co.foodaways.model.*;
@@ -92,6 +94,7 @@ public class StoreController {
     @RequestMapping(value = "/orders", method = {RequestMethod.GET, RequestMethod.POST})
     public ModelAndView storeOrders(Model model, HttpSession session){
         ModelAndView mav = new ModelAndView("store_orders.html");
+        mav.addObject("newProduct", new Product());
         Store store = (Store) session.getAttribute("managedStore");
         model.addAttribute("storeId", store.getStoreId());
         model.addAttribute("storeName", store.getStoreName());
@@ -100,13 +103,13 @@ public class StoreController {
     }
 
 
-    @GetMapping(path = "/new-orders/{storeId}/", produces = "text/event-stream")
+    @MessageMapping("/new-orders/{storeId}/")
     public void getStoreOrder(@PathVariable("storeId") int storeId){
 
     }
 
     @MessageMapping("/place.order")
-    @SendTo("/store-manager/orders")
+    @SendTo("/store-manager/new-orders/")
     public Order placeOrder(@Payload Order order){
         int storeId = order.getOrderItems().stream().findFirst().get().getStoreId();
         String destination = "/store-manager/orders/"+storeId;
@@ -124,6 +127,7 @@ public class StoreController {
     @RequestMapping(value = "/completed-orders", method = {RequestMethod.GET, RequestMethod.POST})
     public ModelAndView storeCompletedOrders(){
         ModelAndView mav = new ModelAndView("store_orders.html");
+        mav.addObject("newProduct", new Product());
         mav.addObject("storeOrders", orderService.getStoreOrdersByStatus(1));
         return mav;
     }
@@ -131,14 +135,16 @@ public class StoreController {
     @RequestMapping(value = "/delivered-orders", method = {RequestMethod.GET, RequestMethod.POST})
     public ModelAndView storeDeliveredOrders(){
         ModelAndView mav = new ModelAndView("store_orders.html");
+        mav.addObject("newProduct", new Product());
         mav.addObject("storeOrders", orderService.getStoreOrdersByStatus(1));
         return mav;
     }
 
-    @RequestMapping(value = "/store-manager/sales-details", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/sales-details", method = {RequestMethod.GET, RequestMethod.POST})
     public ModelAndView storeSalesDetails(){
         ModelAndView mav = new ModelAndView("store_orders.html");
-        mav.addObject("storeOrders", orderService.getStoreOrdersByStatus(1));
+        mav.addObject("newProduct", new Product());
+        mav.addObject("completedOrders", orderService.getStoreOrdersByStatus(1));
         return mav;
     }
 

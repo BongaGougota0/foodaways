@@ -81,13 +81,14 @@ public class CustomerController {
 
     //Place order
     @PostMapping(value = "/place-order")
-    public ModelAndView placeOrder(@RequestBody OrderDto order, HttpSession session){
+    public ModelAndView placeOrder(HttpSession session){
         StoreUser user = (StoreUser)session.getAttribute("loggedInUser");
         CartDto cartDto = (CartDto)session.getAttribute("customerCart") ;
-
-        String orderResult = orderService.customerNewOrder(order, user);
+        Order orderResult = orderService.createOrder(cartDto, user);
         ModelAndView mav = new ModelAndView();
-        if(orderResult.equals(OrderStatus.Status.ORDER_PLACED.toString())){
+        if(orderResult.getOrderStatus().equalsIgnoreCase(OrderStatus.Status.ORDER_PLACED.name())){
+            String destination = "/store-manager/place.order";
+            simpMessagingTemplate.convertAndSend(destination, orderResult);
             mav.setViewName("redirect:/in/my-orders?success=true");
             session.removeAttribute("customerCart");
             return mav;
@@ -138,7 +139,7 @@ public class CustomerController {
                     product.getMenuItems(), product.getProductName(), "",
                     product.getProductImagePath(), product.getProductCategory(),
                     product.getProductPrice(), rating,
-                    1));
+                    1, product.getStoreId()));
         }
         ArrayList<ProductDto> productDtos = new ArrayList<>(customerCart.cartItems.values());
         CartDto cartDto = new CartDto(productDtos, customerCart.getCartTotal());

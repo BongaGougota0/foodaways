@@ -83,7 +83,7 @@ public class ProjectConfig {
                 return new ProductDto(entity.getProductId(), entity.getMenuItems(), entity.getProductName(),
                         entity.getProductImagePath(), entity.getImageOfProduct(), entity.getProductCategory(),
                         entity.getProductPrice(),
-                        entity.reviews.stream().mapToInt(Review::getRating).sum(),0);
+                        entity.reviews.stream().mapToInt(Review::getRating).sum(),0, entity.store.getStoreId());
             }
 
             @Override
@@ -96,6 +96,7 @@ public class ProjectConfig {
                 product.setProductPrice(dto.getProductPrice());
                 product.setMenuItems(dto.getMenuItems());
                 product.setStore(storeService.findStoreByProductId(dto.getProductId()));
+                product.setStore(storeService.findStoreByProductId(dto.getStoreId()));
                 return product;
             }
         };

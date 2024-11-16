@@ -16,4 +16,5 @@ public class ProductDto {
     public double productPrice;
     public double productAverageRating;
     public int productCount;
+    public int storeId;
 }
