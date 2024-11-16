@@ -1,6 +1,8 @@
 package za.co.foodaways.controller;
 
 import jakarta.servlet.http.HttpSession;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,13 +28,16 @@ public class CustomerController {
     ProductsService productsService;
     StoreUserService userService;
     DtoMapper dtoMapper;
+    SimpMessagingTemplate simpMessagingTemplate;
 
     public CustomerController(OrderService orderService, ProductsService productsService,
-                              StoreUserService userService, DtoMapper dtoMapper){
+                              StoreUserService userService,
+                              DtoMapper dtoMapper, SimpMessagingTemplate simpMessagingTemplate){
         this.orderService = orderService;
         this.productsService = productsService;
         this.userService = userService;
         this.dtoMapper = dtoMapper;
+        this.simpMessagingTemplate = simpMessagingTemplate;
     }
 
     //Storefront on login
@@ -78,6 +83,8 @@ public class CustomerController {
     @PostMapping(value = "/place-order")
     public ModelAndView placeOrder(@RequestBody OrderDto order, HttpSession session){
         StoreUser user = (StoreUser)session.getAttribute("loggedInUser");
+        CartDto cartDto = (CartDto)session.getAttribute("customerCart") ;
+
         String orderResult = orderService.customerNewOrder(order, user);
         ModelAndView mav = new ModelAndView();
         if(orderResult.equals(OrderStatus.Status.ORDER_PLACED.toString())){
@@ -117,7 +124,7 @@ public class CustomerController {
         return "redirect:/in/foodaways";
     }
 
-    @RequestMapping(value = "/add-product-to-cart/{productId}")
+    @MessageMapping(value = "/add-product-to-cart/{productId}")
     public void addProductToCart(HttpSession session, @PathVariable("productId") int productId){
         Cart customerCart = (Cart)session.getAttribute("customerCart");
         if(customerCart.cartItems.containsKey(productId)){

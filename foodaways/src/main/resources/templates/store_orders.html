@@ -2,7 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title th:text="${storeName}"> Orders</title>
+    <title th:text="${storeName} + ' Orders'"></title>
+    <link href="/assets/css/modal_style.css" rel="stylesheet">
     <link href="/assets/css/store-order-page.css" rel="stylesheet">
 </head>
 <body>
@@ -12,9 +13,11 @@
 
         </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
     <script src="/assets/js/store_controller.js"></script>
+    <script>
+        window.onload = connect([[${storeId}]]);
+    </script>
 </body>
-<script>
-    window.onload = fetchStoreOrders([[${storeId}]]);
-</script>
 </html>

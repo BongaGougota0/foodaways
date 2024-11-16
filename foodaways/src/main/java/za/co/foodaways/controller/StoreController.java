@@ -6,6 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.codec.ServerSentEvent;
 import org.springframework.http.server.reactive.ServerHttpResponse;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -42,10 +47,12 @@ public class StoreController {
     StoreUserService storeUserService;
     StoreManagerService storeManagerService;
     OrderDtoMapper orderDtoMapper;
+    SimpMessagingTemplate simpMessagingTemplate;
     @Autowired
     public StoreController(ReservationService service, OrderService orderService,
                            StoreUserRepository userRepository, ProductsService productsService,
-                           StoreUserService storeUserService, StoreManagerService storeManagerService, OrderDtoMapper orderDtoMapper){
+                           StoreUserService storeUserService, StoreManagerService storeManagerService,
+                           OrderDtoMapper orderDtoMapper, SimpMessagingTemplate simpMessagingTemplate){
         this.reservationService = service;
         this.orderService = orderService;
         this.storeUserRepository = userRepository;
@@ -53,6 +60,7 @@ public class StoreController {
         this.storeUserService = storeUserService;
         this.storeManagerService = storeManagerService;
         this.orderDtoMapper = orderDtoMapper;
+        this.simpMessagingTemplate = simpMessagingTemplate;
     }
 
     @RequestMapping(value = "/home")
@@ -63,6 +71,7 @@ public class StoreController {
         mav.addObject("productCategories", Arrays.asList("Lunch", "Dinner", "Breakfast"));
         model.addAttribute("roles", authentication.getAuthorities().toString());
         StoreUser userPerson = storeUserRepository.findByEmail(authentication.getName());
+        model.addAttribute("storeId", storeUserService.getManagedStoreByAdminId(userPerson.getUserId()).getStoreId());
         session.setAttribute("managedStore", storeUserService.getManagedStoreByAdminId(userPerson.getUserId()));
         session.setAttribute("loggedInUser", userPerson);
         return mav;
@@ -90,17 +99,26 @@ public class StoreController {
         return mav;
     }
 
-    @CrossOrigin(origins = "http://localhost:8080/")
-    @GetMapping(path = "/new-orders/{storeId}", produces = "text/event-stream")
-    public Flux<OrderDto> getStoreOrder(@PathVariable("storeId") int storeId){
-        //First fetch from DB
-        ArrayList<OrderDto> listOfOrders = orderService.getStoreOrders(storeId)
-        .stream()
-        .map(orderDtoMapper::toDto).collect(Collectors.toCollection(ArrayList::new));
-        // events received by Js function.
-        System.out.println(listOfOrders);
-        return Flux.fromStream(listOfOrders.stream())
-                .delayElements(Duration.ofMillis(5000));
+
+    @GetMapping(path = "/new-orders/{storeId}/", produces = "text/event-stream")
+    public void getStoreOrder(@PathVariable("storeId") int storeId){
+
+    }
+
+    @MessageMapping("/place.order")
+    @SendTo("/store-manager/orders")
+    public Order placeOrder(@Payload Order order){
+        int storeId = order.getOrderItems().stream().findFirst().get().getStoreId();
+        String destination = "/store-manager/orders/"+storeId;
+        simpMessagingTemplate.convertAndSend(destination,order);
+        return order;
+    }
+
+    @MessageMapping("/activate-store")
+    @SendTo("/store-manager/new-orders/")
+    public Order activateStore(@Payload Order order, SimpMessageHeaderAccessor headerAccessor){
+        headerAccessor.getSessionAttributes().put("status", "ONLINE");
+        return order;
     }
 
     @RequestMapping(value = "/completed-orders", method = {RequestMethod.GET, RequestMethod.POST})
