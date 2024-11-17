@@ -125,7 +125,7 @@ public class CustomerController {
         return "redirect:/in/foodaways";
     }
 
-    @MessageMapping(value = "/add-product-to-cart/{productId}")
+    @GetMapping(value = "/add-product-to-cart/{productId}")
     public void addProductToCart(HttpSession session, @PathVariable("productId") int productId){
         Cart customerCart = (Cart)session.getAttribute("customerCart");
         if(customerCart.cartItems.containsKey(productId)){
