@@ -858,6 +858,17 @@ strong {
     padding-bottom: 200px;
   }
 
+ .nav-link{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .cart-count{
+    font-size: 0.8em;
+    color: #666;
+  }
+
   #BookingModal .modal-content::before {
     background-image: url('../images/sincerely-media-HoEYgBL_Gcs-unsplash-mobile.jpg');
     background-position: bottom;

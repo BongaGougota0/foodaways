@@ -35,7 +35,8 @@
                                                     class="img-fluid menu-image" alt="">
 
                                             <span class="menu-tag bg-warning" th:text="${product.productCategory}"></span>
-                                            <a class="add-to-cart" onclick="addToCart(this)">Add To Cart</a>
+                                            <a class="add-to-cart">Add To Cart</a>
+                                            <id th:text="${product.productId}" style="display : none"></id>
                                         </div>
                                     </a>
 
@@ -63,13 +64,14 @@
 
                             <div class="col-lg-4 col-md-6 col-12" th:each="lunch : ${lunchList}">
                                 <div class="menu-thumb">
-                                    <a th:href="@{/product-view/{id}(id = ${lunch.productId})}">
+                                    <a th:href="@{/foodaways/product-view/{id}(id = ${lunch.productId})}">
                                         <div class="menu-image-wrap">
                                             <img th:src="@{'/assets/images/' + ${lunch.imageOfProduct}}"
                                                  class="img-fluid menu-image" alt="">
 
                                             <span class="menu-tag bg-warning" th:text="${lunch.productCategory}"></span>
-                                            <a class="add-to-cart" onclick="addToCart(this)">Add To Cart</a>
+                                            <a class="add-to-cart">Add To Cart</a>
+                                            <id th:text="${lunch.productId}" style="display : none"></id>
                                         </div>
                                     </a>
 
@@ -103,7 +105,8 @@
                                                      class="img-fluid menu-image" alt="">
 
                                                 <span class="menu-tag bg-warning" th:text="${dinner.productCategory}"></span>
-                                                <a class="add-to-cart" onclick="addToCart(this)">Add To Cart</a>
+                                                <a class="add-to-cart">Add To Cart</a>
+                                                <id th:text="${dinner.productId}" style="display : none"></id>
                                             </div>
                                         </a>
 

@@ -50,7 +50,9 @@
                         </li>
 
                         <li sec:authorize="hasRole('ROLE_CUSTOMER')" class="nav-item">
-                            <a id="cart-count" class="nav-link" th:href="@{/foodaways/contact}">Cart </a>
+                            <a id="cart-count" class="nav-link" th:href="@{/foodaways/contact}">Your Cart :
+                                <span class="cart-count"></span>
+                            </a>
                         </li>
 
                     </ul>
