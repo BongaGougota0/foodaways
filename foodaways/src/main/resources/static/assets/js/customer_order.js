@@ -45,7 +45,7 @@ const CartManager = {
         }
     },
     
-    // Update cart UI (implement based on your UI needs)
+    // Update cart UI
     updateCartUI: function() {
         // Update cart count in UI
         const cartCountElement = document.querySelector('.cart-count');
@@ -70,6 +70,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const menuThumb = this.closest('.menu-thumb');
             const productData = {
                 productId: parseInt(menuThumb.querySelector('id').textContent),
+                storeId: parseInt(menuThumb.querySelector('storeId').textContent),
                 productName: menuThumb.querySelector('h4').textContent,
                 productPrice: parseFloat(menuThumb.querySelector('.price-tag').textContent),
                 productCategory: menuThumb.querySelector('.menu-tag').textContent,
