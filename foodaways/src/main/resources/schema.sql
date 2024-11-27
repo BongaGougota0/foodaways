@@ -24,7 +24,7 @@
 --  `store_name` varchar(100) NOT NULL,
 --  `store_number` varchar(15) NOT NULL,
 --  `store_location` varchar(100) NOT NULL,
---  `manager_id` INT NULL,
+--  `store_owner` INT NULL,
 --  PRIMARY KEY (store_id),
 --  FOREIGN KEY (store_owner) REFERENCES store_user(user_id)
 --);
@@ -48,14 +48,13 @@
 --
 --CREATE TABLE IF NOT EXISTS `customer_orders` (
 --    `order_id` int AUTO_INCREMENT PRIMARY KEY,
---    `order_status` int NOT NULL,
+--    `order_status` VARCHAR(255) NULL,
 --    `user_id` int NOT NULL,
 --    `order_items` VARCHAR(255) NULL,
 --    `order_total` double NULL,
 --    `created_at` TIMESTAMP DEFAULT NULL,
 --    `closed_at` TIMESTAMP DEFAULT NULL,
 --    `order_to` int NOT NULL,
---    FOREIGN KEY (order_status) REFERENCES status(status_id),
 --    FOREIGN KEY (user_id) REFERENCES store_user(user_id),
 --    FOREIGN KEY (order_to) REFERENCES store(store_id)
 --);
@@ -77,6 +76,6 @@
 --
 --INSERT INTO store_user(user_id, full_name, phone_number, email, password,role_id)
 -- VALUES (2,"Bonga Gee", "0694772226","bonga@galapagos.com","$2a$10$gDbQErVkE6bXxk2WaIg5W.EiU3t8Hu4xKNQg5U7lMSQ1Bk74Jy8Fa",3);
---
+
 --INSERT INTO store(store_id, store_name, store_number, store_location, store_owner)
 -- VALUES(1,"Galapagos","0128902323","LillyBank",2);
