@@ -200,6 +200,10 @@ strong {
   color: var(--p-color);
 }
 
+a #cart-count .nav-link:hover {
+    cursor : pointer;
+}
+
 .navbar-toggler {
   border: 0;
   padding: 0;
@@ -297,15 +301,7 @@ strong {
 }
 
 .site-menu-header {
-  background-image: url('../images/header/luisa-brimble-aFzg83dvnAI-unsplash.jpg');
-}
-
-.site-news-header {
-  background-image: url('../images/header/priscilla-du-preez-W3SEyZODn8U-unsplash.jpg');
-}
-
-.site-contact-header {
-  background-image: url('../images/header/rod-long-I79Pgmhmy5M-unsplash.jpg');
+  background-image: url('../images/header/farhad-ibrahimzade-MGKqxm6u2bc-unsplash.jpg');
 }
 
 .overlay {
@@ -643,12 +639,13 @@ strong {
 /*---------------------------------------
   BOOKING FORM            
 -----------------------------------------*/
-#BookingModal .modal-content {
+#CartModal .modal-content {
+  display : None;
   border: 0;
   overflow: hidden;
 }
 
-#BookingModal .modal-content::before {
+#CartModal .modal-content::before {
   content: "";
   background-color: var(--white-color);
   background-image: url('../images/sincerely-media-HoEYgBL_Gcs-unsplash.jpg');
@@ -662,18 +659,18 @@ strong {
   right: 0;
 }
 
-#BookingModal .modal-header {
+#CartModal .modal-header {
   border-bottom: 0;
   position: relative;
   padding: 26px 32px 0 32px;
 }
 
-#BookingModal .modal-body {
+#CartModal .modal-body {
   padding: 38px 32px;
   padding-right: 35%;
 }
 
-#BookingModal .modal-footer {
+#CartModal .modal-footer {
   border-top: 0;
   padding: 0;
 }
@@ -854,7 +851,7 @@ strong {
     padding-bottom: 10px;
   }
 
-  #BookingModal .modal-content {
+  #CartModal .modal-content {
     padding-bottom: 200px;
   }
 
@@ -869,7 +866,7 @@ strong {
     color: #666;
   }
 
-  #BookingModal .modal-content::before {
+  #CartModal .modal-content::before {
     background-image: url('../images/sincerely-media-HoEYgBL_Gcs-unsplash-mobile.jpg');
     background-position: bottom;
     top: auto;
@@ -880,7 +877,7 @@ strong {
     transform: rotate(180deg);
   }
 
-  #BookingModal .modal-body {
+  #CartModal .modal-body {
     padding-top: 18px;
     padding-right: 32px;
   }

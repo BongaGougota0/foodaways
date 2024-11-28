@@ -17,7 +17,94 @@
             <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
             <link href="/assets/css/bootstrap-icons.css" rel="stylesheet">
             <link href="/assets/css/tooplate-crispy-kitchen.css" rel="stylesheet">
+            <style>
+            .modal {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5);
+            }
 
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 600px;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            gap: 15px;
+        }
+
+        .product-image {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .product-details {
+            flex-grow: 1;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quantity-btn {
+            padding: 5px 10px;
+            border: 1px solid #ddd;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .quantity-btn:hover {
+            background-color: #eee;
+        }
+
+        .place-order-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+
+        .place-order-btn:hover {
+            background-color: #45a049;
+        }
+
+        .total-price {
+            text-align: right;
+            margin-top: 15px;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .close-btn {
+            float: right;
+            cursor: pointer;
+            font-size: 1.5em;
+        }
+        </style>
         </head>
         <nav class="navbar navbar-expand-lg bg-white shadow-lg">
             <div class="container">
@@ -29,11 +116,6 @@
                 <a class="navbar-brand" th:href="@{/foodaways/}">
                     foodaways
                 </a>
-
-                <div class="d-lg-none">
-                    <button type="button" class="custom-btn btn btn-danger" data-bs-toggle="modal"
-                            data-bs-target="#BookingModal">Reservation</button>
-                </div>
 
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav mx-auto">
@@ -50,7 +132,7 @@
                         </li>
 
                         <li sec:authorize="hasRole('ROLE_CUSTOMER')" class="nav-item">
-                            <a id="cart-count" class="nav-link" th:href="@{/foodaways/contact}">Your Cart :
+                            <a id="cart-count" th:href="@{/in/view-cart}" class="nav-link">Your Cart :
                                 <span class="cart-count"></span>
                             </a>
                         </li>
@@ -69,5 +151,6 @@
             </div>
         </nav>
     </div>
+
 </body>
 </html>

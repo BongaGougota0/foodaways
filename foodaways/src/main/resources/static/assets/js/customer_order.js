@@ -119,3 +119,49 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
+
+function placeOrderFromCart() {
+    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    if (cart.length === 0) {
+        alert('Cart is empty');
+        return;
+    }
+    const firstStoreId = cart[0].storeId;
+    const sameStore = cart.every(product => product.storeId === firstStoreId);
+
+    if (!sameStore) {
+        alert('Products must be from a single store. Please separate orders by store.');
+        return;
+    }
+    const orderData = {
+        products: cart.map(item => ({
+            productId: item.productId,
+            productName: item.productName,
+            productPrice: item.productPrice,
+            productCount: item.productCount
+        })),
+        storeId: firstStoreId
+    };
+
+    fetch('/place.order', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(orderData)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Order submission failed');
+        }
+        return response.json();
+    })
+    .then(result => {
+        localStorage.removeItem('cart');
+        alert('Order placed successfully!');
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to place order. Please try again.');
+    });
+}

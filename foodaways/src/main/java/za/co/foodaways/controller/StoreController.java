@@ -49,12 +49,13 @@ public class StoreController {
     StoreUserService storeUserService;
     StoreManagerService storeManagerService;
     OrderDtoMapper orderDtoMapper;
+    StoreService storeService;
     SimpMessagingTemplate simpMessagingTemplate;
     @Autowired
     public StoreController(ReservationService service, OrderService orderService,
                            StoreUserRepository userRepository, ProductsService productsService,
                            StoreUserService storeUserService, StoreManagerService storeManagerService,
-                           OrderDtoMapper orderDtoMapper, SimpMessagingTemplate simpMessagingTemplate){
+                           OrderDtoMapper orderDtoMapper, StoreService storeService, SimpMessagingTemplate simpMessagingTemplate){
         this.reservationService = service;
         this.orderService = orderService;
         this.storeUserRepository = userRepository;
@@ -62,6 +63,7 @@ public class StoreController {
         this.storeUserService = storeUserService;
         this.storeManagerService = storeManagerService;
         this.orderDtoMapper = orderDtoMapper;
+        this.storeService = storeService;
         this.simpMessagingTemplate = simpMessagingTemplate;
     }
 
@@ -110,8 +112,14 @@ public class StoreController {
 
     @MessageMapping("/place.order")
     @SendTo("/store-manager/new-orders/")
-    public Order placeOrder(@Payload Order order){
-        int storeId = order.getOrderItems().stream().findFirst().get().getStoreId();
+    public Order placeOrder(@Payload OrderDto orderDto, HttpSession session){
+        int storeId = orderDto.storeId;
+        StoreUser user = (StoreUser)session.getAttribute("loggedInUser");
+        Order order = new Order();
+        order.setOrderStatus("ORDER_PLACED");
+        order.setStoreOrder(storeService.findStoreByProductId(storeId));
+        System.out.println("-------- Display post order items ---------- "+orderDto.orderItems);
+        orderService.customerNewOrder(orderDto, user);
         String destination = "/store-manager/orders/"+storeId;
         simpMessagingTemplate.convertAndSend(destination,order);
         return order;

@@ -71,12 +71,7 @@ public class CustomerController {
 
     @RequestMapping(value = "/view-cart")
     public String viewCart(Model model, HttpSession session){
-        CartDto cartDto = (CartDto)session.getAttribute("customerCart");
-        ArrayList<ProductDto> cartProducts = cartDto.cartItems;
-        double cartTotal = cartDto.cartTotal;
-        model.addAttribute("cartTotal", cartTotal);
-        model.addAttribute("cartProducts", cartProducts);
-        return "view_cart.html";
+        return "customer_cart.html";
     }
 
     //Place order
