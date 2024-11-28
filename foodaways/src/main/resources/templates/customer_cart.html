@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title></title>
+</head>
+<body>
+    <div th:insert="~{header :: header}"></div>
+
+    <div id="cartItems">
+
+        <p id="totalPrice"></p>
+    </div>
+
+    <div th:insert="~{footer :: footer}"></div>
+    <script>
+        window.onload = updateCartDisplay;
+    </script>
+</body>
+</html>
