@@ -75,32 +75,18 @@ public class CustomerController {
         return "customer_cart.html";
     }
 
-    //Place order
-    @PostMapping(value = "/xplace-order")
-    public ModelAndView placeOrder(HttpSession session){
-        StoreUser user = (StoreUser)session.getAttribute("loggedInUser");
-        CartDto cartDto = (CartDto)session.getAttribute("customerCart") ;
-        Order orderResult = orderService.createOrder(cartDto, user);
-        ModelAndView mav = new ModelAndView();
-        if(orderResult.getOrderStatus().equalsIgnoreCase(OrderStatus.Status.ORDER_PLACED.name())){
-            String destination = "/store-manager/place.order";
-            simpMessagingTemplate.convertAndSend(destination, orderResult);
-            mav.setViewName("redirect:/in/my-orders?success=true");
-            session.removeAttribute("customerCart");
-            return mav;
-        }
-        mav.setViewName("redirect:/in/foodaways");
-        return mav;
-    }
-
-
     @PostMapping(value = "/place-order")
     public ResponseEntity<Map<String, String>> postOrder(@RequestBody OrderDto orderProducts, HttpSession session){
         StoreUser user = (StoreUser) session.getAttribute("loggedInUser");
-        userService.placeCustomerOrder(orderProducts, user);
+        Order order = userService.placeCustomerOrder(orderProducts, user);
         Map<String, String> response = new HashMap<>();
-        response.put("message", "ORDER_PLACED");
-        response.put("order_id", String.valueOf(13243434));
+        if(order != null){
+            response.put("message", order.getOrderStatus());
+            response.put("order_id", String.valueOf(order.getOrderId()));
+            return ResponseEntity.ok(response);
+        }
+        response.put("message", OrderStatus.Status.ERROR_PLACING_ORDER.name());
+        response.put("order_id", null);
         return ResponseEntity.ok(response);
     }
 

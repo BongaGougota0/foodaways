@@ -23,7 +23,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
     ArrayList<Order> findUserOrdersById(@Param("userId") int userId);
 
     @Modifying
-    @Query(nativeQuery = true, value = "INSERT INTO products(order_items, order_status, store_id, user_id)" +
+    @Query(nativeQuery = true, value = "INSERT INTO orders(order_items, order_status, user_id, store_reference_id)" +
             " VALUES(:items, :status, :storeId, :userId)")
     void placeOrder(String items, String status, int storeId, int userId);
 }

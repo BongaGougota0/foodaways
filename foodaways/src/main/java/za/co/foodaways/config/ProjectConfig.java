@@ -95,8 +95,7 @@ public class ProjectConfig {
                 product.setProductName(dto.getProductName());
                 product.setProductPrice(dto.getProductPrice());
                 product.setMenuItems(dto.getMenuItems());
-                product.setStore(storeService.findStoreByProductId(dto.getProductId()));
-                product.setStore(storeService.findStoreByProductId(dto.getStoreId()));
+                product.setStore(storeService.findById(dto.storeId));
                 return product;
             }
         };

@@ -192,7 +192,8 @@ function placeOrderFromCart() {
             productId: item.productId,
             productName: item.productName,
             productPrice: item.productPrice,
-            productCount: item.productCount
+            productCount: item.productCount,
+            storeId: item.storeId
         })),
         storeId: firstStoreId
     };

@@ -14,6 +14,6 @@ public interface StoreRepository extends JpaRepository<Store, Integer> {
     Optional<Store> findByIdManagerId(@Param("manager_id") int managerId);
 
     @Query(nativeQuery = true, value = "SELECT * FROM store s JOIN products p " +
-                                        "ON p.store_id = s.store_id WHERE p.product_id = :productId")
+                                        "ON p.referenced_store_id = s.store_id WHERE p.product_id = :productId")
     Store findStoreByProductId(int productId);
 }
