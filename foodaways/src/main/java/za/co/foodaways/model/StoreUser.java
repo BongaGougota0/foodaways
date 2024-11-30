@@ -24,7 +24,7 @@ public class StoreUser extends BaseEntity{
 
     // Store Manager Relation
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, targetEntity = Store.class, optional = true)
-    @JoinColumn(name = "store_id", referencedColumnName = "storeId", nullable = true)
+    @JoinColumn(name = "managed_store_id", referencedColumnName = "storeId", nullable = true) // Changed column name
     public Store managedStore;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)

@@ -28,7 +28,7 @@ public class Product extends BaseEntity{
     public String productCategory;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "store_id", referencedColumnName = "storeId", nullable = false)
+    @JoinColumn(name = "referenced_store_id", referencedColumnName = "storeId", nullable = false)
     public Store store;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
