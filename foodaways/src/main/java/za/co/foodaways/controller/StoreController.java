@@ -1,12 +1,7 @@
 package za.co.foodaways.controller;
 
-import jakarta.persistence.EntityManager;
 import jakarta.servlet.http.HttpSession;
-import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.http.codec.ServerSentEvent;
-import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -18,25 +13,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
-import reactor.core.publisher.Flux;
-import za.co.foodaways.dto.CartDto;
 import za.co.foodaways.dto.OrderDto;
 import za.co.foodaways.mapper.OrderDtoMapper;
 import za.co.foodaways.model.*;
 import za.co.foodaways.repository.StoreUserRepository;
 import za.co.foodaways.service.*;
 import za.co.foodaways.utils.Utils;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
 
 @Controller
 @RequestMapping("store-manager")
@@ -55,7 +40,8 @@ public class StoreController {
     public StoreController(ReservationService service, OrderService orderService,
                            StoreUserRepository userRepository, ProductsService productsService,
                            StoreUserService storeUserService, StoreManagerService storeManagerService,
-                           OrderDtoMapper orderDtoMapper, StoreService storeService, SimpMessagingTemplate simpMessagingTemplate){
+                           OrderDtoMapper orderDtoMapper, StoreService storeService,
+                           SimpMessagingTemplate simpMessagingTemplate){
         this.reservationService = service;
         this.orderService = orderService;
         this.storeUserRepository = userRepository;

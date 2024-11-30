@@ -83,6 +83,13 @@ public class CustomerController {
         if(order != null){
             response.put("message", order.getOrderStatus());
             response.put("order_id", String.valueOf(order.getOrderId()));
+            String destination = "/store-manager/new-orders/"+orderProducts.storeId;
+            // Broadcast order to the Store.
+            Map<String, String> orderObj = new HashMap<>();
+            orderObj.put("orderStatus", order.orderStatus);
+            orderObj.put("order_items", order.order_items);
+            orderObj.put("order_id", String.valueOf(order.getOrderId()));
+            simpMessagingTemplate.convertAndSend(destination, orderObj);
             return ResponseEntity.ok(response);
         }
         response.put("message", OrderStatus.Status.ERROR_PLACING_ORDER.name());

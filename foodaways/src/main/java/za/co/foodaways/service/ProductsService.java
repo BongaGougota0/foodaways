@@ -1,26 +1,10 @@
 package za.co.foodaways.service;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.TypedQuery;
-import jakarta.transaction.Transactional;
-import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import za.co.foodaways.model.Review;
-import za.co.foodaways.queries.ProductQueries;
-import za.co.foodaways.queries.StoreQueries;
 import za.co.foodaways.model.Product;
-import za.co.foodaways.model.Store;
 import za.co.foodaways.repository.ProductsRepository;
-import za.co.foodaways.utils.Utils;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 

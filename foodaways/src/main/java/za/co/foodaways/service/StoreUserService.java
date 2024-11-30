@@ -9,25 +9,23 @@ import za.co.foodaways.model.*;
 import za.co.foodaways.repository.RoleRepository;
 import za.co.foodaways.repository.StoreRepository;
 import za.co.foodaways.repository.StoreUserRepository;
-
-import javax.swing.text.html.Option;
-import java.util.ArrayList;
 import java.util.Optional;
 
 @Service
 public class StoreUserService implements CrudService<StoreUser>{
 
     public final StoreUserRepository storeUserRepository;
+    public final StoreRepository storeRepository;
     @Autowired
-    StoreRepository storeRepository;
-    @Autowired
-    RoleRepository roleRepository;
+    public RoleRepository roleRepository;
 
     public final OrderService orderService;
 
-    public StoreUserService(OrderService orderService, StoreUserRepository storeUserRepository){
+    public StoreUserService(OrderService orderService, StoreUserRepository storeUserRepository,
+                            StoreRepository storeRepository){
         this.orderService = orderService;
         this.storeUserRepository = storeUserRepository;
+        this.storeRepository = storeRepository;
     }
 
     public StoreUser findUserByEmail(String userEmail){
@@ -54,10 +52,7 @@ public class StoreUserService implements CrudService<StoreUser>{
 
     public Store getManagedStoreByAdminId(int managerId){
         Optional<Store> store = storeRepository.findByIdManagerId(managerId);
-        if(store.get() != null){
-            return store.get();
-        }
-        return new Store();
+        return store.get();
     }
 
     public void submitReview(Review review) {
@@ -78,6 +73,6 @@ public class StoreUserService implements CrudService<StoreUser>{
 
     @Override
     public StoreUser findById(int id) {
-        return null;
+        return getUserById(id);
     }
 }
