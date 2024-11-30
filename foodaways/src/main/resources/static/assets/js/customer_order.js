@@ -96,7 +96,7 @@ function updateCartDisplay() {
         const itemElement = document.createElement('div');
         itemElement.className = 'cart-item';
         itemElement.innerHTML = `
-            <img src="${product.productImagePath}" alt="${product.productName}" class="product-image">
+            <img src="/assets/images/${product.imageOfProduct}" alt="${product.productName}" class="product-image">
             <div class="product-details">
                 <h3>${product.productName}</h3>
                 <p>R${product.productPrice}</p>
@@ -171,7 +171,6 @@ document.head.appendChild(style);
 const placeOrder = document.querySelector('#placeOrderButton');
 placeOrder.addEventListener("click", function(e){
     e.preventDefault();
-    console.log('The place order button is clicked.');
     placeOrderFromCart();
 })
 

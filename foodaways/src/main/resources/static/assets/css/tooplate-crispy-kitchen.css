@@ -718,6 +718,19 @@ a #cart-count .nav-link:hover {
   position: relative;
 }
 
+.cart-footer {
+    display : flex;
+    align-items : center;
+    padding-top : 20px;
+    padding-bottom : 10px;
+}
+
+.cart-footer p #totalPrice{
+    color : black;
+    font-style : bold;
+    font-size : 20sp;
+}
+
 .site-footer::before {
   content: "";
   background: linear-gradient(to top, var(--dark-color), transparent 200%);
