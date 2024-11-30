@@ -44,7 +44,7 @@ public class ProjectConfig {
                                 .requestMatchers("/in/my-orders").hasRole("CUSTOMER")
                                 .requestMatchers("/in/cancel-order").hasRole("CUSTOMER")
                                 .requestMatchers("/in/submit-review").hasRole("CUSTOMER")
-                                .requestMatchers("/in/place-order/").hasRole("CUSTOMER")
+                                .requestMatchers("/in/place-order/").permitAll()
                                 .requestMatchers("/in/view-cart/").hasRole("CUSTOMER")
                                 .requestMatchers("/in/add-product-to-cart/**").hasRole("CUSTOMER")
                                 .requestMatchers("/store-manager/home").hasRole("STORE_OWNER")

@@ -48,15 +48,17 @@ public class OrderService {
        boolean predicate = products.stream().allMatch(product -> product.getStoreId() == randomProduct.getStoreId());
         if(predicate){
             // go on and place order
-            Store store = storeRepository.findStoreByProductId(randomProduct.getStoreId());
+//            Store store = storeRepository.findStoreByProductId(randomProduct.getStoreId());
             Order order = new Order();
             order.setOrderStatus(OrderStatus.Status.ORDER_PLACED.name());
-            order.setUser(user);
-            order.setStoreOrder(store);
+//            order.setUser(user);
+//            order.setStoreOrder(store);
+            order.setOrderId(newOrder.storeId);
             order.setOrderItems(products);
             // order total ?!
-            Order placedOrder = orderRepository.save(order);
-            return placedOrder.getOrderStatus();
+            orderRepository.placeOrder(newOrder.orderItems.toString(), OrderStatus.Status.ORDER_PLACED.name(),
+                    randomProduct.getStoreId(), newOrder.storeId);
+            return order.getOrderStatus();
         }else {
             throw new MultiStoreOrderException("You cannot place a single order to multiple store.\n " +
                     "Please make your order has products to the same store.");

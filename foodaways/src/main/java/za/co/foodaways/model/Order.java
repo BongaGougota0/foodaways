@@ -22,7 +22,7 @@ public class Order extends BaseEntity{
     public StoreUser user;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "store_id", referencedColumnName = "storeId", nullable = false)
+    @JoinColumn(name = "store_reference_id", referencedColumnName = "storeId", nullable = false)
     public Store storeOrder;
 
     public double getOrderTotal(){
