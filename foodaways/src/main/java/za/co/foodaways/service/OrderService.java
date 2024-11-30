@@ -1,5 +1,7 @@
 package za.co.foodaways.service;
 
+import jakarta.transaction.Transactional;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import za.co.foodaways.dto.CartDto;
 import za.co.foodaways.dto.OrderDto;
@@ -9,22 +11,20 @@ import za.co.foodaways.mapper.DtoMapper;
 import za.co.foodaways.model.*;
 import za.co.foodaways.repository.OrderRepository;
 import za.co.foodaways.repository.StoreRepository;
-import za.co.foodaways.repository.StoreUserRepository;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class OrderService {
+public class OrderService implements CrudService<Order>{
     OrderRepository orderRepository;
-    StoreUserRepository storeUserRepository;
     StoreRepository storeRepository;
     DtoMapper dtoMapper;
 
-    public OrderService(OrderRepository orderRepository, StoreUserRepository storeUserRepository,
+    public OrderService(OrderRepository orderRepository,
                         StoreRepository storeRepository, DtoMapper dtoMapper){
         this.orderRepository = orderRepository;
-        this.storeUserRepository = storeUserRepository;
         this.storeRepository = storeRepository;
         this.dtoMapper = dtoMapper;
     }
@@ -41,28 +41,19 @@ public class OrderService {
     }
 
     // Not in use. Keep for ref.
-    public String customerNewOrder(OrderDto newOrder, StoreUser user){
+    @Transactional
+    public Order customerNewOrder(OrderDto newOrder, StoreUser user){
         ArrayList<Product> products = newOrder.orderItems.stream()
                 .map(dtoMapper::toEntity).collect(Collectors.toCollection(ArrayList::new));
-        Product randomProduct = products.stream().findFirst().get();
-       boolean predicate = products.stream().allMatch(product -> product.getStoreId() == randomProduct.getStoreId());
-        if(predicate){
-            // go on and place order
-//            Store store = storeRepository.findStoreByProductId(randomProduct.getStoreId());
-            Order order = new Order();
-            order.setOrderStatus(OrderStatus.Status.ORDER_PLACED.name());
-//            order.setUser(user);
-//            order.setStoreOrder(store);
-            order.setOrderId(newOrder.storeId);
-            order.setOrderItems(products);
-            // order total ?!
-            orderRepository.placeOrder(newOrder.orderItems.toString(), OrderStatus.Status.ORDER_PLACED.name(),
-                    randomProduct.getStoreId(), newOrder.storeId);
-            return order.getOrderStatus();
-        }else {
-            throw new MultiStoreOrderException("You cannot place a single order to multiple store.\n " +
-                    "Please make your order has products to the same store.");
-        }
+        Optional<Store> store = storeRepository.findById(newOrder.storeId);
+        Order order = new Order();
+        order.setOrderStatus(OrderStatus.Status.ORDER_PLACED.name());
+        order.setUser(user);
+        order.setStore(store.get());
+        order.setOrderItems(products);
+        order.setOrderItemsString();
+        order.setOrderTotal(order.getOrderTotal());
+        return getRepository().save(order);
     }
 
     public List<Order> getStoreOrders(int storeId){
@@ -87,22 +78,15 @@ public class OrderService {
         return orderRepository.findUserOrdersById(userId);
     }
 
-    public Order createOrder(CartDto cartDto, StoreUser user) {
-        Order order = new Order();
-        ProductDto randomProduct = cartDto.cartItems.stream().findFirst().get();
-        boolean predicate = cartDto.cartItems.stream().allMatch(
-                product -> product.getStoreId() == randomProduct.getStoreId());
-        if(predicate){
-        order.setOrderStatus(OrderStatus.Status.ORDER_PLACED.name());
-        order.setOrderItems(cartDto.cartItems.stream().map(dtoMapper::toEntity)
-                .collect(Collectors.toCollection(ArrayList::new)));
-        order.setStoreOrder(storeRepository.findStoreByProductId(order.orderItems
-                .stream().findFirst().get().getStoreId()));
-        order.setUser(user);
-        orderRepository.save(order);
-        return order;
-        }
-        order.setOrderStatus(OrderStatus.Status.ERROR_PLACING_ORDER.name());
-        return order;
+
+    @Override
+    public JpaRepository<Order, Integer> getRepository() {
+        return this.orderRepository;
+    }
+
+    @Override
+    public Order findById(int id) {
+        Optional<Order> order = getRepository().findById(id);
+        return order.get();
     }
 }
