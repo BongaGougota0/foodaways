@@ -22,7 +22,7 @@ public class Store extends  BaseEntity{
             cascade = CascadeType.PERSIST, targetEntity = Product.class)
     public Set<Product> products;
 
-    @OneToMany(mappedBy = "storeOrder", fetch = FetchType.LAZY,
+    @OneToMany(mappedBy = "store", fetch = FetchType.LAZY, // Updated
             cascade = CascadeType.PERSIST, targetEntity = Order.class)
     public Set<Order> orders = new HashSet<>();
 }

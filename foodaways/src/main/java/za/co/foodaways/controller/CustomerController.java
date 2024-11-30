@@ -1,6 +1,8 @@
 package za.co.foodaways.controller;
 
 import jakarta.servlet.http.HttpSession;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
@@ -16,9 +18,8 @@ import za.co.foodaways.model.*;
 import za.co.foodaways.service.OrderService;
 import za.co.foodaways.service.ProductsService;
 import za.co.foodaways.service.StoreUserService;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -74,23 +75,21 @@ public class CustomerController {
         return "customer_cart.html";
     }
 
-    //Place order
     @PostMapping(value = "/place-order")
-    public ModelAndView placeOrder(HttpSession session){
-        StoreUser user = (StoreUser)session.getAttribute("loggedInUser");
-        CartDto cartDto = (CartDto)session.getAttribute("customerCart") ;
-        Order orderResult = orderService.createOrder(cartDto, user);
-        ModelAndView mav = new ModelAndView();
-        if(orderResult.getOrderStatus().equalsIgnoreCase(OrderStatus.Status.ORDER_PLACED.name())){
-            String destination = "/store-manager/place.order";
-            simpMessagingTemplate.convertAndSend(destination, orderResult);
-            mav.setViewName("redirect:/in/my-orders?success=true");
-            session.removeAttribute("customerCart");
-            return mav;
+    public ResponseEntity<Map<String, String>> postOrder(@RequestBody OrderDto orderProducts, HttpSession session){
+        StoreUser user = (StoreUser) session.getAttribute("loggedInUser");
+        Order order = userService.placeCustomerOrder(orderProducts, user);
+        Map<String, String> response = new HashMap<>();
+        if(order != null){
+            response.put("message", order.getOrderStatus());
+            response.put("order_id", String.valueOf(order.getOrderId()));
+            return ResponseEntity.ok(response);
         }
-        mav.setViewName("redirect:/in/foodaways");
-        return mav;
+        response.put("message", OrderStatus.Status.ERROR_PLACING_ORDER.name());
+        response.put("order_id", null);
+        return ResponseEntity.ok(response);
     }
+
 
     //View my orders
     @GetMapping(value = "/my-orders")

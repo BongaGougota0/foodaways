@@ -44,7 +44,7 @@ public class ProjectConfig {
                                 .requestMatchers("/in/my-orders").hasRole("CUSTOMER")
                                 .requestMatchers("/in/cancel-order").hasRole("CUSTOMER")
                                 .requestMatchers("/in/submit-review").hasRole("CUSTOMER")
-                                .requestMatchers("/in/place-order/").hasRole("CUSTOMER")
+                                .requestMatchers("/in/place-order/").permitAll()
                                 .requestMatchers("/in/view-cart/").hasRole("CUSTOMER")
                                 .requestMatchers("/in/add-product-to-cart/**").hasRole("CUSTOMER")
                                 .requestMatchers("/store-manager/home").hasRole("STORE_OWNER")
@@ -95,8 +95,7 @@ public class ProjectConfig {
                 product.setProductName(dto.getProductName());
                 product.setProductPrice(dto.getProductPrice());
                 product.setMenuItems(dto.getMenuItems());
-                product.setStore(storeService.findStoreByProductId(dto.getProductId()));
-                product.setStore(storeService.findStoreByProductId(dto.getStoreId()));
+                product.setStore(storeService.findById(dto.storeId));
                 return product;
             }
         };

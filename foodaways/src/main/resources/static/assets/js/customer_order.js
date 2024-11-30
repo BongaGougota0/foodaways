@@ -84,6 +84,54 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+function updateCartDisplay() {
+    const cartItems = document.querySelector('#cartItems');
+    cartItems.innerHTML = '';
+
+    // Get cart from localStorage
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    let total = 0;
+
+    cart.forEach(product => {
+        const itemElement = document.createElement('div');
+        itemElement.className = 'cart-item';
+        itemElement.innerHTML = `
+            <img src="/assets/images/${product.imageOfProduct}" alt="${product.productName}" class="product-image">
+            <div class="product-details">
+                <h3>${product.productName}</h3>
+                <p>R${product.productPrice}</p>
+            </div>
+            <div class="quantity-controls">
+                <button class="quantity-btn" onclick="updateQuantity(${product.productId}, -1)">-</button>
+                <span>${product.productCount}</span>
+                <button class="quantity-btn" onclick="updateQuantity(${product.productId}, 1)">+</button>
+            </div>
+        `;
+        CartManager.updateCartUI();
+        cartItems.appendChild(itemElement);
+        total += product.productPrice * product.productCount;
+    });
+
+    document.querySelector('#totalPrice').textContent = total.toFixed(2);
+}
+
+function updateQuantity(productId, change) {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const productIndex = cart.findIndex(p => p.productId === productId);
+
+    if (productIndex !== -1) {
+        cart[productIndex].productCount += change;
+
+        if (cart[productIndex].productCount <= 0) {
+            cart.splice(productIndex, 1);
+        }
+
+        localStorage.setItem('cart', JSON.stringify(cart));
+        updateCartDisplay();
+    }
+
+}
+
 // Utility function to show notifications
 function showNotification(message) {
     const notification = document.createElement('div');
@@ -120,6 +168,12 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
+const placeOrder = document.querySelector('#placeOrderButton');
+placeOrder.addEventListener("click", function(e){
+    e.preventDefault();
+    placeOrderFromCart();
+})
+
 function placeOrderFromCart() {
     const cart = JSON.parse(localStorage.getItem('cart') || '[]');
     if (cart.length === 0) {
@@ -134,16 +188,17 @@ function placeOrderFromCart() {
         return;
     }
     const orderData = {
-        products: cart.map(item => ({
+        orderItems: cart.map(item => ({
             productId: item.productId,
             productName: item.productName,
             productPrice: item.productPrice,
-            productCount: item.productCount
+            productCount: item.productCount,
+            storeId: item.storeId
         })),
         storeId: firstStoreId
     };
 
-    fetch('/place.order', {
+    fetch('/in/place-order', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -158,10 +213,10 @@ function placeOrderFromCart() {
     })
     .then(result => {
         localStorage.removeItem('cart');
-        alert('Order placed successfully!');
+        message('Order placed successfully!');
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('Failed to place order. Please try again.');
+        message('Failed to place order. Please try again.');
     });
 }

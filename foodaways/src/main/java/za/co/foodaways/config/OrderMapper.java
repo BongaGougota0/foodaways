@@ -26,7 +26,7 @@ public class OrderMapper {
                                 .stream()
                                 .map(dtoMapper::toDto)
                                 .collect(Collectors.toCollection(ArrayList::new)),
-                        entity.user.getUserId(), entity.getStoreOrder().getStoreId());
+                        entity.user.getUserId(), entity.getStore().getStoreId());
             }
 
             @Override

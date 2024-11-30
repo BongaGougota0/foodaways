@@ -110,16 +110,16 @@ public class StoreController {
 
     }
 
-    @MessageMapping("/place.order")
+//    @MessageMapping("/place.order")
     @SendTo("/store-manager/new-orders/")
     public Order placeOrder(@Payload OrderDto orderDto, HttpSession session){
         int storeId = orderDto.storeId;
         StoreUser user = (StoreUser)session.getAttribute("loggedInUser");
         Order order = new Order();
         order.setOrderStatus("ORDER_PLACED");
-        order.setStoreOrder(storeService.findStoreByProductId(storeId));
+        order.setStore(storeService.findStoreByProductId(storeId));
         System.out.println("-------- Display post order items ---------- "+orderDto.orderItems);
-        orderService.customerNewOrder(orderDto, user);
+//        orderService.customerNewOrder(orderDto, user);
         String destination = "/store-manager/orders/"+storeId;
         simpMessagingTemplate.convertAndSend(destination,order);
         return order;

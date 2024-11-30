@@ -1,11 +1,14 @@
 package za.co.foodaways.service;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import za.co.foodaways.model.Store;
 import za.co.foodaways.repository.StoreRepository;
 
+import java.util.Optional;
+
 @Service
-public class StoreService {
+public class StoreService implements CrudService<Store>{
 
     private final StoreRepository storeRepository;
     public StoreService(StoreRepository storeRepository){
@@ -14,5 +17,16 @@ public class StoreService {
 
     public Store findStoreByProductId(int productId){
         return storeRepository.findStoreByProductId(productId);
+    }
+
+    @Override
+    public JpaRepository<Store, Integer> getRepository() {
+        return this.storeRepository;
+    }
+
+    @Override
+    public Store findById(int id) {
+        Optional<Store> store = getRepository().findById(id);
+        return store.get();
     }
 }
