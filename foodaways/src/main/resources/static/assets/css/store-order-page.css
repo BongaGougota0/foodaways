@@ -1,31 +1,36 @@
-        .order-data {
-            background-color: #f9f9f9; /* Light foreground */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Shadow effect */
-            border-radius: 8px; /* Optional: Rounded corners */
-            padding: 20px;
-            margin: 10px 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+.order-data {
+    background-color: #f9f9f9; /* Light foreground */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Shadow effect */
+    border-radius: 8px; /* Optional: Rounded corners */
+    padding: 20px;
+    margin: 10px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
-        .order-data .column {
-            flex: 1; /* Each column takes up equal space */
-            padding: 0 10px; /* Padding between columns */
-        }
+.order-data .column {
+    flex: 1; /* Each column takes up equal space */
+    padding: 0 10px; /* Padding between columns */
+}
 
-        .order-data .column:first-child {
-            flex: 1; /* First column is slightly wider */
-        }
+.order-data .column:first-child {
+    flex: 1; /* First column is slightly wider */
+}
 
-        .order-data .column h3 {
-            margin-top: 0;
-        }
+.order-data .column h3 {
+    margin-top: 0;
+}
 
-        .order-data .column p {
-            margin: 5px 0;
-        }
+.order-data .column p {
+    margin: 5px 0;
+}
 
-        .order-data .middle{
-            flex: 2;
-        }
+.order-data .middle{
+    flex: 2;
+}
+
+#orders-container {
+    display : flex;
+    flex-direction : column;
+}

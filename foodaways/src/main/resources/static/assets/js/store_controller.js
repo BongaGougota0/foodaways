@@ -23,8 +23,7 @@ function onConnected() {
 function onMessageReceived(payload) {
   var order = JSON.parse(payload.body);
   if(order.orderStatus === 'ORDER_PLACED'){
-    console.log("a new order is placed.");
-    console.log("append order to order list.");
+    addOrderRow(order);
   }
 }
 
@@ -44,5 +43,37 @@ window.onclick = function (event) {
     if (event.target === document.getElementById('productModal')) {
         closeModal();
     }
+}
+
+
+function addOrderRow(order) {
+    const container = document.querySelector("#orders-container");
+    // Create order row div elemeent
+    const orderRow = document.createElement("div");
+    orderRow.classList.add("order-data");
+    // Create column 1
+    const firstColumn = document.createElement("div");
+    firstColumn.classList.add("column");
+    const orderId = document.createElement("h3");
+    orderId.textContent = `Order ID: ${order.order_id}`;
+    firstColumn.appendChild(orderId);
+    // Create column 2
+    const middleColumn = document.createElement("div");
+    middleColumn.classList.add("column", "middle");
+    const orderDetails = document.createElement("p");
+    orderDetails.textContent = `Details: ${order.order_items}`;
+    middleColumn.appendChild(orderDetails);
+    // Create column 3
+    const lastColumn = document.createElement("div");
+    lastColumn.classList.add("column");
+    const orderStatus = document.createElement("p");
+    orderStatus.textContent = `Status: ${order.orderStatus}`;
+    lastColumn.appendChild(orderStatus);
+    // Append columns to order row - one order
+    orderRow.appendChild(firstColumn);
+    orderRow.appendChild(middleColumn);
+    orderRow.appendChild(lastColumn);
+    // Append order row to container.
+    container.appendChild(orderRow);
 }
 

@@ -31,9 +31,8 @@ public class HomeController {
         this.dtoMapper = dtoMapper;
     }
 
-    @RequestMapping(value = {"/", "/home"}, method = {RequestMethod.GET})
+    @RequestMapping(value = "/", method = {RequestMethod.GET})
     public String home(Model model){
-        model.addAttribute("reservation", new Reservation());
         if(productsService.getProductsForMenuDisplay().get("Lunch") != null){
             model.addAttribute("lunchList", productsService.getProductsForMenuDisplay().get("Lunch")
                     .stream().map(dtoMapper::toDto).limit(10));
