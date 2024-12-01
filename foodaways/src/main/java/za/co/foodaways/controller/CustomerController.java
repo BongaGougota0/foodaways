@@ -1,9 +1,7 @@
 package za.co.foodaways.controller;
 
 import jakarta.servlet.http.HttpSession;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -18,9 +16,7 @@ import za.co.foodaways.model.*;
 import za.co.foodaways.service.OrderService;
 import za.co.foodaways.service.ProductsService;
 import za.co.foodaways.service.StoreUserService;
-
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/in")

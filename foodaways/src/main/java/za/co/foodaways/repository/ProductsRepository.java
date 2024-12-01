@@ -15,7 +15,7 @@ import java.util.List;
 public interface ProductsRepository extends JpaRepository<Product,Integer> {
 
     @Query(nativeQuery = true,
-            value = "SELECT * FROM products p WHERE p.store_id IN " +
+            value = "SELECT * FROM products p WHERE p.referenced_store_id IN " +
                     "(SELECT s.store_id FROM store s LEFT JOIN store_user u ON s.manager_id = u.user_id WHERE u.user_id = :manager_id)")
     List<Product> findStoreProductsByAdminId(@Param("manager_id") int managerId);
 

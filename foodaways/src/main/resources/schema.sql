@@ -37,8 +37,8 @@
 --    `product_image_path` VARCHAR(500) NULL,
 --    `product_category` VARCHAR(50) NULL,
 --    `product_price` double NOT NULL,
---    `product_store` int NOT NULL,
---    FOREIGN KEY (product_store) REFERENCES store(store_id)
+--    `referenced_store_id` int NOT NULL,
+--    FOREIGN KEY (referenced_store_id) REFERENCES store(store_id)
 --);
 --
 --CREATE TABLE IF NOT EXISTS `status` (
@@ -54,9 +54,9 @@
 --    `order_total` double NULL,
 --    `created_at` TIMESTAMP DEFAULT NULL,
 --    `closed_at` TIMESTAMP DEFAULT NULL,
---    `order_to` int NOT NULL,
+--    `store_reference_id` int NOT NULL,
 --    FOREIGN KEY (user_id) REFERENCES store_user(user_id),
---    FOREIGN KEY (order_to) REFERENCES store(store_id)
+--    FOREIGN KEY (store_reference_id) REFERENCES store(store_id)
 --);
 --
 --CREATE TABLE IF NOT EXISTS `product_reviews`(
