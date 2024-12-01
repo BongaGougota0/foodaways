@@ -155,11 +155,16 @@ strong {
 -----------------------------------------*/
 .custom-btn {
   border: 0;
+  border-radius: 5px;
+  cursor: pointer;
   color: var(--white-color);
   font-size: var(--menu-font-size);
   padding: 10px 35px;
 }
 
+.custom-btn:hover {
+    background-color : #0056b3;
+}
 
 /*---------------------------------------
   NAVIGATION              
@@ -719,16 +724,18 @@ a #cart-count .nav-link:hover {
 }
 
 .cart-footer {
-    display : flex;
-    align-items : center;
-    padding-top : 20px;
-    padding-bottom : 10px;
+    margin-top: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background-color: #f9f9f9;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.cart-footer p #totalPrice{
-    color : black;
-    font-style : bold;
-    font-size : 20sp;
+#totalPrice{
+    font-size: 1.5em;
+    margin-right: 10px;
 }
 
 .site-footer::before {
