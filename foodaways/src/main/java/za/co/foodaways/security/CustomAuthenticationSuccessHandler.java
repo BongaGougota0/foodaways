@@ -26,7 +26,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         } else if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_CUSTOMER"))) {
             return "/in/foodaways";
         } else if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_STORE_OWNER"))) {
-            return "/store-manager/orders";
+            return "/store-manager/home";
         }
         return "/home";
     }

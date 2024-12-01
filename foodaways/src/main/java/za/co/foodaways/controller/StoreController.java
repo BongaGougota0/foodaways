@@ -57,10 +57,10 @@ public class StoreController {
     public ModelAndView storeHome(Model model, HttpSession session, Authentication authentication){
         ModelAndView mav = new ModelAndView("store_manager.html");
         mav.addObject("newProduct", new Product());
-        mav.addObject("products", new ArrayList<Product>());
         mav.addObject("productCategories", Arrays.asList("Lunch", "Dinner", "Breakfast"));
         model.addAttribute("roles", authentication.getAuthorities().toString());
         StoreUser userPerson = storeUserRepository.findByEmail(authentication.getName());
+        mav.addObject("products", storeManagerService.getStoreProductsByManagerId(userPerson.getUserId()));
         model.addAttribute("storeId", storeUserService.getManagedStoreByAdminId(userPerson.getUserId()).getStoreId());
         session.setAttribute("managedStore", storeUserService.getManagedStoreByAdminId(userPerson.getUserId()));
         session.setAttribute("loggedInUser", userPerson);
