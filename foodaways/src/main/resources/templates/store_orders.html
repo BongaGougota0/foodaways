@@ -9,9 +9,9 @@
 <body>
     <div th:insert="~{side_bar :: sidebar}"></div>
 
-        <div class="order-data" id="orders-container" th:each="order : ${storeOrders}">
+        <div class="order-data" id="orders-container">
 
-            <div class="order-data">
+            <div class="order-data" th:each="order : ${storeOrders}">
                 <div class="column">
                     <h3 th:text="${order.orderId}">Order ID: </h3>
                 </div>
