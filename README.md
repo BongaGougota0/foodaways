@@ -1,8 +1,11 @@
-## foodaways 
-
-Java food ecommerce project. Products are updated by store owner/admin.
----
+## Java Ecommerce Project. 
+ 
 ![Index Page](cover1_java_project.PNG)
----
 
-<video src="git_preview_v1.mp4" width="320" height="240" controls></video>
+Simple ecommerce UI
+---
+![Index Page](add_cart_display.gif)
+
+Products are updated by store owner/admin.
+---
+![Index Page](store_products_display.gif)
