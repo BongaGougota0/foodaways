@@ -6,13 +6,25 @@
 </head>
 <body>
     <div th:fragment="sidebar" class="sidebar">
-        <a href="#" th:href="@{/store-manager/orders}">Orders</a>
-        <a href="#" th:href="@{/store-manager/products}">Products</a>
-        <a href="#" th:href="@{/store-manager/completed-orders}">Completed</a>
-        <a href="#" th:href="@{/store-manager/delivered-orders}">Delivered</a>
-        <a href="#" th:href="@{/store-manager/sales-details}">Sales Details</a>
-        <button class="btn" onclick="openModal()">Add New Product</button>
-        <button class="btn-primary primary" style="border-radius: 4px">
+        <button class="btn-primary primary">
+            <a href="#" th:href="@{/store-manager/orders}">Orders</a>
+        </button>
+        <button class="btn-primary primary">
+            <a href="#" th:href="@{/store-manager/products}">Products</a>
+        </button>
+        <button class="btn-primary primary">
+            <a href="#" th:href="@{/store-manager/completed-orders}">Completed</a>
+        </button>
+        <button class="btn-primary primary">
+            <a href="#" th:href="@{/store-manager/delivered-orders}">Delivered</a>
+        </button>
+        <button class="btn-primary primary">
+            <a href="#" th:href="@{/store-manager/sales-details}">Sales Details</a>
+        </button>
+        <button class="btn-primary primary" onclick="openModal()">
+            <a>Add Product</a>
+        </button>
+        <button class="btn-primary primary" id="logout" style="border-radius: 4px">
             <a th:href="@{/logout}">
                 Log Out
             </a>
