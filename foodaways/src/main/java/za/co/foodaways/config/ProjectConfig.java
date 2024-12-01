@@ -29,7 +29,8 @@ public class ProjectConfig {
     @Bean
     SecurityFilterChain projectSecurityConfig(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(
-                        (re) -> re.requestMatchers("/login").permitAll()
+                        (re) -> re.requestMatchers(
+                                "/foodaways").permitAll()
                                 .requestMatchers("/logout").permitAll()
                                 .requestMatchers("/register").permitAll()
                                 .requestMatchers("/all-products").permitAll()
@@ -40,6 +41,7 @@ public class ProjectConfig {
                                 .requestMatchers("/foodaways/**").permitAll()
                                 .requestMatchers("/").permitAll()
                                 .requestMatchers("/home").permitAll()
+                                .requestMatchers("/login").permitAll()
                                 .requestMatchers("/in/**").hasRole("CUSTOMER")
                                 .requestMatchers("/in/my-orders").hasRole("CUSTOMER")
                                 .requestMatchers("/in/cancel-order").hasRole("CUSTOMER")
