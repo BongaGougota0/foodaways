@@ -54,7 +54,9 @@
                 </div>
 
                 <div sec:authorize="isAnonymous()" class="d-none d-lg-block">
-                    <a th:href="@{/login}">Login</a>
+                    <button type="button" class="custom-btn btn btn-danger">
+                        <a th:href="@{/login}" style="color : white;">Login</a>
+                    </button>
                 </div>
 
                 <div sec:authorize="isAuthenticated()" class="d-none d-lg-block">
