@@ -40,8 +40,6 @@ public class OrderService implements CrudService<Order>{
         orderRepository.save(order);
     }
 
-    // Not in use. Keep for ref.
-    @Transactional
     public Order customerNewOrder(OrderDto newOrder, StoreUser user){
         ArrayList<Product> products = newOrder.orderItems.stream()
                 .map(dtoMapper::toEntity).collect(Collectors.toCollection(ArrayList::new));

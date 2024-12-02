@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import za.co.foodaways.dto.OrderDto;
+import za.co.foodaways.mapper.SocketDtoMapper;
 import za.co.foodaways.model.*;
 import za.co.foodaways.repository.RoleRepository;
 import za.co.foodaways.repository.StoreRepository;
@@ -16,16 +17,15 @@ public class StoreUserService implements CrudService<StoreUser>{
 
     public final StoreUserRepository storeUserRepository;
     public final StoreRepository storeRepository;
-    @Autowired
     public RoleRepository roleRepository;
-
     public final OrderService orderService;
 
     public StoreUserService(OrderService orderService, StoreUserRepository storeUserRepository,
-                            StoreRepository storeRepository){
+                            StoreRepository storeRepository, RoleRepository roleRepository){
         this.orderService = orderService;
         this.storeUserRepository = storeUserRepository;
         this.storeRepository = storeRepository;
+        this.roleRepository = roleRepository;
     }
 
     public StoreUser findUserByEmail(String userEmail){
@@ -58,12 +58,22 @@ public class StoreUserService implements CrudService<StoreUser>{
     public void submitReview(Review review) {
     }
 
-    public Order placeCustomerOrder(OrderDto orderProducts, StoreUser user) {
+    public SocketOrderDto placeCustomerOrder(OrderDto orderProducts, StoreUser user) {
         Order savedOrder =  orderService.customerNewOrder(orderProducts, user);
         if(savedOrder.getOrderStatus().equalsIgnoreCase(OrderStatus.Status.ORDER_PLACED.name())){
-            return savedOrder;
+            SocketDtoMapper orderDto = () -> {
+                SocketOrderDto o = new SocketOrderDto();
+                o.setOrderId(savedOrder.getOrderId());
+                o.setOrderStatus(savedOrder.getOrderStatus());
+                o.setOrderRecipient(savedOrder.getUser().getFullName());
+                o.setOrderItems(savedOrder.getOrder_items());
+                o.setDeliveryAddress("FOR_NOW_EMPTY");
+                return o;
+            };
+            return orderDto.getOrderDto();
+        }else {
+            throw new RuntimeException("Error placing order.");
         }
-        throw new RuntimeException("Error placing order.");
     }
 
     @Override

@@ -22,6 +22,10 @@ public class StoreUser extends BaseEntity{
     @JoinColumn(name = "role_id", referencedColumnName = "roleId",nullable = false)
     Roles role;
 
+    @OneToOne(fetch = FetchType.EAGER,cascade = CascadeType.PERSIST, targetEntity = Address.class)
+    @JoinColumn(name = "address_id", referencedColumnName = "addressId",nullable = true)
+    Address address;
+
     // Store Manager Relation
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, targetEntity = Store.class, optional = true)
     @JoinColumn(name = "managed_store_id", referencedColumnName = "storeId", nullable = true) // Changed column name

@@ -19,6 +19,16 @@
 --  FOREIGN KEY (role_id) REFERENCES roles(role_id)
 --);
 --
+--CREATE TABLE IF NOT EXISTS `address`(
+--	`address_id` int AUTO_INCREMENT,
+--  `longitude` DOUBLE NULL,
+--  `latitude` DOUBLE NULL,
+--	`location_name` VARCHAR(500) NULL,
+--  `user_id` INT NOT NULL,
+--   FOREIGN KEY(user_id) REFERENCES store_user(user_id),
+--   PRIMARY KEY(address_id)
+--);
+--
 --CREATE TABLE IF NOT EXISTS `store` (
 --  `store_id` int AUTO_INCREMENT,
 --  `store_name` varchar(100) NOT NULL,

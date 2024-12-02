@@ -55,13 +55,13 @@ function addOrderRow(order) {
     const firstColumn = document.createElement("div");
     firstColumn.classList.add("column");
     const orderId = document.createElement("h3");
-    orderId.textContent = `Order ID: ${order.order_id}`;
+    orderId.textContent = `Order ID: ${order.orderId}`;
     firstColumn.appendChild(orderId);
     // Create column 2
     const middleColumn = document.createElement("div");
     middleColumn.classList.add("column", "middle");
     const orderDetails = document.createElement("p");
-    orderDetails.textContent = `Details: ${order.order_items}`;
+    orderDetails.textContent = `Details: ${order.orderItems}`;
     middleColumn.appendChild(orderDetails);
     // Create column 3
     const lastColumn = document.createElement("div");

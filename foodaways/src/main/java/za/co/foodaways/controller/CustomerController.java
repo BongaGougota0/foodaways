@@ -74,18 +74,14 @@ public class CustomerController {
     @PostMapping(value = "/place-order")
     public ResponseEntity<Map<String, String>> postOrder(@RequestBody OrderDto orderProducts, HttpSession session){
         StoreUser user = (StoreUser) session.getAttribute("loggedInUser");
-        Order order = userService.placeCustomerOrder(orderProducts, user);
+        SocketOrderDto order = userService.placeCustomerOrder(orderProducts, user);
         Map<String, String> response = new HashMap<>();
         if(order != null){
             response.put("message", order.getOrderStatus());
             response.put("order_id", String.valueOf(order.getOrderId()));
             String destination = "/store-manager/new-orders/"+orderProducts.storeId;
             // Broadcast order to the Store.
-            Map<String, String> orderObj = new HashMap<>();
-            orderObj.put("orderStatus", order.orderStatus);
-            orderObj.put("order_items", order.order_items);
-            orderObj.put("order_id", String.valueOf(order.getOrderId()));
-            simpMessagingTemplate.convertAndSend(destination, orderObj);
+            simpMessagingTemplate.convertAndSend(destination, order);
             return ResponseEntity.ok(response);
         }
         response.put("message", OrderStatus.Status.ERROR_PLACING_ORDER.name());
