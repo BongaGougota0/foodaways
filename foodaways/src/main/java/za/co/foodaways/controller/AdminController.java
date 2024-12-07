@@ -1,10 +1,13 @@
 package za.co.foodaways.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import za.co.foodaways.model.Order;
 import za.co.foodaways.model.Product;
 import za.co.foodaways.model.Store;
@@ -12,8 +15,11 @@ import za.co.foodaways.model.StoreUser;
 import za.co.foodaways.service.AdminService;
 import za.co.foodaways.service.StoreUserService;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Controller
-//@RequestMapping(value = "admin")
+@RequestMapping(value = "foodaways-admin")
 public class AdminController {
 
     private final AdminService adminservice;
@@ -21,6 +27,16 @@ public class AdminController {
     public AdminController(AdminService adminservice, StoreUserService storeUserService){
         this.adminservice = adminservice;
         this.storeUserService = storeUserService;
+    }
+
+    @RequestMapping("/")
+    public Model foodawaysAdminLanding(Model model){
+        Page<Store> page = adminservice.getAllFoodawaysStores();
+        int totalPages = page.getTotalPages();
+        List<Store> listOfStores = page.getContent();
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("stores", listOfStores);
+        return model;
     }
 
     @RequestMapping(value = "/create-admin-user/", method = {RequestMethod.POST, RequestMethod.GET})
@@ -42,17 +58,4 @@ public class AdminController {
         return new ResponseEntity<>(HttpStatusCode.valueOf(200));
     }
 
-    @RequestMapping(value = "/add-product/{storeId}", method = {RequestMethod.POST, RequestMethod.GET})
-    public ResponseEntity<String> addProductByStoreId(@RequestBody Product newProduct,
-                                                      @PathVariable("storeId") int storeId){
-        adminservice.addNewProductByStoreId(newProduct, storeId);
-        return new ResponseEntity<>(HttpStatusCode.valueOf(200));
-    }
-    @RequestMapping(value = "/create-order/{storeId}/{userId}", method = {RequestMethod.POST, RequestMethod.GET})
-    public ResponseEntity<String> createOrder(@RequestBody Order order,
-                                              @PathVariable("storeId") int storeId,
-                                              @PathVariable("userId") int userId){
-        adminservice.addOrderByStoreIdAndUserId(order, storeId, userId);
-        return new ResponseEntity<>(HttpStatusCode.valueOf(200));
-    }
 }
