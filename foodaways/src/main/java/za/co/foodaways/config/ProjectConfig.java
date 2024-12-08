@@ -61,6 +61,7 @@ public class ProjectConfig {
                                 .requestMatchers("/store-manager/sales-details").hasRole("STORE_OWNER")
                                 .requestMatchers("/foodaways-admin").hasRole("ADMIN")
                                 .requestMatchers("/foodaways-admin/**").hasRole("ADMIN")
+//                                .requestMatchers("/foodaways-admin/save-new-store").hasRole("ADMIN")
                                 .requestMatchers("/error?continue").authenticated())
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(loginFormConfigure -> loginFormConfigure.loginPage("/login")

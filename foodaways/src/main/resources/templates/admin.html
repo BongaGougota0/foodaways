@@ -6,6 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="/assets/css/modal_style.css" rel="stylesheet">
+    <link href="/assets/css/pagination_style.css" rel="stylesheet">
 </head>
 <body>
     <div th:insert="~{side_bar :: global_admin_sidebar}"></div>
@@ -38,7 +39,22 @@
           </tbody>
         </table>
       </div>
+
+        <div class="pagination">
+            <a href="#">&laquo;</a>
+            <a th:if="${currentPage > 1}"
+               th:href="@{'/foodaways-admin/stores/' + ${currentPage - 1}+'?sortField=' + ${sortField}}"
+               class="active">
+            </a>
+            <span th:each="i : ${#numbers.sequence(1, totalPages)}">
+                <a th:if="${currentPage != i}"
+                   th:href="@{/foodaways-admin/stores/{pageNum}(pageNum=${i}, sortField=${sortField})}">[[${i}]]</a>
+                <a class="active" th:unless="${currentPage != i}">[[${i}]]</a>
+            </span>
+            <a href="#">&raquo;</a>
+        </div>
     </div>
+
 
     <!-- Modal for adding editing store -->
     <div th:insert="~{side_bar :: store_edit_modal}"></div>

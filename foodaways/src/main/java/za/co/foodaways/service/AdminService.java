@@ -44,17 +44,14 @@ public class AdminService{
     }
 
 
-    public void addNewStoreWithAdmin(Store store, int adminId) {
-        storeAdministrationService.getRepository().save(store);
+    public Store createNewStore(Store store) {
+        return storeAdministrationService.getRepository().save(store);
     }
 
-    public void addStoreAdminByUserAndStoreId(int userId, int storeId) {
 
-    }
-
-    public void createUnmappedStoreOwner(StoreUser storeUser) {
+    public StoreUser createUnmappedStoreOwner(StoreUser storeUser) {
         storeUser.setPassword(passwordEncoder.encode(storeUser.getPassword()));
-        usersAdministrationService.getRepository().save(storeUser);
+        return usersAdministrationService.getRepository().save(storeUser);
     }
 
     private StoreUser getUserHelper(){

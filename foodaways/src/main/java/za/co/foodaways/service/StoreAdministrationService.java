@@ -19,10 +19,13 @@ public class StoreAdministrationService implements FilterableCrudService<Store> 
         this.storeRepository = storeRepository;
     }
 
+    public Store createNewStore(Store store){
+        return getRepository().save(store);
+    }
+
     @Override
     public Page<Store> findAllEntities(Pageable pageable) {
-        Pageable pgbl = PageRequest.of(0,15);
-        return storeRepository.findAll(pgbl);
+        return storeRepository.findAll(pageable);
     }
 
     @Override
