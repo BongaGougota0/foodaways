@@ -74,6 +74,6 @@ function addOrderRow(order) {
     orderRow.appendChild(middleColumn);
     orderRow.appendChild(lastColumn);
     // Append order row to container.
-    container.appendChild(orderRow);
+    container.prepend(orderRow);
 }
 
