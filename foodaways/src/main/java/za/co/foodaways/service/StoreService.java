@@ -10,7 +10,8 @@ import java.util.Optional;
 @Service
 public class StoreService implements CrudService<Store>{
 
-    private final StoreRepository storeRepository;
+    StoreRepository storeRepository;
+
     public StoreService(StoreRepository storeRepository){
         this.storeRepository = storeRepository;
     }

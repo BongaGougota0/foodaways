@@ -17,26 +17,38 @@ import za.co.foodaways.service.StoreUserService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping(value = "foodaways-admin")
 public class AdminController {
 
     private final AdminService adminservice;
-    private final StoreUserService storeUserService;
-    public AdminController(AdminService adminservice, StoreUserService storeUserService){
+
+    public AdminController(AdminService adminservice){
         this.adminservice = adminservice;
-        this.storeUserService = storeUserService;
     }
 
-    @RequestMapping("/")
-    public Model foodawaysAdminLanding(Model model){
-        Page<Store> page = adminservice.getAllFoodawaysStores();
-        int totalPages = page.getTotalPages();
-        List<Store> listOfStores = page.getContent();
+    @RequestMapping("")
+    public ModelAndView foodawaysAdminLanding(){
+        ModelAndView mav = new ModelAndView("admin_home.html");
+        return mav;
+    }
+
+    @RequestMapping("/stores/{pageNum}")
+    public ModelAndView viewStores(Model model, @PathVariable("pageNum") int pageNum,
+                                   @RequestParam("sortField") String sortField){
+        ModelAndView mav = new ModelAndView("admin.html");
+        Page<Store> pageOfStores = adminservice.getStoresSortByStoreName(pageNum, Optional.ofNullable(sortField));
+        List<Store> listOfStores = pageOfStores.getContent();
+        int totalPages = pageOfStores.getTotalPages();
+        long totalElements = pageOfStores.getTotalElements();
+        model.addAttribute("current_page", pageNum);
         model.addAttribute("totalPages", totalPages);
-        model.addAttribute("stores", listOfStores);
-        return model;
+        model.addAttribute("totalPages", totalElements);
+        model.addAttribute("sortField", sortField);
+        mav.addObject("stores", listOfStores);
+        return mav;
     }
 
     @RequestMapping(value = "/create-admin-user/", method = {RequestMethod.POST, RequestMethod.GET})

@@ -7,24 +7,41 @@
 <body>
     <div th:fragment="sidebar" class="sidebar">
         <button class="btn-primary primary">
-            <a href="#" th:href="@{/store-manager/orders}">Orders</a>
+            <a th:href="@{/store-manager/orders}">Orders</a>
         </button>
         <button class="btn-primary primary">
-            <a href="#" th:href="@{/store-manager/products}">Products</a>
+            <a th:href="@{/store-manager/products}">Products</a>
         </button>
         <button class="btn-primary primary">
-            <a href="#" th:href="@{/store-manager/completed-orders}">Completed</a>
+            <a th:href="@{/store-manager/completed-orders}">Completed</a>
         </button>
         <button class="btn-primary primary">
-            <a href="#" th:href="@{/store-manager/delivered-orders}">Delivered</a>
+            <a th:href="@{/store-manager/delivered-orders}">Delivered</a>
         </button>
         <button class="btn-primary primary">
-            <a href="#" th:href="@{/store-manager/sales-details}">Sales Details</a>
+            <a th:href="@{/store-manager/sales-details}">Sales Details</a>
         </button>
         <button class="btn-primary primary" onclick="openModal()">
             <a>Add Product</a>
         </button>
         <button class="btn-primary primary" id="logout" style="border-radius: 4px">
+            <a th:href="@{/logout}">
+                Log Out
+            </a>
+        </button>
+    </div>
+
+    <div th:fragment="global_admin_sidebar" class="sidebar">
+        <button class="btn-primary primary">
+            <a th:href="@{/foodaways-admin/stores/1?sortField=storeName}">Stores</a>
+        </button>
+        <button class="btn-primary primary">
+            <a th:href="@{/foodaways-admin/}">Users</a>
+        </button>
+        <button class="btn-primary primary" onclick="openModal()">
+            <a>Add Store</a>
+        </button>
+        <button class="btn-primary primary" id="admin-logout" style="border-radius: 4px">
             <a th:href="@{/logout}">
                 Log Out
             </a>
@@ -69,5 +86,12 @@
         </div>
     </div>
 
+    <div th:fragment="store_edit_modal" id="storeEditModal" class="modal">
+
+    </div>
+
+    <div th:fragment="" id="" class="modal">
+
+    </div>
 </body>
 </html>

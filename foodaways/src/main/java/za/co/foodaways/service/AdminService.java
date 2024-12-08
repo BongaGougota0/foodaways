@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import za.co.foodaways.repository.StoreRepository;
 import za.co.foodaways.repository.StoreUserRepository;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 @Service
 public class AdminService{
@@ -31,7 +33,12 @@ public class AdminService{
         this.passwordEncoder = passwordEncoder;
     }
 
-    public Page<Store> getAllFoodawaysStores(){
+    public Page<Store> getStoresSortByStoreName(int pageNumber, Optional<String> sortFieldName){
+        if(sortFieldName.isPresent()){
+            Pageable pageable = PageRequest.of(pageNumber - 1,
+                    15, Sort.by(sortFieldName.get()).ascending());
+            return storeAdministrationService.findAllEntities(pageable);
+        }
         Pageable pageable = PageRequest.of(1,15);
         return storeAdministrationService.findAllEntities(pageable);
     }

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Foodaways Admin</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/css/modal_style.css" rel="stylesheet">
+</head>
+<body>
+    <div th:insert="~{side_bar :: global_admin_sidebar}"></div>
+
+    <div class="content">
+      <div class="store-data">
+        <h2>Foodaways Stores</h2>
+        <table>
+          <thead>
+          <tr>
+            <th>Store Name</th>
+            <th>Store Manager</th>
+            <th>Phone Number</th>
+            <th>Store Location</th>
+          </tr>
+          </thead>
+          <tbody>
+              <tr th:each="store : ${listOfStores}">
+                <td>
+                  <a th:text="${store.storeName}"></a>
+                </td>
+                <td>
+                  <a th:text="${store.storeName}"></a>
+                </td>
+                <td th:text="${store.storeNumber}"></td>
+                <td>
+                  <a th:text="${store.storeLocation}"></a>
+                </td>
+              </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Modal for adding editing store -->
+    <div th:insert="~{side_bar :: store_edit_modal}"></div>
+</body>
+</html>

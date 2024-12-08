@@ -60,7 +60,9 @@
                 </div>
 
                 <div sec:authorize="isAuthenticated()" class="d-none d-lg-block">
-                    <a th:href="@{/logout}">Logout</a>
+                    <button type="button" class="custom-btn btn btn-danger">
+                        <a th:href="@{/logout}" style="color : white;">Logout</a>
+                    </button>
                 </div>
 
             </div>
