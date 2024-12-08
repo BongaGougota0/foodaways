@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 
 @Controller
-@RequestMapping("/foodaways")
+@RequestMapping(value = {"","foodaways"})
 public class HomeController {
     public ReservationService reservationService;
     StoreUserRepository storeUserRepository;
