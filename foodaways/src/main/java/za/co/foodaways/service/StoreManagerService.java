@@ -4,15 +4,16 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
-import za.co.foodaways.model.Order;
-import za.co.foodaways.model.OrderStatus;
-import za.co.foodaways.model.Product;
-import za.co.foodaways.model.Store;
+import za.co.foodaways.model.*;
 import za.co.foodaways.repository.OrderRepository;
 import za.co.foodaways.repository.ProductsRepository;
 import za.co.foodaways.repository.StoreManager;
+import za.co.foodaways.repository.StoreRepository;
 import za.co.foodaways.utils.Utils;
 
 import java.io.File;
@@ -28,19 +29,33 @@ import java.util.stream.Collectors;
 @Repository
 public class StoreManagerService implements StoreManager {
 
-    private final EntityManager entityManager;
     ProductsRepository productsRepository;
     OrderRepository orderRepository;
+    StoreRepository storeRepository;
 
     @Autowired
-    public StoreManagerService(EntityManager entityManager, ProductsRepository productsRepository, OrderRepository orderRepository){
-        this.entityManager = entityManager;
+    public StoreManagerService(ProductsRepository productsRepository,
+                               OrderRepository orderRepository, StoreRepository storeRepository){
         this.productsRepository = productsRepository;
         this.orderRepository = orderRepository;
+        this.storeRepository = storeRepository;
     }
+
     @Override
-    public void addNewProduct(Product newProduct) {
-        entityManager.persist(newProduct);
+    public Store getManagedStoreById(int storeId) {
+        Optional<Store> foundStore = storeRepository.findByIdManagerId(storeId);
+        return foundStore.get();
+    }
+
+    @Override
+    public Product getstoreProductById(int productId) {
+        return productsRepository.getReferenceById(productId);
+    }
+
+    @Override
+    public Optional<Product> addNewProduct(Product newProduct) {
+        Product product =  productsRepository.save(newProduct);
+        return Optional.of(product);
     }
 
 
@@ -60,16 +75,7 @@ public class StoreManagerService implements StoreManager {
 
     @Override
     public void editOrder(int orderId, Order order) {
-        Order updateOrder = new Order();
-        TypedQuery<Order> typedQuery = entityManager
-                        .createQuery("FROM Order order WHERE order.id =:id", Order.class);
-        typedQuery.setParameter("id", orderId);
-       List<Order> result = typedQuery.getResultList();
-       Optional<Order> orderFirst = result.stream().findFirst();
-       if(orderFirst.isPresent()){
-           // Update applicable details here.
-//           updateOrder = orderFirst.get().orderStatus;
-       }
+
     }
 
     public void updateProduct(Product updateProduct, int productId){
@@ -78,9 +84,6 @@ public class StoreManagerService implements StoreManager {
         productToUpdate.setProductName(updateProduct.getProductName());
         productToUpdate.setProductCategory(updateProduct.getProductCategory());
         productToUpdate.setMenuItems(updateProduct.getMenuItems());
-
-        //image update : check first
-        // delete old
         if(updateProduct.imageOfProduct != null & !productToUpdate.getImageOfProduct().equals(updateProduct.imageOfProduct)){
             productToUpdate.setImageOfProduct(updateProduct.getImageOfProduct());
         }
@@ -89,14 +92,18 @@ public class StoreManagerService implements StoreManager {
 
     @Override
     public void updateOrder(int orderId, Order updatedOrder) {
-
+        Order orderUpdate = orderRepository.getReferenceById(orderId);
+        if (orderUpdate != null){
+            orderUpdate.setOrderStatus(updatedOrder.orderStatus);
+            orderRepository.save(orderUpdate);
+        }
     }
 
     @Override
     public void deleteOrder(int orderId) {
-        Order removeOrder = entityManager.find(Order.class, orderId);
-        if(!(removeOrder == null)){
-            entityManager.remove(removeOrder);
+        Order order = orderRepository.getReferenceById(orderId);
+        if(order != null){
+            orderRepository.deleteById(orderId);
         }
     }
 
@@ -124,48 +131,47 @@ public class StoreManagerService implements StoreManager {
     }
 
     @Override
+    public ArrayList<Order> getAllNewOrders(int storeId) {
+        ArrayList<Order> orders = getAllStoreOrders(storeId).stream()
+                .filter(o -> o.getOrderStatus().equalsIgnoreCase(OrderStatus.Status.ORDER_PLACED.name()))
+                .collect(Collectors.toCollection(ArrayList::new));
+        return !orders.isEmpty() ? orders : new ArrayList<>();
+    }
+
+    @Override
     public List<Order> getCompletedOrders(int storeId) {
-        List<Order> completedOrders = new ArrayList<>();
-        TypedQuery<Order> typedQuery = entityManager
-                .createQuery("FROM Order order WHERE order.storeId  =:id", Order.class);
-        typedQuery.setParameter("id",storeId);
-        if(!typedQuery.getResultList().isEmpty()){
-            completedOrders = typedQuery.getResultList()
-                            .stream()
-                            .peek(System.out::println) // Preview check function working. # Comment out
-                            .filter( order -> order.orderStatus.equals(OrderStatus.Status.DELIVERED))
-                            .collect(Collectors.toList());
-        }
-        return completedOrders;
+        ArrayList<Order> orders = getAllStoreOrders(storeId).stream()
+                .filter(o -> o.getOrderStatus().equalsIgnoreCase(OrderStatus.Status.DELIVERED.name()))
+                .collect(Collectors.toCollection(ArrayList::new));
+        return !orders.isEmpty() ? orders : new ArrayList<>();
     }
 
     @Override
     public List<Order> getCancelledOrders(int storeId) {
-        List<Order> cancelledOrders = new ArrayList<>();
-        TypedQuery<Order> typedQuery = entityManager
-                .createQuery("FROM Order order WHERE order.id =:id", Order.class);
-        typedQuery.setParameter("id", storeId);
-        if(!typedQuery.getResultList().isEmpty()){
-            cancelledOrders = typedQuery.getResultList()
-                    .stream()
-                    .filter( order -> order.orderStatus.equals(OrderStatus.Status.ORDER_ACCEPTED))
-                    .collect(Collectors.toList());
-        }
-        return cancelledOrders;
+        ArrayList<Order> orders = getAllStoreOrders(storeId).stream()
+                .filter(o -> o.getOrderStatus().equalsIgnoreCase(OrderStatus.Status.ORDER_DECLINED.name()))
+                .collect(Collectors.toCollection(ArrayList::new));
+        return !orders.isEmpty() ? orders : new ArrayList<>();
     }
 
     @Override
     public List<Order> getInProgressOrders(int storeId) {
-        List<Order> inProgressOrders = new ArrayList<>();
-        TypedQuery<Order> typedQuery = entityManager
-                        .createQuery("FROM Order order WHERE order.id =:id", Order.class);
-        typedQuery.setParameter("id", storeId);
-        if(!typedQuery.getResultList().isEmpty()){
-            inProgressOrders = typedQuery.getResultList()
-                    .stream()
-                    .filter( order -> order.orderStatus.equals(OrderStatus.Status.PREPARING_ORDER))
-                    .collect(Collectors.toList());
-        }
-        return inProgressOrders;
+        ArrayList<Order> orders = getAllStoreOrders(storeId).stream()
+                .filter(o -> o.getOrderStatus().equalsIgnoreCase(OrderStatus.Status.PREPARING_ORDER.name()))
+                .collect(Collectors.toCollection(ArrayList::new));
+        return !orders.isEmpty() ? orders : new ArrayList<>();
+    }
+
+    @Override
+    public ArrayList<Order> getDeliveredOrders(int storeId) {
+        ArrayList<Order> orders = getAllStoreOrders(storeId).stream()
+                .filter( o -> o.getOrderStatus().equalsIgnoreCase(OrderStatus.Status.DELIVERED.name()))
+                .collect(Collectors.toCollection(ArrayList::new));
+        return !orders.isEmpty() ? orders : new ArrayList<>();
+    }
+
+    @Override
+    public ArrayList<Product> getStoreProductsById(int storeId) {
+        return productsRepository.findStoreProducts(storeId);
     }
 }

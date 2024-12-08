@@ -30,4 +30,6 @@ public interface ProductsRepository extends JpaRepository<Product,Integer> {
     @Query(nativeQuery = true, value = "SELECT * FROM products")
     ArrayList<Product> getProductsByRatingEqualToAndGreater();
 
+    @Query(nativeQuery = true, value = "SELECT * FROM products p WHERE p.referenced_store_id = :storeId")
+    ArrayList<Product> findStoreProducts(@Param("storeId") int storeId);
 }

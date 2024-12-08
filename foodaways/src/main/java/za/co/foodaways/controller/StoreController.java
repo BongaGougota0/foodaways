@@ -27,29 +27,15 @@ import java.util.Arrays;
 @RequestMapping("store-manager")
 public class StoreController {
 
-    ReservationService reservationService;
-    StoreUserRepository storeUserRepository;
-    OrderService orderService;
-    ProductsService productsService;
     StoreUserService storeUserService;
     StoreManagerService storeManagerService;
-    OrderDtoMapper orderDtoMapper;
-    StoreService storeService;
     SimpMessagingTemplate simpMessagingTemplate;
+
     @Autowired
-    public StoreController(ReservationService service, OrderService orderService,
-                           StoreUserRepository userRepository, ProductsService productsService,
-                           StoreUserService storeUserService, StoreManagerService storeManagerService,
-                           OrderDtoMapper orderDtoMapper, StoreService storeService,
+    public StoreController(StoreUserService storeUserService, StoreManagerService storeManagerService,
                            SimpMessagingTemplate simpMessagingTemplate){
-        this.reservationService = service;
-        this.orderService = orderService;
-        this.storeUserRepository = userRepository;
-        this.productsService = productsService;
         this.storeUserService = storeUserService;
         this.storeManagerService = storeManagerService;
-        this.orderDtoMapper = orderDtoMapper;
-        this.storeService = storeService;
         this.simpMessagingTemplate = simpMessagingTemplate;
     }
 
@@ -59,10 +45,11 @@ public class StoreController {
         mav.addObject("newProduct", new Product());
         mav.addObject("productCategories", Arrays.asList("Lunch", "Dinner", "Breakfast"));
         model.addAttribute("roles", authentication.getAuthorities().toString());
-        StoreUser userPerson = storeUserRepository.findByEmail(authentication.getName());
-        mav.addObject("products", storeManagerService.getStoreProductsByManagerId(userPerson.getUserId()));
-        model.addAttribute("storeId", storeUserService.getManagedStoreByAdminId(userPerson.getUserId()).getStoreId());
-        session.setAttribute("managedStore", storeUserService.getManagedStoreByAdminId(userPerson.getUserId()));
+        StoreUser userPerson = storeUserService.findUserByEmail(authentication.getName());
+        Store managedStore = storeManagerService.getManagedStoreById(userPerson.getUserId());
+        mav.addObject("products", storeManagerService.getStoreProductsById(managedStore.getStoreId()));
+        model.addAttribute("storeId", managedStore.getStoreId());
+        session.setAttribute("managedStore", managedStore);
         session.setAttribute("loggedInUser", userPerson);
         return mav;
     }
@@ -75,7 +62,6 @@ public class StoreController {
         mav.addObject("newProduct", new Product());
         mav.addObject("products", storeManagerService.getStoreProductsByManagerId(userPerson.getUserId()));
         mav.addObject("productCategories", Arrays.asList("Lunch", "Dinner", "Breakfast"));
-        session.setAttribute("managedStore", storeUserService.getManagedStoreByAdminId(userPerson.getUserId()));
         return mav;
     }
 
@@ -86,7 +72,8 @@ public class StoreController {
         Store store = (Store) session.getAttribute("managedStore");
         model.addAttribute("storeId", store.getStoreId());
         model.addAttribute("storeName", store.getStoreName());
-        mav.addObject("storeOrders", orderService.getStoreOrdersByStatus(store.getStoreId()));
+        ArrayList<Order> orders = storeManagerService.getAllStoreOrders(store.getStoreId());
+        mav.addObject("storeOrders", orders);
         return mav;
     }
 
@@ -96,16 +83,13 @@ public class StoreController {
 
     }
 
-//    @MessageMapping("/place.order")
     @SendTo("/store-manager/new-orders/")
     public Order placeOrder(@Payload OrderDto orderDto, HttpSession session){
         int storeId = orderDto.storeId;
-        StoreUser user = (StoreUser)session.getAttribute("loggedInUser");
+        Store store = (Store)session.getAttribute("managedStore");
         Order order = new Order();
         order.setOrderStatus("ORDER_PLACED");
-        order.setStore(storeService.findStoreByProductId(storeId));
-        System.out.println("-------- Display post order items ---------- "+orderDto.orderItems);
-//        orderService.customerNewOrder(orderDto, user);
+        order.setStore(store);
         String destination = "/store-manager/orders/"+storeId;
         simpMessagingTemplate.convertAndSend(destination,order);
         return order;
@@ -119,26 +103,29 @@ public class StoreController {
     }
 
     @RequestMapping(value = "/completed-orders", method = {RequestMethod.GET, RequestMethod.POST})
-    public ModelAndView storeCompletedOrders(){
+    public ModelAndView storeCompletedOrders(HttpSession session){
         ModelAndView mav = new ModelAndView("store_orders.html");
+        Store store = (Store)session.getAttribute("managedStore");
         mav.addObject("newProduct", new Product());
-        mav.addObject("storeOrders", orderService.getStoreOrdersByStatus(1));
+        mav.addObject("storeOrders", storeManagerService.getCompletedOrders(store.getStoreId()));
         return mav;
     }
 
     @RequestMapping(value = "/delivered-orders", method = {RequestMethod.GET, RequestMethod.POST})
-    public ModelAndView storeDeliveredOrders(){
+    public ModelAndView storeDeliveredOrders(HttpSession session){
         ModelAndView mav = new ModelAndView("store_orders.html");
+        Store store = (Store)session.getAttribute("managedStore");
         mav.addObject("newProduct", new Product());
-        mav.addObject("storeOrders", orderService.getStoreOrdersByStatus(1));
+        mav.addObject("storeOrders", storeManagerService.getDeliveredOrders(store.getStoreId()));
         return mav;
     }
 
     @RequestMapping(value = "/sales-details", method = {RequestMethod.GET, RequestMethod.POST})
-    public ModelAndView storeSalesDetails(){
+    public ModelAndView storeSalesDetails(HttpSession session){
         ModelAndView mav = new ModelAndView("store_orders.html");
         mav.addObject("newProduct", new Product());
-        mav.addObject("completedOrders", orderService.getStoreOrdersByStatus(1));
+        Store store = (Store)session.getAttribute("managedStore");
+        mav.addObject("completedOrders", storeManagerService.getCompletedOrders(store.getStoreId()));
         return mav;
     }
 
@@ -153,9 +140,9 @@ public class StoreController {
     public ModelAndView addProductToStore(@ModelAttribute("newProduct")Product newProduct,
                                           MultipartFile productImage, Authentication authentication, HttpSession session){
         ModelAndView mav = new ModelAndView("redirect:/store-manager/home");
-        StoreUser userPerson = storeUserRepository.findByEmail(authentication.getName());
         Store store = (Store)session.getAttribute("managedStore");
-        storeManagerService.addProduct(newProduct, productImage, store, userPerson.getUserId());
+        StoreUser user = (StoreUser)session.getAttribute("loggedInUser");
+        storeManagerService.addProduct(newProduct, productImage, store, user.getUserId());
         return mav;
     }
 
@@ -167,7 +154,7 @@ public class StoreController {
 
     @RequestMapping(value = "/product-edit-page/{productId}")
     public String updateProduct(Model model, @PathVariable("productId") int productId){
-        Product toUpdateProduct = productsService.getProductById(productId);
+        Product toUpdateProduct = storeManagerService.getstoreProductById(productId);
         model.addAttribute("productToUpdate", toUpdateProduct);
         model.addAttribute("productCategories", Arrays.asList("Lunch", "Dinner", "Breakfast"));
         return "product_edit.html";
@@ -186,13 +173,13 @@ public class StoreController {
 
     @RequestMapping(value = "/accept")
     public String acceptOrder(@RequestParam("orderId") int orderId){
-        orderService.acceptOrderUpdate(orderId);
+//        orderService.acceptOrderUpdate(orderId);
         return "redirect:/store-manager/home";
     }
 
     @RequestMapping(value = "/decline")
     public String declineOrder(@RequestParam("orderId") int orderId, @RequestParam("declineReason") String declineReason){
-        orderService.declineOrderUpdate(orderId, declineReason);
+//        orderService.declineOrderUpdate(orderId, declineReason);
         return "redirect:/store-manager/home";
     }
 }
