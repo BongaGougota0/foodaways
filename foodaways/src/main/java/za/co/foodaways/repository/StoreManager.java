@@ -1,5 +1,6 @@
 package za.co.foodaways.repository;
 
+import org.springframework.data.domain.Page;
 import za.co.foodaways.model.Order;
 import za.co.foodaways.model.Product;
 import za.co.foodaways.model.Store;
@@ -18,6 +19,7 @@ public interface StoreManager{
     void deleteOrder(int orderId);
     void sendOrderForDelivery(int driverId);
     ArrayList<Order> getAllNewOrders(int storeId);
+    Page<Order> getAllStoreOrders(int storeId, int pageNum, String sortField);
     List<Order> getAllStoreOrders(int storeId);
     List<Order> getCompletedOrders(int storeId);
     List<Order> getCancelledOrders(int storeId);

@@ -2,6 +2,7 @@ package za.co.foodaways.controller;
 
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -21,6 +22,7 @@ import za.co.foodaways.service.*;
 import za.co.foodaways.utils.Utils;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 
 @Controller
@@ -65,23 +67,26 @@ public class StoreController {
         return mav;
     }
 
-    @RequestMapping(value = "/orders", method = {RequestMethod.GET, RequestMethod.POST})
-    public ModelAndView storeOrders(Model model, HttpSession session){
+    @RequestMapping(value = "/orders/{pageNum}", method = {RequestMethod.GET, RequestMethod.POST})
+    public ModelAndView storeOrders(Model model,
+                                    @RequestParam(value = "sortField") String sortField,
+                                    @PathVariable(value = "pageNum") int pageNum,
+                                    HttpSession session){
         ModelAndView mav = new ModelAndView("store_orders.html");
         mav.addObject("newProduct", new Product());
         Store store = (Store) session.getAttribute("managedStore");
         model.addAttribute("storeId", store.getStoreId());
         model.addAttribute("storeName", store.getStoreName());
-        ArrayList<Order> orders = storeManagerService.getAllStoreOrders(store.getStoreId());
-        mav.addObject("storeOrders", orders);
+        Page<Order> orders = storeManagerService.getAllStoreOrders(store.getStoreId(), pageNum, sortField);
+        List<Order> listOfOrders = orders.getContent();
+        model.addAttribute("totalOrderElements", orders.getTotalElements());
+        model.addAttribute("totalPages", orders.getTotalPages());
+        model.addAttribute("currentPage", pageNum);
+        model.addAttribute("sortField", sortField);
+        mav.addObject("storeOrders", listOfOrders);
         return mav;
     }
 
-
-    @MessageMapping("/new-orders/{storeId}/")
-    public void getStoreOrder(@PathVariable("storeId") int storeId){
-
-    }
 
     @SendTo("/store-manager/new-orders/")
     public Order placeOrder(@Payload OrderDto orderDto, HttpSession session){
@@ -182,4 +187,4 @@ public class StoreController {
 //        orderService.declineOrderUpdate(orderId, declineReason);
         return "redirect:/store-manager/home";
     }
-}
+}git

@@ -5,7 +5,9 @@ import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
@@ -126,7 +128,13 @@ public class StoreManagerService implements StoreManager {
     }
 
     @Override
-    public ArrayList<Order> getAllStoreOrders(int storeId) {
+    public Page<Order> getAllStoreOrders(int storeId, int pageNum, String sortField) {
+        Pageable pageable = PageRequest.of(pageNum - 1, 10, Sort.by(sortField).descending());
+        return orderRepository.findOrdersByStoreId(storeId, pageable);
+    }
+
+    @Override
+    public List<Order> getAllStoreOrders(int storeId) {
         return orderRepository.findOrdersByStoreId(storeId);
     }
 
