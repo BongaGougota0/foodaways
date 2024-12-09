@@ -35,7 +35,6 @@ public class StoreManagerService implements StoreManager {
     OrderRepository orderRepository;
     StoreRepository storeRepository;
 
-    @Autowired
     public StoreManagerService(ProductsRepository productsRepository,
                                OrderRepository orderRepository, StoreRepository storeRepository){
         this.productsRepository = productsRepository;
@@ -129,57 +128,50 @@ public class StoreManagerService implements StoreManager {
 
     @Override
     public Page<Order> getAllStoreOrders(int storeId, int pageNum, String sortField) {
-        Pageable pageable = PageRequest.of(pageNum - 1, 10, Sort.by(sortField).descending());
-        return orderRepository.findOrdersByStoreId(storeId, pageable);
+        return orderRepository.findOrdersByStoreId(storeId, "ORDER_PLACED",getPageable(pageNum, sortField));
     }
 
     @Override
-    public List<Order> getAllStoreOrders(int storeId) {
+    public ArrayList<Order> getAllStoreOrders(int storeId) {
         return orderRepository.findOrdersByStoreId(storeId);
     }
 
     @Override
-    public ArrayList<Order> getAllNewOrders(int storeId) {
-        ArrayList<Order> orders = getAllStoreOrders(storeId).stream()
-                .filter(o -> o.getOrderStatus().equalsIgnoreCase(OrderStatus.Status.ORDER_PLACED.name()))
-                .collect(Collectors.toCollection(ArrayList::new));
-        return !orders.isEmpty() ? orders : new ArrayList<>();
+    public Page<Order> getAllNewOrders(int storeId, int pageNum, String sortField) {
+        return orderRepository.findOrdersByStoreId(storeId,"ORDER_PLACED", getPageable(pageNum, sortField));
     }
 
     @Override
-    public List<Order> getCompletedOrders(int storeId) {
-        ArrayList<Order> orders = getAllStoreOrders(storeId).stream()
-                .filter(o -> o.getOrderStatus().equalsIgnoreCase(OrderStatus.Status.DELIVERED.name()))
-                .collect(Collectors.toCollection(ArrayList::new));
-        return !orders.isEmpty() ? orders : new ArrayList<>();
+    public Page<Order> getCompletedOrders(int storeId, int pageNum, String sortField) {
+        return orderRepository.findOrdersByStoreId(storeId, "DELIVERED", getPageable(pageNum, sortField));
     }
 
     @Override
-    public List<Order> getCancelledOrders(int storeId) {
-        ArrayList<Order> orders = getAllStoreOrders(storeId).stream()
-                .filter(o -> o.getOrderStatus().equalsIgnoreCase(OrderStatus.Status.ORDER_DECLINED.name()))
-                .collect(Collectors.toCollection(ArrayList::new));
-        return !orders.isEmpty() ? orders : new ArrayList<>();
+    public Page<Order> getCancelledOrders(int storeId, int pageNum, String sortField) {
+        return orderRepository.findOrdersByStoreId(storeId, "DECLINED", getPageable(pageNum, sortField));
     }
 
     @Override
-    public List<Order> getInProgressOrders(int storeId) {
-        ArrayList<Order> orders = getAllStoreOrders(storeId).stream()
-                .filter(o -> o.getOrderStatus().equalsIgnoreCase(OrderStatus.Status.PREPARING_ORDER.name()))
-                .collect(Collectors.toCollection(ArrayList::new));
-        return !orders.isEmpty() ? orders : new ArrayList<>();
+    public Page<Order> getInProgressOrders(int storeId, int pageNum, String sortField) {
+        return orderRepository.findOrdersByStoreId(storeId, "IN_PROGRESS", getPageable(pageNum, sortField));
     }
 
     @Override
-    public ArrayList<Order> getDeliveredOrders(int storeId) {
-        ArrayList<Order> orders = getAllStoreOrders(storeId).stream()
-                .filter( o -> o.getOrderStatus().equalsIgnoreCase(OrderStatus.Status.DELIVERED.name()))
-                .collect(Collectors.toCollection(ArrayList::new));
-        return !orders.isEmpty() ? orders : new ArrayList<>();
+    public Page<Order> getDeliveredOrders(int storeId, int pageNum, String sortField) {
+        return orderRepository.findOrdersByStoreId(storeId, "DELIVERED", getPageable(pageNum, sortField));
     }
 
     @Override
-    public ArrayList<Product> getStoreProductsById(int storeId) {
-        return productsRepository.findStoreProducts(storeId);
+    public Page<Product> getStoreProductsById(int pageNum, int storeId, String sortField) {
+        return productsRepository.findStoreProducts(storeId, getPageable(pageNum, sortField));
+    }
+
+    @Override
+    public Page<Product> getStoreProductsById(int pageNum, int storeId) {
+        return productsRepository.findStoreProducts(storeId, getPageable(pageNum, "product_name"));
+    }
+
+    private Pageable getPageable(int pageNum, String sortField){
+        return PageRequest.of(pageNum - 1, 20, Sort.by(sortField).ascending());
     }
 }

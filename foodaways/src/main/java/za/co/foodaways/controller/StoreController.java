@@ -41,28 +41,43 @@ public class StoreController {
         this.simpMessagingTemplate = simpMessagingTemplate;
     }
 
-    @RequestMapping(value = "/home")
-    public ModelAndView storeHome(Model model, HttpSession session, Authentication authentication){
+    @RequestMapping(value = "/home/{pageNum}")
+    public ModelAndView storeHome(Model model, @PathVariable(value = "pageNum") int pageNum,
+                                  @RequestParam("sortField") String sortField,
+                                  HttpSession session, Authentication authentication){
         ModelAndView mav = new ModelAndView("store_manager.html");
         mav.addObject("newProduct", new Product());
         mav.addObject("productCategories", Arrays.asList("Lunch", "Dinner", "Breakfast"));
         model.addAttribute("roles", authentication.getAuthorities().toString());
         StoreUser userPerson = storeUserService.findUserByEmail(authentication.getName());
         Store managedStore = storeManagerService.getManagedStoreById(userPerson.getUserId());
-        mav.addObject("products", storeManagerService.getStoreProductsById(managedStore.getStoreId()));
+        Page<Product> pageOfProducts = storeManagerService.getStoreProductsById(managedStore.getStoreId(), pageNum, sortField);
+        model.addAttribute("totalOrderElements", pageOfProducts.getTotalElements());
+        model.addAttribute("totalPages", pageOfProducts.getTotalPages());
+        model.addAttribute("currentPage", pageNum);
+        model.addAttribute("sortField", sortField);
+        mav.addObject("products", pageOfProducts.getContent());
         model.addAttribute("storeId", managedStore.getStoreId());
         session.setAttribute("managedStore", managedStore);
         session.setAttribute("loggedInUser", userPerson);
         return mav;
     }
 
-    @RequestMapping(value = "/products", method = {RequestMethod.GET, RequestMethod.POST})
-    public ModelAndView storeProducts(Model model, Authentication authentication, HttpSession session){
+    @RequestMapping(value = "/products/{pageNum}", method = {RequestMethod.GET, RequestMethod.POST})
+    public ModelAndView storeProducts(Model model, Authentication authentication,
+                                      @RequestParam(value = "sortField") String sortField,
+                                      @PathVariable(value = "pageNum") int pageNum, HttpSession session){
         StoreUser userPerson = (StoreUser) session.getAttribute("loggedInUser");
         model.addAttribute("roles", authentication.getAuthorities().toString());
-        ModelAndView mav = new ModelAndView("store_manager.html");
+        ModelAndView mav = new ModelAndView("store_products.html");
+        Store store  = (Store) session.getAttribute("managedStore");
+        Page<Product> pageOfProducts = storeManagerService.getStoreProductsById(store.getStoreId(), pageNum,sortField);
+        model.addAttribute("totalOrderElements", pageOfProducts.getTotalElements());
+        model.addAttribute("totalPages", pageOfProducts.getTotalPages());
+        model.addAttribute("currentPage", pageNum);
+        model.addAttribute("sortField", sortField);
+        mav.addObject("products", pageOfProducts.getContent());
         mav.addObject("newProduct", new Product());
-        mav.addObject("products", storeManagerService.getStoreProductsByManagerId(userPerson.getUserId()));
         mav.addObject("productCategories", Arrays.asList("Lunch", "Dinner", "Breakfast"));
         return mav;
     }
@@ -107,30 +122,51 @@ public class StoreController {
         return order;
     }
 
-    @RequestMapping(value = "/completed-orders", method = {RequestMethod.GET, RequestMethod.POST})
-    public ModelAndView storeCompletedOrders(HttpSession session){
+    @RequestMapping(value = "/completed-orders/{pageNum}", method = {RequestMethod.GET, RequestMethod.POST})
+    public ModelAndView storeCompletedOrders(Model model,
+                                             @RequestParam(value = "sortField") String sortField,
+                                             @PathVariable(value = "pageNum") int pageNum,HttpSession session){
         ModelAndView mav = new ModelAndView("store_orders.html");
         Store store = (Store)session.getAttribute("managedStore");
+        Page<Order> orderPage = storeManagerService.getInProgressOrders(store.getStoreId(), pageNum, sortField);
+        model.addAttribute("totalOrderElements", orderPage.getTotalElements());
+        model.addAttribute("totalPages", orderPage.getTotalPages());
+        model.addAttribute("currentPage", pageNum);
+        model.addAttribute("sortField", sortField);
+        mav.addObject("storeOrders", orderPage.getContent());
         mav.addObject("newProduct", new Product());
-        mav.addObject("storeOrders", storeManagerService.getCompletedOrders(store.getStoreId()));
         return mav;
     }
 
-    @RequestMapping(value = "/delivered-orders", method = {RequestMethod.GET, RequestMethod.POST})
-    public ModelAndView storeDeliveredOrders(HttpSession session){
-        ModelAndView mav = new ModelAndView("store_orders.html");
+    @RequestMapping(value = "/delivered-orders/{pageNum}", method = {RequestMethod.GET, RequestMethod.POST})
+    public ModelAndView storeDeliveredOrders(Model model,
+                                             @RequestParam(value = "sortField") String sortField,
+                                             @PathVariable(value = "pageNum") int pageNum, HttpSession session){
+        ModelAndView mav = new ModelAndView("store_delivered.html");
         Store store = (Store)session.getAttribute("managedStore");
+        Page<Order> orderPage = storeManagerService.getCompletedOrders(store.getStoreId(),pageNum, sortField);
+        model.addAttribute("totalOrderElements", orderPage.getTotalElements());
+        model.addAttribute("totalPages", orderPage.getTotalPages());
+        model.addAttribute("currentPage", pageNum);
+        model.addAttribute("sortField", sortField);
         mav.addObject("newProduct", new Product());
-        mav.addObject("storeOrders", storeManagerService.getDeliveredOrders(store.getStoreId()));
+        mav.addObject("storeOrders", orderPage.getContent());
         return mav;
     }
 
-    @RequestMapping(value = "/sales-details", method = {RequestMethod.GET, RequestMethod.POST})
-    public ModelAndView storeSalesDetails(HttpSession session){
+    @RequestMapping(value = "/sales-details/{pageNum}", method = {RequestMethod.GET, RequestMethod.POST})
+    public ModelAndView storeSalesDetails(Model model, @PathVariable(value = "pageNum") int pageNum,
+                                          @RequestParam("sortField") String sortField, HttpSession session){
         ModelAndView mav = new ModelAndView("store_orders.html");
         mav.addObject("newProduct", new Product());
         Store store = (Store)session.getAttribute("managedStore");
-        mav.addObject("completedOrders", storeManagerService.getCompletedOrders(store.getStoreId()));
+        Page<Order> orderPage = storeManagerService.getCompletedOrders(store.getStoreId(),pageNum, sortField);
+        model.addAttribute("totalOrderElements", orderPage.getTotalElements());
+        model.addAttribute("totalPages", orderPage.getTotalPages());
+        model.addAttribute("currentPage", pageNum);
+        model.addAttribute("sortField", sortField);
+        mav.addObject("newProduct", new Product());
+        mav.addObject("completedOrders", orderPage.getContent());
         return mav;
     }
 

@@ -1,6 +1,8 @@
 package za.co.foodaways.repository;
 
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -31,5 +33,5 @@ public interface ProductsRepository extends JpaRepository<Product,Integer> {
     ArrayList<Product> getProductsByRatingEqualToAndGreater();
 
     @Query(nativeQuery = true, value = "SELECT * FROM products p WHERE p.referenced_store_id = :storeId")
-    ArrayList<Product> findStoreProducts(@Param("storeId") int storeId);
+    Page<Product> findStoreProducts(@Param("storeId") int storeId, Pageable pageable);
 }

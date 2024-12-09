@@ -28,10 +28,14 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
             "WHERE o.store_reference_id =:storeId AND o.order_status = 'ORDER_COMPLETED'")
     List<Order> findStoreCompletedOrders(@Param("storeId") int storeId);
 
-    @Query(nativeQuery = true, value = "SELECT * FROM customer_orders o WHERE o.store_reference_id = :storeId")
-    Page<Order> findOrdersByStoreId(@Param("storeId") int storeId, Pageable pageable);
+    @Query(nativeQuery = true, value = "SELECT * FROM customer_orders o " +
+            "WHERE o.store_reference_id = :storeId AND o.order_status = :orderStatus")
+    Page<Order> findOrdersByStoreId(@Param("storeId") int storeId, @Param("orderStatus") String orderStatus, Pageable pageable);
 
     @Query(nativeQuery = true, value = "SELECT * FROM customer_orders o WHERE o.store_reference_id = :storeId")
     ArrayList<Order> findOrdersByStoreId(@Param("storeId") int storeId);
+
+//    @Query(nativeQuery = true, value = "SELECT * FROM customer_orders o WHERE o.store_reference_id = :storeId")
+//    Page<Order> findOrdersByStoreId(@Param("storeId") int storeId, Pageable pageable);
 
 }

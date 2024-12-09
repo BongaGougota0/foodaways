@@ -18,12 +18,13 @@ public interface StoreManager{
     void updateOrder(int orderId, Order updatedOrder);
     void deleteOrder(int orderId);
     void sendOrderForDelivery(int driverId);
-    ArrayList<Order> getAllNewOrders(int storeId);
+    Page<Order> getAllNewOrders(int storeId, int pageNum, String sortField);
     Page<Order> getAllStoreOrders(int storeId, int pageNum, String sortField);
-    List<Order> getAllStoreOrders(int storeId);
-    List<Order> getCompletedOrders(int storeId);
-    List<Order> getCancelledOrders(int storeId);
-    List<Order> getInProgressOrders(int storeId);
-    ArrayList<Order> getDeliveredOrders(int storeId);
-    ArrayList<Product> getStoreProductsById(int storeId);
+    List<Order> getAllStoreOrders(int storeId); //, int pageNum, String sortField);
+    Page<Order> getCompletedOrders(int storeId, int pageNum, String sortField);
+    Page<Order> getCancelledOrders(int storeId, int pageNum, String sortField);
+    Page<Order> getInProgressOrders(int storeId, int pageNum, String sortField);
+    Page<Order> getDeliveredOrders(int storeId, int pageNum, String sortField);
+    Page<Product> getStoreProductsById(int pageNum, int storeId, String sortField);
+    Page<Product> getStoreProductsById(int pageNum, int storeId);
 }

@@ -50,12 +50,12 @@
         <div class="pagination">
             <a href="#">&laquo;</a>
             <a th:if="${currentPage > 1}"
-               th:href="@{'/store-manager/home/' + ${currentPage - 1}+'?sortField=' + ${sortField}}"
+               th:href="@{'/store-manager/products/' + ${currentPage - 1}+'?sortField=' + ${sortField}}"
                class="active">
             </a>
             <span th:each="i : ${#numbers.sequence(1, totalPages)}">
                 <a th:if="${currentPage != i}"
-                   th:href="@{/store-manager/home/{pageNum}(pageNum=${i}, sortField=${sortField})}">[[${i}]]</a>
+                   th:href="@{/store-manager/products/{pageNum}(pageNum=${i}, sortField=${sortField})}">[[${i}]]</a>
                 <a class="active" th:unless="${currentPage != i}">[[${i}]]</a>
             </span>
             <a href="#">&raquo;</a>

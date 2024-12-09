@@ -27,21 +27,21 @@
             </tr>
             </thead>
             <tbody>
-                <tr th:each="product : ${products}">
+                <tr th:each="order : ${storeOrders}">
                     <td>
-                        <a th:href="@{/store-manager/product-edit-page/{productId}(productId = ${product.productId})}">
-                            Edit Product
+                        <a th:href="@{/store-manager/product-edit-page/{productId}(productId = ${order.orderId})}">
+                            Edit Order
                         </a>
                     </td>
                     <td>
                         <div class="product-image-display">
-                            <img th:src="@{'/assets/images/' + ${product.imageOfProduct}}" class="img-fluid menu-image" alt="">
+                            <img th:src="" class="img-fluid menu-image" alt="">
                         </div>
                     </td>
-                    <td th:text="${product.menuItems}">Menu Items</td>
-                    <td th:text="${product.productPrice}">Price</td>
+                    <td th:text="${order.menuItems}">Menu Items</td>
+                    <td th:text="${order.productPrice}">Price</td>
                     <td>
-                        <a th:href="@{/store-manager/delete-product/{productId}(productId = ${product.productId})}">Delete (X)</a>
+                        <a th:href="">Accept (X)</a>
                     </td>
                 </tr>
             </tbody>
@@ -50,12 +50,12 @@
         <div class="pagination">
             <a href="#">&laquo;</a>
             <a th:if="${currentPage > 1}"
-               th:href="@{'/store-manager/home/' + ${currentPage - 1}+'?sortField=' + ${sortField}}"
+               th:href="@{'/store-manager/completed-orders/' + ${currentPage - 1}+'?sortField=' + ${sortField}}"
                class="active">
             </a>
             <span th:each="i : ${#numbers.sequence(1, totalPages)}">
                 <a th:if="${currentPage != i}"
-                   th:href="@{/store-manager/home/{pageNum}(pageNum=${i}, sortField=${sortField})}">[[${i}]]</a>
+                   th:href="@{/store-manager/completed-orders/{pageNum}(pageNum=${i}, sortField=${sortField})}">[[${i}]]</a>
                 <a class="active" th:unless="${currentPage != i}">[[${i}]]</a>
             </span>
             <a href="#">&raquo;</a>
