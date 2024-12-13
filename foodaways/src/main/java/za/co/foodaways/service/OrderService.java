@@ -57,7 +57,8 @@ public class OrderService implements CrudService<Order>{
         order.setStore(store.get());
         order.setOrderItems(products);
         order.setOrderItemsString();
-        order.setOrderTotal(order.getOrderTotal());
+        order.setOrderTotal(newOrder.getOrderItems().stream().mapToDouble(
+                o -> o.getProductCount()*o.getProductPrice()).sum());
         return getRepository().save(order);
     }
 
