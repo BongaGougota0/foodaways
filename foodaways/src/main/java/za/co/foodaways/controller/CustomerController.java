@@ -1,6 +1,7 @@
 package za.co.foodaways.controller;
 
 import jakarta.servlet.http.HttpSession;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
@@ -91,16 +92,24 @@ public class CustomerController {
 
 
     //View my orders
-    @GetMapping(value = "/my-orders")
+    @GetMapping(value = "/orders/{pageNum}")
     public ModelAndView viewMyOrders(HttpSession session,
-                                     @RequestParam(value = "success", required = false) String success){
+                                     @PathVariable("pageNum") int pageNum,
+                                     @RequestParam("sortField") String sortField,
+                                     @RequestParam(value = "success", required = false) String success,
+                                     Model model){
         StoreUser user = (StoreUser) session.getAttribute("loggedInUser");
         ModelAndView mav = new ModelAndView("customer_orders.html");
         if(success != null){
             mav.addObject("order_success_toast","Order placed successfully");
         }
-        ArrayList<Order> customerOrders = orderService.getCustomerOrdersById(user.getUserId());
-        mav.addObject("customerOrders", customerOrders);
+        Page<Order> customerOrders = orderService.getCustomerOrdersById(user.getUserId(), pageNum,sortField);
+        model.addAttribute("current_page", pageNum);
+        model.addAttribute("totalPages", customerOrders.getTotalPages());
+        model.addAttribute("totalPgs", customerOrders.getTotalElements());
+        model.addAttribute("sortField", sortField);
+        mav.addObject("customerOrders", customerOrders.getContent());
+
         return mav;
     }
 

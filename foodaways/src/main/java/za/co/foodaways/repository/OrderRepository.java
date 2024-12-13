@@ -1,5 +1,7 @@
 package za.co.foodaways.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -20,7 +22,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
     ArrayList<Order> findOrdersByStoreId(@Param("storeId") int storeId);
 
     @Query(nativeQuery = true, value = "SELECT * FROM customer_orders o WHERE o.user_id = :userId")
-    ArrayList<Order> findUserOrdersById(@Param("userId") int userId);
+    Page<Order> findUserOrdersById(@Param("userId") int userId, Pageable pageable);
 
     @Modifying
     @Query(nativeQuery = true, value = "INSERT INTO customer_orders(order_items, order_status, user_id, store_reference_id)" +

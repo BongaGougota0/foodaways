@@ -34,11 +34,6 @@ public class Order extends BaseEntity {
     @JoinColumn(name = "store_reference_id", referencedColumnName = "storeId", nullable = false)
     public Store store;
 
-    public double getOrderTotal(){
-        return this.orderItems.isEmpty() ?
-                0.0 : this.orderItems.stream().mapToDouble(p -> p.productPrice).sum();
-    }
-
     public void setOrderItemsString(){
         this.order_items = this.orderItems.stream().map(Product::getProductName)
                 .collect(Collectors.joining(","));
