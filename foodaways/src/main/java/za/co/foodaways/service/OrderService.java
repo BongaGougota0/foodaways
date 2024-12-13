@@ -1,6 +1,10 @@
 package za.co.foodaways.service;
 
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import za.co.foodaways.dto.CartDto;
@@ -8,6 +12,7 @@ import za.co.foodaways.dto.OrderDto;
 import za.co.foodaways.dto.ProductDto;
 import za.co.foodaways.exceptions.MultiStoreOrderException;
 import za.co.foodaways.mapper.DtoMapper;
+import za.co.foodaways.mapper.OrderDtoMapper;
 import za.co.foodaways.model.*;
 import za.co.foodaways.repository.OrderRepository;
 import za.co.foodaways.repository.StoreRepository;
@@ -21,12 +26,14 @@ public class OrderService implements CrudService<Order>{
     OrderRepository orderRepository;
     StoreRepository storeRepository;
     DtoMapper dtoMapper;
+    OrderDtoMapper orderDtoMapper;
 
     public OrderService(OrderRepository orderRepository,
-                        StoreRepository storeRepository, DtoMapper dtoMapper){
+                        StoreRepository storeRepository, DtoMapper dtoMapper, OrderDtoMapper orderDtoMapper){
         this.orderRepository = orderRepository;
         this.storeRepository = storeRepository;
         this.dtoMapper = dtoMapper;
+        this.orderDtoMapper = orderDtoMapper;
     }
 
     public void declineOrderUpdate(int orderId, String declineReason){
@@ -50,7 +57,8 @@ public class OrderService implements CrudService<Order>{
         order.setStore(store.get());
         order.setOrderItems(products);
         order.setOrderItemsString();
-        order.setOrderTotal(order.getOrderTotal());
+        order.setOrderTotal(newOrder.getOrderItems().stream().mapToDouble(
+                o -> o.getProductCount()*o.getProductPrice()).sum());
         return getRepository().save(order);
     }
 
@@ -72,8 +80,9 @@ public class OrderService implements CrudService<Order>{
 
     }
 
-    public ArrayList<Order> getCustomerOrdersById(Integer userId) {
-        return orderRepository.findUserOrdersById(userId);
+    public Page<Order> getCustomerOrdersById(Integer userId, int pageNum, String sortField) {
+        Pageable pageable = PageRequest.of(pageNum, 10, Sort.by(sortField));
+        return orderRepository.findUserOrdersById(userId, pageable);
     }
 
 

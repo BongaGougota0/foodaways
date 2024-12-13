@@ -15,6 +15,9 @@ import java.util.List;
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Integer> {
 
+    @Query(nativeQuery = true, value = "SELECT * FROM customer_orders o WHERE o.user_id = :userId")
+    Page<Order> findUserOrdersById(@Param("userId") int userId, Pageable pageable);
+
     @Modifying
     @Query(nativeQuery = true, value = "INSERT INTO customer_orders(order_items, order_status, user_id, store_reference_id)" +
             " VALUES(:items, :status, :storeId, :userId)")

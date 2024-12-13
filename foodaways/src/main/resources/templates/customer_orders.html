@@ -1,24 +1,34 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6" lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Customer Orders</title>
     <link href="/assets/css/modal_style.css" rel="stylesheet">
+    <link href="/assets/css/pagination_style.css" rel="stylesheet">
 </head>
 
 <body>
 
-<div th:insert="~{header :: header}"></div>
-
 <!-- Main Content -->
 <div class="content">
-    <div class="header"></div>
+
+    <div th:insert="~{header :: header}"></div>
 
     <div class="store-data">
         <h2>My Orders</h2>
-        <table>
+        <div sec:authorize="hasRole('ROLE_CUSTOMER')">
+            <div th:each="order : ${customerOrders}">
+                <p th:text="${order.orderId}"></p>
+                <p th:text="${order.orderStatus}"></p>
+                <p th:text="${order.order_items}"></p>
+                <p th:text="${order.orderTotal}"></p>
+            </div>
+        </div>
+
+        <table sec:authorize="hasRole('ROLE_ADMIN')">
             <thead>
             <tr>
                 <th>Order Number</th>
@@ -49,6 +59,35 @@
             </tr>
             </tbody>
         </table>
+
+        <div sec:authorize="hasRole('ROLE_CUSTOMER')" class="pagination">
+            <a href="#">&laquo;</a>
+            <a th:if="${currentPage > 1}"
+               th:href="@{'/in/orders/' + ${currentPage - 1}+'?sortField=' + ${sortField}}"
+               class="active">
+            </a>
+            <span th:each="i : ${#numbers.sequence(1, totalPages)}">
+                <a th:if="${currentPage != i}"
+                   th:href="@{/in/orders/{pageNum}(pageNum=${i}, sortField=${sortField})}">[[${i}]]</a>
+                <a class="active" th:unless="${currentPage != i}">[[${i}]]</a>
+            </span>
+            <a href="#">&raquo;</a>
+        </div>
+
+        <div sec:authorize="hasRole('ROLE_ADMIN')" class="pagination">
+            <a href="#">&laquo;</a>
+            <a th:if="${currentPage > 1}"
+               th:href="@{'/foodaways-admin/stores/' + ${currentPage - 1}+'?sortField=' + ${sortField}}"
+               class="active">
+            </a>
+            <span th:each="i : ${#numbers.sequence(1, totalPages)}">
+                <a th:if="${currentPage != i}"
+                   th:href="@{/foodaways-admin/stores/{pageNum}(pageNum=${i}, sortField=${sortField})}">[[${i}]]</a>
+                <a class="active" th:unless="${currentPage != i}">[[${i}]]</a>
+            </span>
+            <a href="#">&raquo;</a>
+        </div>
+
     </div>
 </div>
 

@@ -21,6 +21,7 @@ public class OrderMapper {
         return new OrderDtoMapper() {
             @Override
             public OrderDto toDto(Order entity) {
+                entity.setOrderItemsString();
                 return new OrderDto(entity.getOrderStatus(),
                         entity.getOrderItems()
                                 .stream()
