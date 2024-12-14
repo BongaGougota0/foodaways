@@ -82,11 +82,6 @@ public class HomeController {
         return "menu.html";
     }
 
-    @GetMapping(value = "/contact")
-    public String contact(){
-        return "contact.html";
-    }
-
     @GetMapping(value = "/best-rating/{pageNum}")
     public ModelAndView displayProductsByRatings(Model model, @PathVariable(value = "pageNum") int pageNum,
                                                  @RequestParam("sortField") String sortField){

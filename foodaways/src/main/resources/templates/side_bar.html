@@ -85,6 +85,28 @@
         </div>
     </div>
 
+    <div th:fragment="products_loop" class="menu-thumb">
+            <a th:href="@{/foodaways/product-view/{id}(id = ${product.productId})}">
+                <div class="menu-image-wrap">
+                    <img th:src="@{'/assets/images/' + ${product.imageOfProduct}}"
+                         class="img-fluid menu-image" alt="">
+
+                    <span class="menu-tag bg-warning" th:text="${product.productCategory}"></span>
+                    <a class="add-to-cart">Add To Cart</a>
+                    <id th:text="${product.productId}" style="display : none"></id>
+                    <storeId th:text="${product.storeId}" style="display : none"></storeId>
+                </div>
+            </a>
+
+            <div class="menu-info d-flex flex-wrap align-items-center">
+                <h4 class="mb-0" th:text="${product.productName}"></h4>
+                <p th:text="product.menuItems"></p>
+                <span class="price-tag bg-white shadow-lg ms-4"
+                      th:text="${product.productPrice}"><small>R</small></span>
+
+            </div>
+        </div>
+
     <div th:fragment="store_edit_modal" id="storeEditModal" class="modal">
 
     </div>
