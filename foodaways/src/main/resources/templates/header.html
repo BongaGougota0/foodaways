@@ -41,7 +41,7 @@
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link" th:href="@{/foodaways/rated}">Top Rated</a>
+                            <a class="nav-link" th:href="@{/foodaways/best-rating/1?sortField=product_name}">Top Rated</a>
                         </li>
 
                         <li sec:authorize="hasRole('ROLE_CUSTOMER')"  class="nav-item">

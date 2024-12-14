@@ -1,18 +1,18 @@
 package za.co.foodaways.controller;
 
-
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import za.co.foodaways.mapper.DtoMapper;
 import za.co.foodaways.model.Product;
-import za.co.foodaways.model.Reservation;
+import za.co.foodaways.model.Review;
 import za.co.foodaways.repository.StoreUserRepository;
 import za.co.foodaways.service.ProductsService;
 import za.co.foodaways.service.ReservationService;
-
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 
 @Controller
@@ -87,35 +87,36 @@ public class HomeController {
         return "contact.html";
     }
 
-    @GetMapping(value = "/best-rating")
-    public String bestSellers(@RequestParam("productCategory") String rating, Model model){
-        model.addAttribute("product_filter", "Best Rated");
-        model.addAttribute("productList", productsService.getProductsByBestRating(rating)
-                .stream().map(dtoMapper::toDto));
-        return "products_by_category.html";
-    }
-
-    @GetMapping(value = "/products-rated")
-    public String bestSellers(@RequestParam("rating") double rating, Model model){
-        model.addAttribute("product_filter", "Best Rated");
-        model.addAttribute("productList", productsService.getProductsByRatingEqualToAndGreater((int)rating)
-                .stream().map(dtoMapper::toDto));
-        return "products_by_category.html";
-    }
-
-    @GetMapping(value = "/products-by-category")
-    public String productByCategory(@RequestParam("category") String category, Model model){
-        model.addAttribute("productList",productsService.getProductsByCategory(category).stream().map(dtoMapper::toDto));
-        model.addAttribute("category_name", category);
-        return "products_by_category.html";
-    }
-
-    @PostMapping(value = "/createReservation")
-    public ModelAndView createReservation(@ModelAttribute("reservation")Reservation reservation){
-        reservationService.addReservation(reservation);
-        ModelAndView mav = new ModelAndView();
-        mav.setViewName("redirect:foodaways/home");
+    @GetMapping(value = "/best-rating/{pageNum}")
+    public ModelAndView displayProductsByRatings(Model model, @PathVariable(value = "pageNum") int pageNum,
+                                                 @RequestParam("sortField") String sortField){
+        ModelAndView mav = new ModelAndView("products_by_category.html");
+        Page<Product> productsByRatingDesc = productsService.getProductsByBestRating(pageNum, sortField);
+        ArrayList<Product> products = productsByRatingDesc.getContent().stream()
+                .filter(p -> p.getReviews().stream().mapToDouble(Review::getRating).sum() > 3)
+                .collect(Collectors.toCollection(ArrayList::new));
+        model.addAttribute("current_page", pageNum);
+        model.addAttribute("totalPages", productsByRatingDesc.getTotalPages());
+        model.addAttribute("totalPgs", productsByRatingDesc.getTotalElements());
+        model.addAttribute("sortField", sortField);
+        mav.addObject("productList", products);
+        model.addAttribute("category_name", sortField);
+        model.addAttribute("productCategories", "throw_away_var");
         return mav;
+    }
+
+    @GetMapping(value = "/products-by-category/{pageNum}")
+    public String productByCategory(@PathVariable(value = "pageNum") int pageNum,
+                                    @RequestParam("category") String category, Model model){
+        Page<Product> productPage = productsService.getProductsByCategory(pageNum, category);
+        model.addAttribute("productList", productPage.getContent().stream().map(dtoMapper::toDto));
+        model.addAttribute("category_name", category);
+        model.addAttribute("productCategories", category);
+        model.addAttribute("current_page", pageNum);
+        model.addAttribute("totalPages", productPage.getTotalPages());
+        model.addAttribute("totalPgs", productPage.getTotalElements());
+        model.addAttribute("sortField", category);
+        return "products_by_category.html";
     }
 
     @GetMapping(value = "/product-view/{productId}")

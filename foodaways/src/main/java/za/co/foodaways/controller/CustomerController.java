@@ -67,11 +67,6 @@ public class CustomerController {
         return "index.html";
     }
 
-    @RequestMapping(value = "/view-cart")
-    public String viewCart(Model model, HttpSession session){
-        return "customer_cart.html";
-    }
-
     @PostMapping(value = "/place-order")
     public ResponseEntity<Map<String, String>> postOrder(@RequestBody OrderDto orderProducts, HttpSession session){
         StoreUser user = (StoreUser) session.getAttribute("loggedInUser");
@@ -109,7 +104,6 @@ public class CustomerController {
         model.addAttribute("totalPgs", customerOrders.getTotalElements());
         model.addAttribute("sortField", sortField);
         mav.addObject("customerOrders", customerOrders.getContent());
-
         return mav;
     }
 

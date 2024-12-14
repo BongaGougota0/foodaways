@@ -47,6 +47,35 @@
 
                         </div>
                     </div>
+
+                    <div th:if="not ${category_name.equals(productCategories)}" class="pagination">
+                        <a href="#">&laquo;</a>
+                        <a th:if="${currentPage > 1}"
+                           th:href="@{'/foodaways/best-rating/' + ${currentPage - 1}+'?sortField=' + ${sortField}}"
+                           class="active">
+                        </a>
+                        <span th:each="i : ${#numbers.sequence(1, totalPages)}">
+                            <a th:if="${currentPage != i}"
+                               th:href="@{/foodaways/best-rating/{pageNum}(pageNum=${i}, sortField=${sortField})}">[[${i}]]</a>
+                            <a class="active" th:unless="${currentPage != i}">[[${i}]]</a>
+                        </span>
+                        <a href="#">&raquo;</a>
+                    </div>
+
+                    <div th:if="${category_name.equals(productCategories)}" class="pagination">
+                        <a href="#">&laquo;</a>
+                        <a th:if="${currentPage > 1}"
+                           th:href="@{'/foodaways/products-by-category/' + ${currentPage - 1}+'?category=' + ${category}}"
+                           class="active">
+                        </a>
+                        <span th:each="i : ${#numbers.sequence(1, totalPages)}">
+                            <a th:if="${currentPage != i}"
+                               th:href="@{/foodaways/products-by-category/{pageNum}(pageNum=${i}, category=${category})}">[[${i}]]</a>
+                            <a class="active" th:unless="${currentPage != i}">[[${i}]]</a>
+                        </span>
+                        <a href="#">&raquo;</a>
+                    </div>
+
                 </div>
 
             </div>

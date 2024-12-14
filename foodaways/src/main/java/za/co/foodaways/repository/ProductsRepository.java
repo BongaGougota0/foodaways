@@ -27,10 +27,10 @@ public interface ProductsRepository extends JpaRepository<Product,Integer> {
     void deleteProductById(@Param("productId") int productId);
 
     @Query(nativeQuery = true, value = "SELECT * FROM products p WHERE p.product_category = :productCategory")
-    ArrayList<Product> findByProductCategory(@Param("productCategory") String productCategory);
+    Page<Product> findByProductCategory(@Param("productCategory") String productCategory, Pageable pageable);
 
     @Query(nativeQuery = true, value = "SELECT * FROM products")
-    ArrayList<Product> getProductsByRatingEqualToAndGreater();
+    Page<Product> getProductsByRatingEqualToAndGreater(Pageable pageable);
 
     @Query(nativeQuery = true, value = "SELECT * FROM products p WHERE p.referenced_store_id = :storeId")
     Page<Product> findStoreProducts(@Param("storeId") int storeId, Pageable pageable);

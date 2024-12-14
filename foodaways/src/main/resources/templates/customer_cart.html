@@ -6,11 +6,13 @@
 <body>
     <div th:insert="~{header :: header}"></div>
 
-    <div id="cartItems"></div>
-    <div class="cart-footer">
-        <p id="totalPrice">Cart Total : </p>
-        <button class="custom-btn" id="placeOrderButton"> Place Order</button>
-    </div>
+    <main>
+        <div id="cartItems"></div>
+        <div class="cart-footer">
+            <p id="totalPrice">Cart Total : </p>
+            <button class="custom-btn" id="placeOrderButton"> Place Order</button>
+        </div>
+    </main>
 
     <div th:insert="~{footer :: footer}"></div>
     <script>

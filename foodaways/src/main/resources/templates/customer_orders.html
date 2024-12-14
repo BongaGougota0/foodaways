@@ -16,81 +16,86 @@
 <div class="content">
 
     <div th:insert="~{header :: header}"></div>
+    <main>
 
-    <div class="store-data">
-        <h2>My Orders</h2>
-        <div sec:authorize="hasRole('ROLE_CUSTOMER')">
-            <div th:each="order : ${customerOrders}">
-                <p th:text="${order.orderId}"></p>
-                <p th:text="${order.orderStatus}"></p>
-                <p th:text="${order.order_items}"></p>
-                <p th:text="${order.orderTotal}"></p>
+        <div class="store-data">
+            <h2>My Orders</h2>
+            <div sec:authorize="hasRole('ROLE_CUSTOMER')">
+                <div th:each="order : ${customerOrders}">
+                    <p th:text="${order.orderId}"></p>
+                    <p th:text="${order.orderStatus}"></p>
+                    <p th:text="${order.order_items}"></p>
+                    <p th:text="${order.orderTotal}"></p>
+                </div>
             </div>
-        </div>
 
-        <table sec:authorize="hasRole('ROLE_ADMIN')">
-            <thead>
-            <tr>
-                <th>Order Number</th>
-                <th>Order Status</th>
-                <th>Menu Items</th>
-                <th>Order Total</th>
-                <th>Cancel Order</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="order : ${customerOrderList}">
-                <td>
-                    <a th:text="${order.orderId}">
-                    </a>
-                </td>
-                <td>
-                    <a th:text="${order.orderStatus}">
-                    </a>
-                </td>
-                <td>
-                    <a th:text="${order.orderItems}"></a>
-                </td>
+            <table sec:authorize="hasRole('ROLE_ADMIN')">
+                <thead>
+                <tr>
+                    <th>Order Number</th>
+                    <th>Order Status</th>
+                    <th>Menu Items</th>
+                    <th>Order Total</th>
+                    <th>Cancel Order</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="order : ${customerOrderList}">
+                    <td>
+                        <a th:text="${order.orderId}">
+                        </a>
+                    </td>
+                    <td>
+                        <a th:text="${order.orderStatus}">
+                        </a>
+                    </td>
+                    <td>
+                        <a th:text="${order.orderItems}"></a>
+                    </td>
 
-                <td th:text="${order.getOrderTotal()}"></td>
-                <td>
-                    <a th:href="@{/in/cancel-order/{orderId}(orderId = ${order.orderId})}">Cancel</a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+                    <td th:text="${order.getOrderTotal()}"></td>
+                    <td>
+                        <a th:href="@{/in/cancel-order/{orderId}(orderId = ${order.orderId})}">Cancel</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
 
-        <div sec:authorize="hasRole('ROLE_CUSTOMER')" class="pagination">
-            <a href="#">&laquo;</a>
-            <a th:if="${currentPage > 1}"
-               th:href="@{'/in/orders/' + ${currentPage - 1}+'?sortField=' + ${sortField}}"
-               class="active">
-            </a>
-            <span th:each="i : ${#numbers.sequence(1, totalPages)}">
+            <div sec:authorize="hasRole('ROLE_CUSTOMER')" class="pagination">
+                <a href="#">&laquo;</a>
+                <a th:if="${currentPage > 1}"
+                   th:href="@{'/in/orders/' + ${currentPage - 1}+'?sortField=' + ${sortField}}"
+                   class="active">
+                </a>
+                <span th:each="i : ${#numbers.sequence(1, totalPages)}">
                 <a th:if="${currentPage != i}"
                    th:href="@{/in/orders/{pageNum}(pageNum=${i}, sortField=${sortField})}">[[${i}]]</a>
                 <a class="active" th:unless="${currentPage != i}">[[${i}]]</a>
             </span>
-            <a href="#">&raquo;</a>
-        </div>
+                <a href="#">&raquo;</a>
+            </div>
 
-        <div sec:authorize="hasRole('ROLE_ADMIN')" class="pagination">
-            <a href="#">&laquo;</a>
-            <a th:if="${currentPage > 1}"
-               th:href="@{'/foodaways-admin/stores/' + ${currentPage - 1}+'?sortField=' + ${sortField}}"
-               class="active">
-            </a>
-            <span th:each="i : ${#numbers.sequence(1, totalPages)}">
+            <div sec:authorize="hasRole('ROLE_ADMIN')" class="pagination">
+                <a href="#">&laquo;</a>
+                <a th:if="${currentPage > 1}"
+                   th:href="@{'/foodaways-admin/stores/' + ${currentPage - 1}+'?sortField=' + ${sortField}}"
+                   class="active">
+                </a>
+                <span th:each="i : ${#numbers.sequence(1, totalPages)}">
                 <a th:if="${currentPage != i}"
                    th:href="@{/foodaways-admin/stores/{pageNum}(pageNum=${i}, sortField=${sortField})}">[[${i}]]</a>
                 <a class="active" th:unless="${currentPage != i}">[[${i}]]</a>
             </span>
-            <a href="#">&raquo;</a>
+                <a href="#">&raquo;</a>
+            </div>
+
         </div>
 
-    </div>
+    </main>
+    <div th:insert="~{footer :: footer}"></div>
 </div>
-
-<script src="/assets/js/none.js"></script>
+<script>
+    window.onload = updateCartDisplay;
+</script>
 </body>
 </html>
