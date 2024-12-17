@@ -91,6 +91,7 @@ function updateCartDisplay() {
     // Get cart from localStorage
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
     let total = 0;
+    let totalItems = 0;
 
     cart.forEach(product => {
         const itemElement = document.createElement('div');
@@ -110,8 +111,9 @@ function updateCartDisplay() {
         CartManager.updateCartUI();
         cartItems.appendChild(itemElement);
         total += product.productPrice * product.productCount;
+        totalItems += product.productCount;
     });
-
+    document.querySelector('.cart-count').textContent = totalItems;
     document.querySelector('#totalPrice').textContent = total.toFixed(2);
 }
 
@@ -213,10 +215,12 @@ function placeOrderFromCart() {
     })
     .then(result => {
         localStorage.removeItem('cart');
-        message('Order placed successfully!');
+        const cartCountElement = document.querySelector('.cart-count');
+        updateCartDisplay();
+        showNotification('Order placed successfully!');
     })
     .catch(error => {
         console.error('Error:', error);
-        message('Failed to place order. Please try again.');
+        showNotification('Failed to place order. Please try again.');
     });
 }
