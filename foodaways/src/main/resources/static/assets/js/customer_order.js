@@ -91,6 +91,7 @@ function updateCartDisplay() {
     // Get cart from localStorage
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
     let total = 0;
+    let totalItems = 0;
 
     cart.forEach(product => {
         const itemElement = document.createElement('div');
@@ -110,8 +111,9 @@ function updateCartDisplay() {
         CartManager.updateCartUI();
         cartItems.appendChild(itemElement);
         total += product.productPrice * product.productCount;
+        totalItems += product.productCount;
     });
-
+    document.querySelector('.cart-count').textContent = totalItems;
     document.querySelector('#totalPrice').textContent = total.toFixed(2);
 }
 
@@ -133,7 +135,7 @@ function updateQuantity(productId, change) {
 }
 
 // Utility function to show notifications
-function showNotification(message, bgColor = '#f3af24') {
+function showNotification(message) {
     const notification = document.createElement('div');
     notification.className = 'notification';
     notification.textContent = message;
@@ -141,7 +143,7 @@ function showNotification(message, bgColor = '#f3af24') {
         position: 'fixed',
         top: '20px',
         right: '20px',
-        background: `${bgColor}`,
+        background: '#f3af24',
         color: 'black',
         padding: '15px',
         borderRadius: '4px',
@@ -213,7 +215,9 @@ function placeOrderFromCart() {
     })
     .then(result => {
         localStorage.removeItem('cart');
-        showNotification('Order placed successfully!', '#00FF00');
+        const cartCountElement = document.querySelector('.cart-count');
+        updateCartDisplay();
+        showNotification('Order placed successfully!');
     })
     .catch(error => {
         console.error('Error:', error);

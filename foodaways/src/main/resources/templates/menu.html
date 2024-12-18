@@ -12,7 +12,6 @@
                             <h1 class="text-white">Our Menus</h1>
                             <strong class="text-white">Perfect for all Breakfast, Lunch and Dinner</strong>
                         </div>
-
                     </div>
                 </div>
 
@@ -22,35 +21,12 @@
             <section class="menu section-padding">
                 <div class="container">
                     <div class="row">
-
                         <div class="col-12">
                             <h2 class="mb-lg-5 mb-4">Breakfast Menu</h2>
                         </div>
-
-                            <div class="col-lg-4 col-md-6 col-12" th:each="product : ${breakfastList}">
-                                <div class="menu-thumb">
-                                    <a th:href="@{/foodaways/product-view/{id}(id = ${product.productId})}">
-                                        <div class="menu-image-wrap">
-                                            <img th:src="@{'/assets/images/' + ${product.imageOfProduct}}"
-                                                    class="img-fluid menu-image" alt="">
-
-                                            <span class="menu-tag bg-warning" th:text="${product.productCategory}"></span>
-                                            <a class="add-to-cart">Add To Cart</a>
-                                            <id th:text="${product.productId}" style="display : none"></id>
-                                            <storeId th:text="${product.storeId}" style="display : none"></storeId>
-                                        </div>
-                                    </a>
-
-                                    <div class="menu-info d-flex flex-wrap align-items-center">
-                                        <h4 class="mb-0" th:text="${product.productName}"></h4>
-                                        <p th:text="product.menuItems"></p>
-                                        <span class="price-tag bg-white shadow-lg ms-4"
-                                              th:text="${product.productPrice}"><small>R</small></span>
-
-                                    </div>
-                                </div>
-                            </div>
-
+                        <div class="col-lg-4 col-md-6 col-12" th:each="product : ${breakfastList}">
+                            <div th:insert="~{side_bar :: products_loop}"></div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -58,35 +34,12 @@
             <section class="menu section-padding bg-white">
                 <div class="container">
                     <div class="row">
-
                         <div class="col-12">
                             <h2 class="mb-lg-5 mb-4">Lunch Menu</h2>
                         </div>
-
-                            <div class="col-lg-4 col-md-6 col-12" th:each="lunch : ${lunchList}">
-                                <div class="menu-thumb">
-                                    <a th:href="@{/foodaways/product-view/{id}(id = ${lunch.productId})}">
-                                        <div class="menu-image-wrap">
-                                            <img th:src="@{'/assets/images/' + ${lunch.imageOfProduct}}"
-                                                 class="img-fluid menu-image" alt="">
-
-                                            <span class="menu-tag bg-warning" th:text="${lunch.productCategory}"></span>
-                                            <a class="add-to-cart">Add To Cart</a>
-                                            <id th:text="${lunch.productId}" style="display : none"></id>
-                                            <storeId th:text="${lunch.storeId}" style="display : none"></storeId>
-                                        </div>
-                                    </a>
-
-                                    <div class="menu-info d-flex flex-wrap align-items-center">
-                                        <h4 class="mb-0" th:text="${lunch.productName}"></h4>
-                                        <p th:text="${lunch.menuItems}"></p>
-                                        <span class="price-tag bg-white shadow-lg ms-4"
-                                              th:text="${lunch.productPrice}"><small>R</small></span>
-
-                                    </div>
-                                </div>
-                            </div>
-
+                        <div class="col-lg-4 col-md-6 col-12" th:each="product : ${lunchList}">
+                            <div th:insert="~{side_bar :: products_loop}"></div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -98,31 +51,9 @@
                         <div class="col-12">
                             <h2 class="mb-lg-5 mb-4">Dinner Menu</h2>
                         </div>
-
-                                <div class="col-lg-4 col-md-6 col-12" th:each="dinner : ${dinnerList}">
-                                    <div class="menu-thumb">
-                                        <a th:href="@{/foodaways/product-view/{id}(id = ${dinner.productId})}">
-                                            <div class="menu-image-wrap">
-                                                <img th:src="@{'/assets/images/' + ${dinner.imageOfProduct}}"
-                                                     class="img-fluid menu-image" alt="">
-
-                                                <span class="menu-tag bg-warning" th:text="${dinner.productCategory}"></span>
-                                                <a class="add-to-cart">Add To Cart</a>
-                                                <id th:text="${dinner.productId}" style="display : none"></id>
-                                                <storeId th:text="${dinner.storeId}" style="display : none"></storeId>
-                                            </div>
-                                        </a>
-
-                                        <div class="menu-info d-flex flex-wrap align-items-center">
-                                            <h4 class="mb-0" th:text="${dinner.productName}"></h4>
-                                            <p th:text="${dinner.menuItems}"></p>
-                                            <span class="price-tag bg-white shadow-lg ms-4"
-                                                  th:text="${dinner.productPrice}"><small>R</small></span>
-
-                                        </div>
-                                    </div>
-                                </div>
-
+                            <div class="col-lg-4 col-md-6 col-12" th:each="product : ${dinnerList}">
+                                <div th:insert="~{side_bar :: products_loop}"></div>
+                            </div>
                         </div>
 
                     </div>
