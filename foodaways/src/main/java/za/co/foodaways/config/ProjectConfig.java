@@ -38,6 +38,7 @@ public class ProjectConfig {
                                 .requestMatchers("/assets/images/**").permitAll()
                                 .requestMatchers("/assets/**").permitAll()
                                 .requestMatchers("video/**").permitAll()
+                                .requestMatchers("/carousel-items").permitAll()
                                 .requestMatchers("/foodaways/**").permitAll()
                                 .requestMatchers("/").permitAll()
                                 .requestMatchers("/home").permitAll()

@@ -1,10 +1,12 @@
 package za.co.foodaways.controller;
 
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import za.co.foodaways.dto.ProductDto;
 import za.co.foodaways.mapper.DtoMapper;
 import za.co.foodaways.model.Product;
 import za.co.foodaways.model.Review;
@@ -12,6 +14,8 @@ import za.co.foodaways.repository.StoreUserRepository;
 import za.co.foodaways.service.ProductsService;
 import za.co.foodaways.service.ReservationService;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -80,6 +84,15 @@ public class HomeController {
             model.addAttribute("breakfastList",new ArrayList<>());
         }
         return "menu.html";
+    }
+
+    @GetMapping(path = "/carousel-items")
+    public ResponseEntity<Map<String, ArrayList<ProductDto>>> getCarouselProducts(){
+        ArrayList<ProductDto> carouselProducts = productsService.getAllProducts().stream()
+                .limit(4).map(dtoMapper::toDto).collect(Collectors.toCollection(ArrayList::new));
+        Map<String, ArrayList<ProductDto>> frontCarousel =  new HashMap<>();
+        frontCarousel.put("carousel_items", carouselProducts);
+        return ResponseEntity.ok(frontCarousel);
     }
 
     @GetMapping(value = "/contact")
