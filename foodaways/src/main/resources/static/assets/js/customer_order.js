@@ -135,7 +135,7 @@ function updateQuantity(productId, change) {
 }
 
 // Utility function to show notifications
-function showNotification(message) {
+function showNotification(message, bgColor = '#f3af24') {
     const notification = document.createElement('div');
     notification.className = 'notification';
     notification.textContent = message;
@@ -143,7 +143,7 @@ function showNotification(message) {
         position: 'fixed',
         top: '20px',
         right: '20px',
-        background: '#f3af24',
+        background: `${bgColor}`,
         color: 'black',
         padding: '15px',
         borderRadius: '4px',
@@ -217,7 +217,7 @@ function placeOrderFromCart() {
         localStorage.removeItem('cart');
         const cartCountElement = document.querySelector('.cart-count');
         updateCartDisplay();
-        showNotification('Order placed successfully!');
+        showNotification('Order placed successfully!', '#00FF00');
     })
     .catch(error => {
         console.error('Error:', error);
