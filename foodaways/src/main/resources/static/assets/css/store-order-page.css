@@ -14,7 +14,7 @@
     padding: 0 10px; /* Padding between columns */
 }
 
-.order-data .column:first-child {
+.order-data .column:Second-child {
     flex: 1; /* First column is slightly wider */
 }
 

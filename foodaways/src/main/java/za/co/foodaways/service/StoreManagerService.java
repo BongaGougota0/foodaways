@@ -100,6 +100,15 @@ public class StoreManagerService implements StoreManager {
         }
     }
 
+    public Order updateOrder(int orderId, String newOrderStatus) {
+        Order orderUpdate = orderRepository.getReferenceById(orderId);
+        if (orderUpdate != null){
+            orderUpdate.setOrderStatus(newOrderStatus);
+             return orderRepository.save(orderUpdate);
+        }
+        return orderUpdate;
+    }
+
     @Override
     public void deleteOrder(int orderId) {
         Order order = orderRepository.getReferenceById(orderId);
@@ -138,27 +147,32 @@ public class StoreManagerService implements StoreManager {
 
     @Override
     public Page<Order> getAllNewOrders(int storeId, int pageNum, String sortField) {
-        return orderRepository.findOrdersByStoreId(storeId,"ORDER_PLACED", getPageable(pageNum, sortField));
+        return orderRepository.findOrdersByStoreId(storeId,OrderStatusEnum.ORDER_PLACED.name(), getPageable(pageNum, sortField));
     }
 
     @Override
     public Page<Order> getCompletedOrders(int storeId, int pageNum, String sortField) {
-        return orderRepository.findOrdersByStoreId(storeId, "DELIVERED", getPageable(pageNum, sortField));
+        return orderRepository.findOrdersByStoreId(storeId, OrderStatusEnum.ORDER_COMPLETED.name(), getPageable(pageNum, sortField));
     }
 
     @Override
     public Page<Order> getCancelledOrders(int storeId, int pageNum, String sortField) {
-        return orderRepository.findOrdersByStoreId(storeId, "DECLINED", getPageable(pageNum, sortField));
+        return orderRepository.findOrdersByStoreId(storeId, OrderStatusEnum.ORDER_CANCELLED.name(), getPageable(pageNum, sortField));
     }
 
     @Override
     public Page<Order> getInProgressOrders(int storeId, int pageNum, String sortField) {
-        return orderRepository.findOrdersByStoreId(storeId, "IN_PROGRESS", getPageable(pageNum, sortField));
+        return orderRepository.findOrdersByStoreId(storeId, OrderStatusEnum.ORDER_IN_PROGRESS.name(), getPageable(pageNum, sortField));
+    }
+
+    public Page<Order> getInProgressOrders(int storeId, int pageNum) {
+        return orderRepository.findOrdersByStoreId(storeId, OrderStatusEnum.ORDER_IN_PROGRESS.name(),
+                getPageable(pageNum, OrderStatusEnum.ORDER_ACCEPTED.name()));
     }
 
     @Override
     public Page<Order> getDeliveredOrders(int storeId, int pageNum, String sortField) {
-        return orderRepository.findOrdersByStoreId(storeId, "DELIVERED", getPageable(pageNum, sortField));
+        return orderRepository.findOrdersByStoreId(storeId, OrderStatusEnum.ORDER_COMPLETED.name(), getPageable(pageNum, sortField));
     }
 
     @Override

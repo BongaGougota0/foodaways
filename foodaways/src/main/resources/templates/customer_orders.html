@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Customer Orders</title>
     <link href="/assets/css/modal_style.css" rel="stylesheet">
+    <link href="/assets/css/store-order-page.css" rel="stylesheet">
     <link href="/assets/css/pagination_style.css" rel="stylesheet">
 </head>
 
@@ -21,11 +22,19 @@
         <div class="store-data">
             <h2>My Orders</h2>
             <div sec:authorize="hasRole('ROLE_CUSTOMER')">
-                <div th:each="order : ${customerOrders}">
-                    <p th:text="${order.orderId}"></p>
-                    <p th:text="${order.orderStatus}"></p>
-                    <p th:text="${order.order_items}"></p>
-                    <p th:text="${order.orderTotal}"></p>
+                <div class="order-data" th:each="order : ${customerOrders}">
+                    <div class="column">
+                        <h3 th:text="${order.orderId}">Order ID: </h3>
+                    </div>
+                    <div class="column middle">
+                        <p th:text="${order.order_items}">Items: </p>
+                    </div>
+                    <div class="column middle">
+                        <p th:text="${order.orderTotal}">Items: </p>
+                    </div>
+                    <div class="column">
+                        <p th:text="${order.orderStatus}">Status: </p>
+                    </div>
                 </div>
             </div>
 
