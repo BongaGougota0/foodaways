@@ -1,7 +1,5 @@
 package za.co.foodaways.service;
 
-import jakarta.persistence.EntityManager;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -9,14 +7,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import za.co.foodaways.model.Order;
-import za.co.foodaways.model.Product;
 import za.co.foodaways.model.Store;
 import za.co.foodaways.model.StoreUser;
-import za.co.foodaways.repository.StoreRepository;
-import za.co.foodaways.repository.StoreUserRepository;
 
-import java.util.ArrayList;
 import java.util.Optional;
 
 @Service
@@ -41,6 +34,16 @@ public class AdminService{
         }
         Pageable pageable = PageRequest.of(1,15);
         return storeAdministrationService.findAllEntities(pageable);
+    }
+
+    public Page<StoreUser> viewUsers(int pageNumber, String sortFieldName){
+        if(!sortFieldName.isBlank()){
+            Pageable pageable = PageRequest.of(pageNumber - 1,
+                    15, Sort.by(sortFieldName).ascending());
+            return usersAdministrationService.findAllEntities(pageable);
+        }
+        Pageable pageable = PageRequest.of(1,15);
+        return usersAdministrationService.findAllEntities(pageable);
     }
 
 

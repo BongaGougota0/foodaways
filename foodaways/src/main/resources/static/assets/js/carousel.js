@@ -4,7 +4,6 @@ const styleCarousel = () => {
     container.innerHTML = '';
     axios.get('http://localhost:8080/carousel-items')
         .then((res) => {
-            console.log(res.data.carousel_items);
             for (let item of res.data.carousel_items) {
                 const itemElement = document.createElement('div');
                 itemElement.className = 'carousel-item';

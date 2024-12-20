@@ -20,7 +20,7 @@ public class UsersAdministrationService implements FilterableCrudService<StoreUs
     }
     @Override
     public Page<StoreUser> findAllEntities(Pageable pageable) {
-        return null;
+        return storeUserRepository.findAll(pageable);
     }
 
     @Override
@@ -41,6 +41,6 @@ public class UsersAdministrationService implements FilterableCrudService<StoreUs
         if(user.isPresent()){
             return user.get();
         }
-        return null;
+        return user.orElseThrow();
     }
 }

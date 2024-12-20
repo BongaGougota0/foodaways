@@ -9,9 +9,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import za.co.foodaways.dto.ProductDto;
+import za.co.foodaways.dto.StoreUserDto;
+import za.co.foodaways.mapper.BaseEntityDtoMapper;
 import za.co.foodaways.mapper.DtoMapper;
 import za.co.foodaways.model.Product;
 import za.co.foodaways.model.Review;
+import za.co.foodaways.model.StoreUser;
 import za.co.foodaways.security.CustomAuthenticationSuccessHandler;
 import za.co.foodaways.service.StoreService;
 
@@ -105,6 +108,13 @@ public class ProjectConfig {
                 return product;
             }
         };
+    }
+
+    @Bean
+    public BaseEntityDtoMapper<StoreUserDto, StoreUser> getStoreUserDtoMapper(){
+        return storeUser -> new StoreUserDto(storeUser.getUserId(),
+                storeUser.getFullName(),
+                storeUser.getPhoneNumber(), storeUser.getEmail(), storeUser.getRole().getRoleId());
     }
 }
 

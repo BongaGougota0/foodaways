@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Foodaways Admin</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/css/modal_style.css" rel="stylesheet">
+    <link href="/assets/css/pagination_style.css" rel="stylesheet">
+</head>
+<body>
+    <div th:insert="~{side_bar :: global_admin_sidebar}"></div>
+
+    <div class="content">
+      <div class="store-data">
+        <h2>Unallocated Store Admin</h2>
+        <table>
+          <thead>
+          <tr>
+            <th>Full Name</th>
+            <th>Phone Number</th>
+            <th>Email</th>
+            <th>Allocate Store</th>
+          </tr>
+          </thead>
+          <tbody>
+              <tr th:each="user : ${listOfUsers}">
+                <td>
+                  <a th:text="${user.fullName}"></a>
+                </td>
+                <td>
+                  <a th:text="${user.phoneNumber}"></a>
+                </td>
+                <td th:text="${user.email}"></td>
+                <td>
+                  <a th:text="${user.userId}"></a>
+                </td>
+              </tr>
+          </tbody>
+        </table>
+      </div>
+
+        <div class="pagination">
+            <a href="#">&laquo;</a>
+            <a th:if="${currentPage > 1}"
+               th:href="@{'/foodaways-admin/users/' + ${currentPage - 1}+'?sortField=' + ${sortField}}"
+               class="active">
+            </a>
+            <span th:each="i : ${#numbers.sequence(1, totalPages)}">
+                <a th:if="${currentPage != i}"
+                   th:href="@{/foodaways-admin/users/{pageNum}(pageNum=${i}, sortField=${sortField})}">[[${i}]]</a>
+                <a class="active" th:unless="${currentPage != i}">[[${i}]]</a>
+            </span>
+            <a href="#">&raquo;</a>
+        </div>
+    </div>
+
+
+    <!-- Modal for adding editing store -->
+    <div th:insert="~{side_bar :: store_edit_modal}"></div>
+</body>
+</html>
