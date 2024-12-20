@@ -24,16 +24,16 @@
             <div sec:authorize="hasRole('ROLE_CUSTOMER')">
                 <div class="order-data" th:each="order : ${customerOrders}">
                     <div class="column">
-                        <h3 th:text="${order.orderId}">Order ID: </h3>
+                        <h3 th:text="${order.orderId}"> </h3>
                     </div>
                     <div class="column middle">
-                        <p th:text="${order.order_items}">Items: </p>
+                        <p th:text="${order.order_items}"> </p>
                     </div>
                     <div class="column middle">
-                        <p th:text="${order.orderTotal}">Items: </p>
+                        <p th:text="${#numbers.formatDecimal(order.orderTotal, 0, 2)}"> </p>
                     </div>
                     <div class="column">
-                        <p th:text="${order.orderStatus}">Status: </p>
+                        <p th:text="${order.orderStatus}"></p>
                     </div>
                 </div>
             </div>

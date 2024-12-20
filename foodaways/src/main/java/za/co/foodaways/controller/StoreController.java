@@ -17,9 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import za.co.foodaways.dto.OrderDto;
 import za.co.foodaways.dto.OrderProcess;
-import za.co.foodaways.mapper.OrderDtoMapper;
 import za.co.foodaways.model.*;
-import za.co.foodaways.repository.StoreUserRepository;
 import za.co.foodaways.service.*;
 import za.co.foodaways.utils.Utils;
 
