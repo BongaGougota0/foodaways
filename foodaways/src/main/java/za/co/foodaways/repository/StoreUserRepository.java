@@ -15,7 +15,7 @@ import java.util.Optional;
 @Repository
 public interface StoreUserRepository extends JpaRepository<StoreUser, Integer> {
     StoreUser findByPhoneNumber(String mobileNumber);
-    StoreUser findByEmail(String email);
+    public StoreUser findByEmail(String email);
 
 //    global admin functions
     @Query(nativeQuery = true, value = "SELECT * FROM store_user")

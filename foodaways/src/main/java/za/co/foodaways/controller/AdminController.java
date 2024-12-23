@@ -5,12 +5,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import za.co.foodaways.dto.OrderProcess;
+import za.co.foodaways.dto.StoreAllocationDto;
+import za.co.foodaways.dto.StoreDto;
 import za.co.foodaways.dto.StoreUserDto;
 import za.co.foodaways.mapper.BaseEntityDtoMapper;
 import za.co.foodaways.model.Store;
 import za.co.foodaways.model.StoreUser;
 import za.co.foodaways.service.AdminService;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -59,21 +61,21 @@ public class AdminController {
         ModelAndView mav = new ModelAndView("admin_stores.html");
         mav.addObject("newStoreObj", new Store()); // if admin clicks add new store.
         Page<Store> pageOfStores = adminservice.getStoresSortByStoreName(pageNum, Optional.ofNullable(sortField));
-        List<Store> listOfStores = pageOfStores.getContent();
         int totalPages = pageOfStores.getTotalPages();
         long totalElements = pageOfStores.getTotalElements();
         model.addAttribute("current_page", pageNum);
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("totalPgs", totalElements);
         model.addAttribute("sortField", sortField);
-        mav.addObject("listOfStores", listOfStores);
+        mav.addObject("storeList", adminservice.getStoreWithNoAdmins());
         return mav;
     }
 
-    @RequestMapping(value = "/create-store-manager/", method = {RequestMethod.POST, RequestMethod.GET})
-    public String createAdminUser(@RequestBody StoreUser storeUser){
-        StoreUser user = adminservice.createUnmappedStoreOwner(storeUser);
-        return "";
+    @RequestMapping(value = "/stores-allocate/{storeId}", method = {RequestMethod.POST})
+    public String allocateAdminToStore(Model model, @PathVariable(value = "storeId", required = false) int storeId,
+                                       @RequestBody StoreAllocationDto storeAllocationDto){ //better variable could've been made. lazy
+        StoreUser user = adminservice.assignUserToStoreByStoreId(storeAllocationDto);
+        return "redirect:/foodaways-admin/stores/1?sortField=storeName";
     }
 
     @RequestMapping(value = "/add-store/", method = {RequestMethod.POST, RequestMethod.GET})
