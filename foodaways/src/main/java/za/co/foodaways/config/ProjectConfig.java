@@ -62,6 +62,7 @@ public class ProjectConfig {
                                 .requestMatchers("/store-manager/product-edit-page/**").hasRole("STORE_OWNER")
                                 .requestMatchers("/store-manager/store-products-menu").hasRole("STORE_OWNER")
                                 .requestMatchers("/store-manager/completed-orders/**").hasRole("STORE_OWNER")
+                                .requestMatchers("/store-manager/inprogress-orders/**").hasRole("STORE_OWNER")
                                 .requestMatchers("/store-manager/delivered-orders/**").hasRole("STORE_OWNER")
                                 .requestMatchers("/store-manager/sales-details/**").hasRole("STORE_OWNER")
                                 .requestMatchers("/store-manager/update-product").permitAll()

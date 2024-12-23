@@ -167,7 +167,7 @@ public class StoreManagerService implements StoreManager {
 
     public Page<Order> getInProgressOrders(int storeId, int pageNum) {
         return orderRepository.findOrdersByStoreId(storeId, OrderStatusEnum.ORDER_IN_PROGRESS.name(),
-                getPageable(pageNum, OrderStatusEnum.ORDER_ACCEPTED.name()));
+                getPageable(pageNum, "order_id"));
     }
 
     @Override
