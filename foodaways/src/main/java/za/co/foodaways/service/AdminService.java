@@ -52,4 +52,14 @@ public class AdminService{
         return usersAdministrationService.storeUserRepository
                 .findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
     }
+
+    public Page<StoreUser> viewUsers(int pageNumber, String sortFieldName){
+        if(!sortFieldName.isBlank()){
+            Pageable pageable = PageRequest.of(pageNumber - 1,
+                    15, Sort.by(sortFieldName).ascending());
+            return usersAdministrationService.findAllEntities(pageable);
+        }
+        Pageable pageable = PageRequest.of(1,15);
+        return usersAdministrationService.findAllEntities(pageable);
+    }
 }
