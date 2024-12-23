@@ -64,7 +64,7 @@ public class ProjectConfig {
                                 .requestMatchers("/store-manager/completed-orders/**").hasRole("STORE_OWNER")
                                 .requestMatchers("/store-manager/delivered-orders/**").hasRole("STORE_OWNER")
                                 .requestMatchers("/store-manager/sales-details/**").hasRole("STORE_OWNER")
-                                .requestMatchers("/store-manager/inprogress-orders/**").hasRole("STORE_OWNER")
+                                .requestMatchers("/store-manager/update-product").permitAll()
                                 .requestMatchers("/store-manager/reject-order/").permitAll()
                                 .requestMatchers("/store-manager/accept-order/").permitAll()
                                 .requestMatchers("/foodaways-admin").hasRole("ADMIN")
@@ -94,7 +94,7 @@ public class ProjectConfig {
             public ProductDto toDto(Product entity) {
                 return new ProductDto(entity.getProductId(), entity.getMenuItems(), entity.getProductName(),
                         entity.getProductImagePath(), entity.getImageOfProduct(), entity.getProductCategory(),
-                        entity.getProductPrice(),
+                        entity.getStore().getStoreName(), entity.getProductPrice(),
                         entity.reviews.stream().mapToInt(Review::getRating).sum(),0, entity.store.getStoreId());
             }
 

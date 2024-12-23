@@ -13,6 +13,7 @@ public class ProductDto {
     public String productImagePath;
     public String imageOfProduct;
     public String productCategory;
+    public String storeName;
     public double productPrice;
     public double productAverageRating;
     public int productCount;
