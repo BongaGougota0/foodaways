@@ -19,13 +19,8 @@
                     <p th:text="${order.order_items}">Items: </p>
                 </div>
                 <div class="column">
-                    <button class="accept" th:data-order-id="${order.orderId}">
-                        <span>Accept</span>
-                    </button>
-                </div>
-                <div class="column">
-                    <button class="reject" th:data-order-id="${order.orderId}">
-                        <span>Reject</span>
+                    <button class="complete" th:data-order-id="${order.orderId}">
+                        <span>Mark Complete</span>
                     </button>
                 </div>
             </div>
@@ -51,7 +46,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
     <script src="/assets/js/store_controller.js"></script>
     <script>
-        window.onload = connect([[${storeId}]]);
+
     </script>
 </body>
 </html>

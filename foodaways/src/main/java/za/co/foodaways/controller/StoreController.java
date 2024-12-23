@@ -3,6 +3,7 @@ package za.co.foodaways.controller;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -15,14 +16,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import za.co.foodaways.dto.OrderDto;
-import za.co.foodaways.mapper.OrderDtoMapper;
+import za.co.foodaways.dto.OrderProcess;
 import za.co.foodaways.model.*;
-import za.co.foodaways.repository.StoreUserRepository;
 import za.co.foodaways.service.*;
 import za.co.foodaways.utils.Utils;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+
+import java.util.*;
 
 
 @Controller
@@ -138,6 +137,23 @@ public class StoreController {
         return mav;
     }
 
+    @RequestMapping(value = "/inprogress-orders/{pageNum}", method = {RequestMethod.GET, RequestMethod.POST})
+    public ModelAndView inProgressOrders(Model model,
+                                             @RequestParam(value = "sortField") String sortField,
+                                             @PathVariable(value = "pageNum") int pageNum,
+                                         HttpSession session){
+        ModelAndView mav = new ModelAndView("store_progress_orders.html");
+        Store store = (Store)session.getAttribute("managedStore");
+        Page<Order> orderPage = storeManagerService.getInProgressOrders(store.getStoreId(), pageNum);
+        model.addAttribute("totalOrderElements", orderPage.getTotalElements());
+        model.addAttribute("totalPages", orderPage.getTotalPages());
+        model.addAttribute("currentPage", pageNum);
+        model.addAttribute("sortField", sortField);
+        mav.addObject("storeOrders", orderPage.getContent());
+        mav.addObject("newProduct", new Product());
+        return mav;
+    }
+
     @RequestMapping(value = "/delivered-orders/{pageNum}", method = {RequestMethod.GET, RequestMethod.POST})
     public ModelAndView storeDeliveredOrders(Model model,
                                              @RequestParam(value = "sortField") String sortField,
@@ -212,15 +228,26 @@ public class StoreController {
         return "redirect:/store-manager/home";
     }
 
-    @RequestMapping(value = "/accept")
-    public String acceptOrder(@RequestParam("orderId") int orderId){
-//        orderService.acceptOrderUpdate(orderId);
-        return "redirect:/store-manager/home";
+    @PostMapping(value = "/accept-order/")
+    public ResponseEntity<Map<String,String>> acceptOrder(@RequestBody OrderProcess orderProcess){
+        Order order = storeManagerService.updateOrder(Integer.parseInt(orderProcess.getOrderId()),
+                orderProcess.getOrderStatus());
+        Map<String, String> responseData = new HashMap<>();
+        responseData.put("orderId", String.valueOf(order.getOrderId()));
+        responseData.put("status", order.getOrderStatus());
+        responseData.put("request", "complete");
+        return ResponseEntity.ok(responseData);
     }
 
-    @RequestMapping(value = "/decline")
-    public String declineOrder(@RequestParam("orderId") int orderId, @RequestParam("declineReason") String declineReason){
-//        orderService.declineOrderUpdate(orderId, declineReason);
-        return "redirect:/store-manager/home";
+
+    @PostMapping(value = "/reject-order/")
+    public ResponseEntity<Map<String, String>> declineOrder(@RequestBody OrderProcess orderProcess){
+        Order order = storeManagerService.updateOrder(Integer.parseInt(orderProcess.getOrderId()),
+                OrderStatusEnum.ORDER_DECLINED.name());
+        Map<String, String> responseData = new HashMap<>();
+        responseData.put("orderId", String.valueOf(order.getOrderId()));
+        responseData.put("status", order.getOrderStatus());
+        responseData.put("request", "complete");
+        return ResponseEntity.ok(responseData);
     }
 }

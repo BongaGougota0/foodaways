@@ -77,3 +77,62 @@ function addOrderRow(order) {
     container.prepend(orderRow);
 }
 
+const ORDER_ACTIONS = {
+    reject: {
+        selector: '.reject',
+        endpoint: '/store-manager/reject-order/',
+        status: 'ORDER_DECLINED'
+    },
+    accept: {
+        selector: '.accept',
+        endpoint: '/store-manager/accept-order/',
+        status: 'ORDER_IN_PROGRESS'
+    },
+    complete: {
+        selector: '.complete',
+        endpoint: '/store-manager/accept-order/',
+        status: 'ORDER_COMPLETED'
+    }
+};
+
+async function processOrderStatus(orderId, endpoint, orderStatus) {
+    try {
+        const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ orderId, orderStatus })
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log('Response:', data);
+        return data;
+    } catch (error) {
+        console.error('Error processing order:', error);
+        throw error;
+    }
+}
+
+function setupOrderActionListeners() {
+    Object.values(ORDER_ACTIONS).forEach(action => {
+        document.querySelectorAll(action.selector).forEach(button => {
+            button.addEventListener('click', async () => {
+                try {
+                    const orderId = parseInt(button.getAttribute('data-order-id'), 10);
+                    if (isNaN(orderId)) {
+                        throw new Error('Invalid order ID');
+                    }
+                    await processOrderStatus(orderId, action.endpoint, action.status);
+                     button.closest('.order-item')?.remove();
+                } catch (error) {
+                    console.error('Failed to process order:', error);
+                }
+            });
+        });
+    });
+}
+
+document.addEventListener('DOMContentLoaded', setupOrderActionListeners);
