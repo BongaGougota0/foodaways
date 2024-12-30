@@ -14,5 +14,9 @@ public class Address {
     public int addressId;
     public float longitude;
     public float latitude;
-    public String locationName;
+    public String streetNumber;
+    public String streetAddress;
+    public String suburbName;
+    public String postCode;
+    public String cityName;
 }
