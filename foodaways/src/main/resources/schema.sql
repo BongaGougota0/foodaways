@@ -13,6 +13,8 @@
 --  `full_name` varchar(100) NOT NULL,
 --  `phone_number` varchar(10) NOT NULL,
 --  `email` varchar(100) NOT NULL,
+--  `created_date` TIMESTAMP DEFAULT NULL,
+--  `updated_date` TIMESTAMP DEFAULT NULL,
 --  `password` varchar(350) NOT NULL,
 --  `role_id` INT NOT NULL,
 --  PRIMARY KEY (`user_id`),
@@ -20,10 +22,16 @@
 --);
 --
 --CREATE TABLE IF NOT EXISTS `address`(
---	`address_id` int AUTO_INCREMENT,
+--  `address_id` int AUTO_INCREMENT,
 --  `longitude` DOUBLE NULL,
 --  `latitude` DOUBLE NULL,
---	`location_name` VARCHAR(500) NULL,
+--  `street_number` VARCHAR(50) NULL,
+--  `street_address` VARCHAR(50) NULL,
+--  `suburb_name` VARCHAR(100) NULL,
+--  `post_code` VARCHAR(10) NULL,
+--  `city_name` VARCHAR(500) NULL,
+--  `created_date` TIMESTAMP DEFAULT NULL,
+--  `updated_date` TIMESTAMP DEFAULT NULL,
 --  `user_id` INT NOT NULL,
 --   FOREIGN KEY(user_id) REFERENCES store_user(user_id),
 --   PRIMARY KEY(address_id)
@@ -34,6 +42,8 @@
 --  `store_name` varchar(100) NOT NULL,
 --  `store_number` varchar(15) NOT NULL,
 --  `store_location` varchar(100) NOT NULL,
+--  `created_date` TIMESTAMP DEFAULT NULL,
+--  `updated_date` TIMESTAMP DEFAULT NULL,
 --  `store_owner` INT NULL,
 --  PRIMARY KEY (store_id),
 --  FOREIGN KEY (store_owner) REFERENCES store_user(user_id)
@@ -48,6 +58,8 @@
 --    `product_category` VARCHAR(50) NULL,
 --    `product_price` double NOT NULL,
 --    `referenced_store_id` int NOT NULL,
+--    `created_date` TIMESTAMP DEFAULT NULL,
+--    `updated_date` TIMESTAMP DEFAULT NULL,
 --    FOREIGN KEY (referenced_store_id) REFERENCES store(store_id)
 --);
 --
@@ -63,7 +75,7 @@
 --    `order_items` VARCHAR(255) NULL,
 --    `order_total` double NULL,
 --    `created_at` TIMESTAMP DEFAULT NULL,
---    `closed_at` TIMESTAMP DEFAULT NULL,
+--    `updated_date` TIMESTAMP DEFAULT NULL,
 --    `store_reference_id` int NOT NULL,
 --    FOREIGN KEY (user_id) REFERENCES store_user(user_id),
 --    FOREIGN KEY (store_reference_id) REFERENCES store(store_id)

@@ -1,13 +1,16 @@
 package za.co.foodaways.model;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import java.time.LocalDateTime;
 
 public class BaseEntity {
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.AUTO, generator="native")
-//    public Long id;
+    @CreatedDate
+    @JsonIgnore
+    LocalDateTime createdDate;
+
+    @LastModifiedDate
+    @JsonIgnore
+    LocalDateTime updatedDate;
 }
