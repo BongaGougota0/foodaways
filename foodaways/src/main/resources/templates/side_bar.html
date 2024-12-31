@@ -107,7 +107,7 @@
                 <div class="d-flex flex-wrap align-items-center w-100 mt-2">
                     <span class="store-name" th:text="${product.storeName}"></span>
                     <span class="price-tag bg-white shadow-lg ms-4"
-                          th:text="'R' +${product.productPrice}">
+                          th:text="${product.productPrice}">
                     </span>
                 </div>
             </div>
