@@ -74,6 +74,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 productName: menuThumb.querySelector('h4').textContent,
                 productPrice: parseFloat(menuThumb.querySelector('.price-tag').textContent),
                 productCategory: menuThumb.querySelector('.menu-tag').textContent,
+                storeName: menuThumb.querySelector('.store-name').textContent,
                 menuItems: menuThumb.querySelector('p').textContent,
                 imageOfProduct: menuThumb.querySelector('img').getAttribute('src').split('/').pop(),
                 productCount: 1

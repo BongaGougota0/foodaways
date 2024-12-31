@@ -573,6 +573,7 @@ a #cart-count .nav-link:hover {
 }
 
 .category-tag,
+.store-name,
 .menu-tag {
   background: var(--dark-color);
   border-radius: var(--border-radius-default);
@@ -580,6 +581,11 @@ a #cart-count .nav-link:hover {
   font-size: var(--category-font-size);
   display: inline-block;
   padding: 4px 12px;
+}
+
+.store-name {
+    background : var(--p-color);
+    color : var(--white-color);
 }
 
 .category-tag {

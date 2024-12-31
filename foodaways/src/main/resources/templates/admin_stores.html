@@ -21,20 +21,30 @@
             <th>Store Manager</th>
             <th>Phone Number</th>
             <th>Store Location</th>
+            <th>Allocate Admin</th>
           </tr>
           </thead>
           <tbody>
-              <tr th:each="store : ${listOfStores}">
+              <tr th:each="store : ${storeList}">
                 <td>
                   <a th:text="${store.storeName}"></a>
                 </td>
                 <td>
-                  <a th:text="${store.storeName}"></a>
+                  <a th:text="${store.storeManager}"></a>
                 </td>
-                <td th:text="${store.storeNumber}"></td>
+                  <td>
+                      <a th:text="${store.storeNumber}"></a>
+                  </td>
                 <td>
                   <a th:text="${store.storeLocation}"></a>
                 </td>
+                  <td>
+                      <button class="allocate-manager">
+                          <a th:href="@{/foodaways-admin/store-allocate/{id}(id = ${store.storeId})}">
+                            <span>allocate</span>
+                          </a>
+                      </button>
+                  </td>
               </tr>
           </tbody>
         </table>

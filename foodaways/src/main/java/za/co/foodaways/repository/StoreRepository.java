@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import za.co.foodaways.model.Store;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 @Repository
@@ -22,4 +23,7 @@ public interface StoreRepository extends JpaRepository<Store, Integer> {
 //    global admin functions
     @Query(nativeQuery = true, value = "SELECT * FROM store")
     Page<Store> findStoreByOrderNumbers(Pageable pageable);
+
+    @Query(nativeQuery = true, value = "SELECT * FROM store s WHERE s.manager_id IS NULL")
+    public ArrayList<Store> findStoresWithNoAdmin();
 }

@@ -3,6 +3,7 @@ package za.co.foodaways.controller;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -217,7 +218,7 @@ public class StoreController {
         return "product_edit.html";
     }
 
-    @RequestMapping(value = "/update-product", method = {RequestMethod.POST})
+    @RequestMapping(value = "/update-product", method = {RequestMethod.PUT, RequestMethod.POST})
     public String updateProductDetails(@RequestParam("productId") int productId,
                                        MultipartFile productImage, @ModelAttribute("updateProduct") Product updateProduct){
         if(!productImage.isEmpty()){
@@ -225,7 +226,7 @@ public class StoreController {
             updateProduct.setImageOfProduct(newImageName);
         }
         storeManagerService.updateProduct(updateProduct, productId);
-        return "redirect:/store-manager/home";
+        return "redirect:/store-manager/home/1?sortField=product_name";
     }
 
     @PostMapping(value = "/accept-order/")

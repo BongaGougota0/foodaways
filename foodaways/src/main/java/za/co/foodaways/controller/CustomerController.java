@@ -125,26 +125,4 @@ public class CustomerController {
         userService.submitReview(review);
         return "redirect:/in/foodaways";
     }
-
-    @GetMapping(value = "/add-product-to-cart/{productId}")
-    public void addProductToCart(HttpSession session, @PathVariable("productId") int productId){
-        Cart customerCart = (Cart)session.getAttribute("customerCart");
-        if(customerCart.cartItems.containsKey(productId)){
-            ProductDto p = customerCart.cartItems.get(productId);
-            p.productCount = p.productCount +1;
-            customerCart.cartItems.replace(productId,p);
-        }else {
-            Product product = productsService.getProductById(productId);
-            double rating = product.getReviews().stream().mapToDouble(Review::getRating).sum();
-            customerCart.cartItems.put(productId,new ProductDto(productId,
-                    product.getMenuItems(), product.getProductName(), "",
-                    product.getProductImagePath(), product.getProductCategory(),
-                    product.getProductPrice(), rating,
-                    1, product.getStoreId()));
-        }
-        ArrayList<ProductDto> productDtos = new ArrayList<>(customerCart.cartItems.values());
-        CartDto cartDto = new CartDto(productDtos, customerCart.getCartTotal());
-        session.setAttribute("customerCart", cartDto);
-        // send event to update cart count by Js.
-    }
 }
