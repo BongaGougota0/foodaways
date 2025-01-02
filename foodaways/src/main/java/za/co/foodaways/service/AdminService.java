@@ -1,7 +1,5 @@
 package za.co.foodaways.service;
 
-import jakarta.persistence.EntityManager;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -12,13 +10,10 @@ import org.springframework.stereotype.Service;
 import za.co.foodaways.dto.StoreAllocationDto;
 import za.co.foodaways.dto.StoreDto;
 import za.co.foodaways.mapper.BaseEntityDtoMapper;
-import za.co.foodaways.model.Roles;
 import za.co.foodaways.model.Store;
 import za.co.foodaways.model.StoreUser;
 import za.co.foodaways.repository.RoleRepository;
-
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 

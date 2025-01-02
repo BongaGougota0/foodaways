@@ -15,10 +15,10 @@ public class FoodawaysExceptionController {
         return "error_page.html";
     }
 
-//    @ExceptionHandler(Exception.class)
-//    public String foodAwaysGlobalException(Model model, Exception exception){
-//        model.addAttribute("exceptionMessage", exception.getMessage());
-//        model.addAttribute("exceptionTitle", "There was an error on our side.");
-//        return "error_page.html";
-//    }
+    @ExceptionHandler(Exception.class)
+    public String foodAwaysGlobalException(Model model, Exception exception){
+        model.addAttribute("exceptionMessage", exception.getMessage());
+        model.addAttribute("exceptionTitle", "There was an error on our side.");
+        return "error_page.html";
+    }
 }

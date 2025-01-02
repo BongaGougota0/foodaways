@@ -6,7 +6,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import za.co.foodaways.model.Review;
 import za.co.foodaways.model.Product;
 import za.co.foodaways.repository.ProductsRepository;
 import java.util.*;

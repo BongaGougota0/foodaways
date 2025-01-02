@@ -12,7 +12,6 @@ import za.co.foodaways.model.Product;
 import za.co.foodaways.model.Review;
 import za.co.foodaways.repository.StoreUserRepository;
 import za.co.foodaways.service.ProductsService;
-import za.co.foodaways.service.ReservationService;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,16 +21,13 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping(value = {"","foodaways"})
 public class HomeController {
-    public ReservationService reservationService;
     StoreUserRepository storeUserRepository;
     ProductsService productsService;
     DtoMapper dtoMapper;
 
-    public HomeController(ProductsService service, StoreUserRepository userRepository,
-                          ReservationService reservationService, DtoMapper dtoMapper){
+    public HomeController(ProductsService service, StoreUserRepository userRepository, DtoMapper dtoMapper){
         this.storeUserRepository = userRepository;
         this.productsService = service;
-        this.reservationService = reservationService;
         this.dtoMapper = dtoMapper;
     }
 

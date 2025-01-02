@@ -1,16 +1,12 @@
 package za.co.foodaways.service;
 
-import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
-import za.co.foodaways.dto.CartDto;
 import za.co.foodaways.dto.OrderDto;
-import za.co.foodaways.dto.ProductDto;
-import za.co.foodaways.exceptions.MultiStoreOrderException;
 import za.co.foodaways.mapper.DtoMapper;
 import za.co.foodaways.mapper.OrderDtoMapper;
 import za.co.foodaways.model.*;

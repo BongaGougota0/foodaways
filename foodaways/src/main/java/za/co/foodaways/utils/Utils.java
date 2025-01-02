@@ -11,7 +11,7 @@ public class Utils {
     private static final String UPLOAD_DIRECTORY = "src/main/resources/static/assets/images";
     private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     public static String writeImage(MultipartFile productImage) {
-        String fileName = null;
+        String fileName;
         if (!productImage.isEmpty()) {
             fileName = productImage.getOriginalFilename();
 //            String nameExtension = fileName.split(".")[1];
