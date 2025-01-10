@@ -27,7 +27,7 @@ public class StoreUserService implements CrudService<StoreUser>{
     }
 
     public StoreUser findUserByEmail(String userEmail){
-        return storeUserRepository.findByEmail(userEmail);
+        return storeUserRepository.findStoreUserByEmail(userEmail);
     }
 
     public int createUser(StoreUser user){
@@ -40,7 +40,7 @@ public class StoreUserService implements CrudService<StoreUser>{
     }
 
     public StoreUser getUserByEmail(String userEmail){
-        return storeUserRepository.findByEmail(userEmail);
+        return storeUserRepository.findStoreUserByEmail(userEmail);
     }
 
     public StoreUser getUserById(int userId){

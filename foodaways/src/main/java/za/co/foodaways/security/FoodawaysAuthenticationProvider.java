@@ -10,12 +10,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import za.co.foodaways.model.Roles;
 import za.co.foodaways.model.StoreUser;
 import za.co.foodaways.repository.StoreUserRepository;
-
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 @Component
@@ -32,7 +29,7 @@ public class FoodawaysAuthenticationProvider implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String email = authentication.getName();
         String password = authentication.getCredentials().toString();
-        StoreUser storeUser = storeUserRepository.findByEmail(email);
+        StoreUser storeUser = storeUserRepository.findStoreUserByEmail(email);
         if(storeUser != null && storeUser.getUserId() > 0
                 && passwordEncoder.matches(password, storeUser.getPassword())){
             return new UsernamePasswordAuthenticationToken(email,

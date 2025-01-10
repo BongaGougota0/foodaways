@@ -7,7 +7,7 @@ public interface CrudService<E extends BaseEntity>{
 
     JpaRepository<E, Integer> getRepository();
 
-    public E findById(int id);
+    E findById(int id);
 
     default E addNewEntity(E entity){
         return getRepository().save(entity);

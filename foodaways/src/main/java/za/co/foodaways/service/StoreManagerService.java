@@ -1,14 +1,10 @@
 package za.co.foodaways.service;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
 import za.co.foodaways.model.*;
@@ -18,15 +14,8 @@ import za.co.foodaways.repository.StoreManager;
 import za.co.foodaways.repository.StoreRepository;
 import za.co.foodaways.utils.Utils;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Repository
 public class StoreManagerService implements StoreManager {
@@ -53,12 +42,6 @@ public class StoreManagerService implements StoreManager {
         return productsRepository.getReferenceById(productId);
     }
 
-    @Override
-    public Optional<Product> addNewProduct(Product newProduct) {
-        Product product =  productsRepository.save(newProduct);
-        return Optional.of(product);
-    }
-
 
     public void addProduct(Product newProduct, MultipartFile productImage, Store store, int storeAdminId){
         String imageName = Utils.writeImage(productImage);
@@ -74,11 +57,6 @@ public class StoreManagerService implements StoreManager {
         productsRepository.save(product);
     }
 
-    @Override
-    public void editOrder(int orderId, Order order) {
-
-    }
-
     public void updateProduct(Product updateProduct, int productId){
         Product productToUpdate = productsRepository.findById(productId).get();
         productToUpdate.setProductPrice(updateProduct.getProductPrice());
@@ -91,15 +69,6 @@ public class StoreManagerService implements StoreManager {
         productsRepository.save(productToUpdate);
     }
 
-    @Override
-    public void updateOrder(int orderId, Order updatedOrder) {
-        Order orderUpdate = orderRepository.getReferenceById(orderId);
-        if (orderUpdate != null){
-            orderUpdate.setOrderStatus(updatedOrder.orderStatus);
-            orderRepository.save(orderUpdate);
-        }
-    }
-
     public Order updateOrder(int orderId, String newOrderStatus) {
         Order orderUpdate = orderRepository.getReferenceById(orderId);
         if (orderUpdate != null){
@@ -107,19 +76,6 @@ public class StoreManagerService implements StoreManager {
              return orderRepository.save(orderUpdate);
         }
         return orderUpdate;
-    }
-
-    @Override
-    public void deleteOrder(int orderId) {
-        Order order = orderRepository.getReferenceById(orderId);
-        if(order != null){
-            orderRepository.deleteById(orderId);
-        }
-    }
-
-    @Override
-    public void sendOrderForDelivery(int driverId) {
-
     }
 
     public List<Product> getStoreProductsByManagerId(int managerId){
@@ -141,23 +97,8 @@ public class StoreManagerService implements StoreManager {
     }
 
     @Override
-    public ArrayList<Order> getAllStoreOrders(int storeId) {
-        return orderRepository.findOrdersByStoreId(storeId);
-    }
-
-    @Override
-    public Page<Order> getAllNewOrders(int storeId, int pageNum, String sortField) {
-        return orderRepository.findOrdersByStoreId(storeId,OrderStatusEnum.ORDER_PLACED.name(), getPageable(pageNum, sortField));
-    }
-
-    @Override
     public Page<Order> getCompletedOrders(int storeId, int pageNum, String sortField) {
         return orderRepository.findOrdersByStoreId(storeId, OrderStatusEnum.ORDER_COMPLETED.name(), getPageable(pageNum, sortField));
-    }
-
-    @Override
-    public Page<Order> getCancelledOrders(int storeId, int pageNum, String sortField) {
-        return orderRepository.findOrdersByStoreId(storeId, OrderStatusEnum.ORDER_CANCELLED.name(), getPageable(pageNum, sortField));
     }
 
     @Override
@@ -171,18 +112,8 @@ public class StoreManagerService implements StoreManager {
     }
 
     @Override
-    public Page<Order> getDeliveredOrders(int storeId, int pageNum, String sortField) {
-        return orderRepository.findOrdersByStoreId(storeId, OrderStatusEnum.ORDER_COMPLETED.name(), getPageable(pageNum, sortField));
-    }
-
-    @Override
     public Page<Product> getStoreProductsById(int pageNum, int storeId, String sortField) {
         return productsRepository.findStoreProducts(storeId, getPageable(pageNum, sortField));
-    }
-
-    @Override
-    public Page<Product> getStoreProductsById(int pageNum, int storeId) {
-        return productsRepository.findStoreProducts(storeId, getPageable(pageNum, "product_name"));
     }
 
     private Pageable getPageable(int pageNum, String sortField){

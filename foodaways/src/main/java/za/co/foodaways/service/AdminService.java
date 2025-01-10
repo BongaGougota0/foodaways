@@ -57,7 +57,7 @@ public class AdminService{
 
     private StoreUser getUserHelper(){
         return usersAdministrationService.storeUserRepository
-                .findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+                .findStoreUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
     }
 
     public Page<StoreUser> viewUsers(int pageNumber, String sortFieldName){
@@ -80,7 +80,7 @@ public class AdminService{
     }
 
     public StoreUser assignUserToStoreByStoreId(StoreAllocationDto storeAllocationDto){
-        StoreUser storeUser = usersAdministrationService.storeUserRepository.findByEmail(storeAllocationDto.userEmail);
+        StoreUser storeUser = usersAdministrationService.storeUserRepository.findStoreUserByEmail(storeAllocationDto.userEmail);
         storeUser.setRole(roleRepository.findRoleByRoleName("STORE_OWNER"));
         storeUser.setManagedStore(storeAdministrationService.findById(storeAllocationDto.storeId));
         return usersAdministrationService.getRepository().save(storeUser);

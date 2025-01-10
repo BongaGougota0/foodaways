@@ -8,7 +8,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import za.co.foodaways.model.Product;
 import za.co.foodaways.repository.ProductsRepository;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -57,6 +59,4 @@ public class ProductsService {
         }
         return productsRepository.findById(productId).get();
     }
-
-
 }
